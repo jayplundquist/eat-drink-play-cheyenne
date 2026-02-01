@@ -115,13 +115,14 @@ export default function EditVenue() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        <VenueForm
-          venue={venue}
-          onSave={(data) => updateVenueMutation.mutate(data)}
-          onCancel={() => window.location.href = createPageUrl(`VenueDetails?id=${venueId}`)}
-          isSaving={updateVenueMutation.isPending}
-        />
-      </div>
+         <VenueForm
+           venue={venue}
+           onSave={(data) => updateVenueMutation.mutate(data)}
+           onCancel={() => window.location.href = createPageUrl(`VenueDetails?id=${venueId}`)}
+           isSaving={updateVenueMutation.isPending}
+           user={user}
+         />
+       </div>
     </div>
   );
 }

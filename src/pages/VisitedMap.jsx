@@ -10,15 +10,16 @@ import { MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import BootRating from '../components/BootRating';
 
-// Golden Railroad Spike SVG
+// Black Railroad Spike SVG
 const goldenSpikeSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 60" width="32" height="48">
-  <!-- Spike -->
-  <path d="M 20 5 L 18 50 Q 18 55 20 58 Q 22 55 22 50 L 20 5 Z" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
-  <!-- Highlight -->
-  <path d="M 19 10 L 18 45" stroke="#FFF8DC" stroke-width="1" opacity="0.6"/>
-  <!-- Head -->
-  <ellipse cx="20" cy="8" rx="3" ry="2" fill="#DAA520"/>
+  <!-- Spike body -->
+  <path d="M 20 5 L 18 50 Q 18 55 20 58 Q 22 55 22 50 L 20 5 Z" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="1"/>
+  <!-- Highlight for dimension -->
+  <path d="M 19 10 L 18 45" stroke="#404040" stroke-width="0.5" opacity="0.8"/>
+  <!-- Head/cap -->
+  <ellipse cx="20" cy="7" rx="3.5" ry="2.5" fill="#0a0a0a"/>
+  <ellipse cx="20" cy="6.5" rx="3.5" ry="2" fill="#1a1a1a"/>
 </svg>
 `;
 

@@ -117,12 +117,17 @@ export default function Layout({ children, currentPageName }) {
                       variant="ghost" 
                       size="sm"
                       className={cn(
+                        "flex items-center gap-2",
                         isHome 
                           ? "text-white/80 hover:text-white hover:bg-white/10" 
                           : "text-stone-600 hover:text-stone-800"
                       )}
                     >
-                      <User className="w-4 h-4 mr-2" />
+                      {user.profile_picture ? (
+                        <img src={user.profile_picture} alt="Profile" className="w-5 h-5 rounded-full object-cover" />
+                      ) : (
+                        <User className="w-4 h-4" />
+                      )}
                       <span className="hidden sm:inline">{user.full_name || user.email?.split('@')[0]}</span>
                     </Button>
                   </DropdownMenuTrigger>

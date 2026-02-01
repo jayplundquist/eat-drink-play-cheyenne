@@ -44,17 +44,17 @@ export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId
     try {
       // Create Stripe checkout session using backend function
       const response = await base44.functions.invoke('createCheckoutSession', {
-        userEmail: user.email,
+        type: 'venue_claim',
         venueId: venueId,
-        venueName: venueName,
       });
 
-      const session = response.data;
+      const sessionUrl = response.data.url;
 
       // Redirect to Stripe checkout
-      if (window.Stripe) {
-        const stripe = await window.Stripe(STRIPE_PUBLISHABLE_KEY);
-        await stripe.redirectToCheckout({ sessionId: session.id });
+      if (sessionUrl) {
+        window.location.href = sessionUrl;
+      } else {
+        throw new Error('No checkout URL returned');
       }
     } catch (error) {
       toast.error('Failed to start checkout. Please try again.');

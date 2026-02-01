@@ -33,7 +33,7 @@ export default function EventCard({ event }) {
 
   return (
     <Card className={cn(
-      "group overflow-hidden bg-white border-stone-200 transition-all duration-300 hover:shadow-lg",
+      "group overflow-hidden bg-amber-50 border-4 border-amber-900 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/30 rounded-none",
       isPast && "opacity-60"
     )}>
       <div className="relative aspect-[16/9] overflow-hidden">
@@ -43,29 +43,30 @@ export default function EventCard({ event }) {
           onError={() => setImageError(true)}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-amber-950/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 border-4 border-amber-900/50" />
         
         <Badge className={cn("absolute top-3 left-3 border", categoryColors[event.category])}>
           {categoryLabels[event.category] || event.category}
         </Badge>
         
-        <div className="absolute top-3 right-3 bg-white rounded-lg p-2 text-center min-w-[52px] shadow-md">
-          <div className="text-xs font-medium text-amber-700 uppercase">
+        <div className="absolute top-3 right-3 bg-amber-50 border-4 border-amber-900 p-2 text-center min-w-[52px] shadow-lg">
+          <div className="text-xs font-bold text-amber-900 uppercase" style={{ fontFamily: 'Rye, serif' }}>
             {format(eventDate, 'MMM')}
           </div>
-          <div className="text-xl font-bold text-stone-800">
+          <div className="text-xl font-bold text-amber-950">
             {format(eventDate, 'd')}
           </div>
         </div>
         
         <div className="absolute bottom-3 left-3 right-3">
-          <h3 className="text-white font-semibold text-lg leading-tight drop-shadow-md">
+          <h3 className="text-amber-100 font-bold text-lg leading-tight" style={{ fontFamily: 'Rye, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
             {event.title}
           </h3>
         </div>
       </div>
       
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-3 bg-gradient-to-b from-amber-50 to-orange-50 border-t-4 border-amber-900">
         <div className="flex flex-wrap gap-3 text-sm text-stone-600">
           {event.time && (
             <div className="flex items-center gap-1.5">
@@ -94,7 +95,7 @@ export default function EventCard({ event }) {
           {event.ticket_url && (
             <Button 
               size="sm" 
-              className="bg-amber-600 hover:bg-amber-700 text-white ml-auto"
+              className="bg-amber-800 hover:bg-amber-900 text-white border-2 border-amber-950 ml-auto"
               asChild
             >
               <a href={event.ticket_url} target="_blank" rel="noopener noreferrer">

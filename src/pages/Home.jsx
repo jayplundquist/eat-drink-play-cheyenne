@@ -89,7 +89,7 @@ export default function Home() {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-amber-50">
       <HeroSection 
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -120,8 +120,8 @@ export default function Home() {
       {featuredVenues.length > 0 && !searchQuery && selectedCategory === 'all' && (
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           <div className="flex items-center gap-2 mb-6">
-            <Sparkles className="w-5 h-5 text-amber-600" />
-            <h2 className="text-2xl font-bold text-stone-800">Top Rated</h2>
+            <Sparkles className="w-5 h-5 text-amber-800" />
+            <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Top Rated</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredVenues.map((venue, i) => (
@@ -146,17 +146,17 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <Tabs defaultValue="venues" className="w-full">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <TabsList className="bg-stone-100 p-1 rounded-full">
+            <TabsList className="bg-amber-100 p-1 border-2 border-amber-900">
               <TabsTrigger 
                 value="venues" 
-                className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700 data-[state=active]:shadow-sm"
+                className="px-6 border-2 border-transparent data-[state=active]:bg-amber-800 data-[state=active]:text-amber-50 data-[state=active]:border-amber-950 data-[state=active]:shadow-lg"
               >
                 <MapPin className="w-4 h-4 mr-2" />
                 Venues
               </TabsTrigger>
               <TabsTrigger 
                 value="events"
-                className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700 data-[state=active]:shadow-sm"
+                className="px-6 border-2 border-transparent data-[state=active]:bg-amber-800 data-[state=active]:text-amber-50 data-[state=active]:border-amber-950 data-[state=active]:shadow-lg"
               >
                 <Calendar className="w-4 h-4 mr-2" />
                 Events

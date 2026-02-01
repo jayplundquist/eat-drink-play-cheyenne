@@ -33,7 +33,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
   const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80";
 
   return (
-    <Card className="group overflow-hidden bg-white border-stone-200 hover:border-amber-300 transition-all duration-300 hover:shadow-lg hover:shadow-amber-100/50">
+    <Card className="group overflow-hidden bg-amber-50 border-4 border-amber-900 hover:border-amber-700 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/30 rounded-none">
       <Link to={createPageUrl(`VenueDetails?id=${venue.id}`)}>
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
@@ -42,7 +42,8 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             onError={() => setImageError(true)}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-amber-950/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 border-4 border-amber-900/50" />
           
           <Badge className={cn("absolute top-3 left-3 border", categoryColors[venue.category])}>
             {categoryLabels[venue.category]}
@@ -55,20 +56,20 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
           )}
           
           <div className="absolute bottom-3 left-3 right-3">
-            <h3 className="text-white font-semibold text-lg leading-tight mb-1 drop-shadow-md">
+            <h3 className="text-amber-100 font-bold text-lg leading-tight mb-1" style={{ fontFamily: 'Rye, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
               {venue.name}
             </h3>
             {venue.address && (
-              <div className="flex items-center gap-1 text-white/90 text-sm">
+              <div className="flex items-center gap-1 text-amber-200 text-sm">
                 <MapPin className="w-3.5 h-3.5" />
-                <span className="truncate">{venue.address}</span>
+                <span className="truncate" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{venue.address}</span>
               </div>
             )}
           </div>
         </div>
       </Link>
       
-      <div className="p-4">
+      <div className="p-4 bg-gradient-to-b from-amber-50 to-orange-50 border-t-4 border-amber-900">
         <div className="flex items-center justify-between">
           <BootRating 
             rating={Math.round(avgRating)} 

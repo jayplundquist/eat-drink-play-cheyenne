@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2
+  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -25,6 +25,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import BootRating from "../components/BootRating";
+import ClaimVenueModal from "../components/ClaimVenueModal";
 import { toast } from "sonner";
 
 const categoryLabels = {

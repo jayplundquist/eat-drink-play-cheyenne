@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users
+  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users, Image, Loader2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -64,6 +64,8 @@ export default function VenueDetails() {
   const [user, setUser] = useState(null);
   const [newRating, setNewRating] = useState(0);
   const [newComment, setNewComment] = useState('');
+  const [reviewImages, setReviewImages] = useState([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [reportIssue, setReportIssue] = useState('');
   const [reportReviewDialogOpen, setReportReviewDialogOpen] = useState(false);
@@ -142,6 +144,7 @@ export default function VenueDetails() {
         user_email: user.email,
         boots: newRating,
         comment: newComment,
+        image_urls: reviewImages,
       };
 
       if (userRating) {
@@ -166,6 +169,7 @@ export default function VenueDetails() {
       queryClient.invalidateQueries({ queryKey: ['userRating', venueId] });
       setNewRating(0);
       setNewComment('');
+      setReviewImages([]);
       toast.success('Review submitted successfully');
     },
     onError: (error) => {
@@ -223,10 +227,36 @@ export default function VenueDetails() {
     },
   });
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setReviewImages([...reviewImages, file_url]);
+      toast.success('Image added');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const removeImage = (index) => {
+    setReviewImages(reviewImages.filter((_, i) => i !== index));
+  };
+
   useEffect(() => {
     if (userRating) {
       setNewRating(userRating.boots);
       setNewComment(userRating.comment || '');
+      setReviewImages(userRating.image_urls || []);
     }
   }, [userRating]);
 
@@ -539,11 +569,18 @@ export default function VenueDetails() {
                           {rating.comment && (
                             <p className="text-stone-600 mt-2">{rating.comment}</p>
                           )}
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                          {rating.image_urls && rating.image_urls.length > 0 && (
+                            <div className="grid grid-cols-2 gap-2 mt-3">
+                              {rating.image_urls.map((url, i) => (
+                                <img key={i} src={url} alt={`Review photo ${i}`} className="w-full h-20 object-cover rounded-md" />
+                              ))}
+                            </div>
+                          )}
+                          </div>
+                          </div>
+                          </Card>
+                          ))}
+                          </div>
               )}
             </motion.div>
           </div>

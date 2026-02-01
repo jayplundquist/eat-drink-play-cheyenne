@@ -35,7 +35,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Events', icon: Calendar, label: 'Events' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
-    { name: 'ManageVenues', icon: Plus, label: 'Manage' },
+    ...(user?.role === 'admin' ? [{ name: 'ManageVenues', icon: Plus, label: 'Manage' }] : []),
   ];
 
   const isHome = currentPageName === 'Home';

@@ -98,17 +98,28 @@ export default function ManageVenues() {
     );
   }
 
-  if (!user) {
+  if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-stone-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
-          <h1 className="text-2xl font-bold text-stone-800 mb-4">Sign in required</h1>
-          <Button 
-            onClick={() => base44.auth.redirectToLogin()}
-            className="bg-amber-600 hover:bg-amber-700 text-white"
-          >
-            Sign In
-          </Button>
+          <h1 className="text-2xl font-bold text-stone-800 mb-4">Admin Access Required</h1>
+          <p className="text-stone-600 mb-8">
+            {!user ? 'You need to sign in as an admin to manage venues' : 'Only administrators can manage venues'}
+          </p>
+          {!user ? (
+            <Button 
+              onClick={() => base44.auth.redirectToLogin()}
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              Sign In
+            </Button>
+          ) : (
+            <Link to={createPageUrl('Home')}>
+              <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                Back to Home
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     );

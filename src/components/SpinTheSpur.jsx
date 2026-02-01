@@ -97,19 +97,8 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Spin the Spur */}
-        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200 hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-amber-800">
-              <motion.div
-                animate={{ rotate: spinning ? 360 : 0 }}
-                transition={{ duration: 0.5, repeat: spinning ? Infinity : 0, ease: "linear" }}
-              >
-                <Sparkles className="w-5 h-5" />
-              </motion.div>
-              Spin the Spur
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+         <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200 hover:shadow-lg transition-shadow">
+           <CardContent className="space-y-3 pt-6">
             <p className="text-sm text-stone-600">
               Can't decide where to eat? Let fate choose from your favorites!
             </p>
@@ -128,18 +117,7 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
         {/* Quick Draw */}
         <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-blue-800">
-              <motion.div
-                animate={{ rotate: spinning ? 360 : 0 }}
-                transition={{ duration: 0.5, repeat: spinning ? Infinity : 0, ease: "linear" }}
-              >
-                <Zap className="w-5 h-5" />
-              </motion.div>
-              Quick Draw
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 pt-6">
             <p className="text-sm text-stone-600">
               Feeling adventurous? Try a new restaurant you haven't rated yet!
             </p>

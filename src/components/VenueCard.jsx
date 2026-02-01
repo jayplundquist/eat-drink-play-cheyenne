@@ -26,7 +26,7 @@ const categoryColors = {
   recreation: "bg-sky-100 text-sky-800 border-sky-200"
 };
 
-export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true, hideImage = false }) {
+export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true, hideImage = false, hideDescription = false }) {
   const [imageError, setImageError] = useState(false);
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
 
@@ -118,7 +118,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
           )}
         </div>
         
-        {venue.description && (
+        {!hideDescription && venue.description && (
           <p className="text-stone-600 text-sm mt-3 line-clamp-2">
             {venue.description}
           </p>

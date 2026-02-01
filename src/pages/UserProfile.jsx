@@ -76,6 +76,18 @@ export default function UserProfile() {
     enabled: !!currentUser && !!userEmail,
   });
 
+  const { data: profileFollowers = [] } = useQuery({
+    queryKey: ['profileFollowers', userEmail],
+    queryFn: () => userEmail ? base44.entities.Follow.filter({ following_email: userEmail }) : [],
+    enabled: !!userEmail,
+  });
+
+  const { data: profileFollowing = [] } = useQuery({
+    queryKey: ['profileFollowing', userEmail],
+    queryFn: () => userEmail ? base44.entities.Follow.filter({ user_email: userEmail }) : [],
+    enabled: !!userEmail,
+  });
+
   const toggleFollowMutation = useMutation({
     mutationFn: async () => {
       const existing = userFollows[0];

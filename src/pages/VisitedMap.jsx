@@ -172,7 +172,7 @@ export default function VisitedMap() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Map */}
           <div className="lg:col-span-2">
-            <Card className="overflow-hidden h-96 lg:h-[600px]">
+            <Card className="overflow-hidden" style={{ height: '600px' }}>
               {mapLoading ? (
                 <div className="w-full h-full flex items-center justify-center bg-stone-100">
                   <Loader2 className="w-8 h-8 animate-spin text-amber-600" />

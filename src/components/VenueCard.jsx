@@ -14,7 +14,9 @@ const categoryLabels = {
   brewery: "Brewery",
   music_hall: "Music Hall",
   activity: "Activity",
-  recreation: "Recreation"
+  recreation: "Recreation",
+  souvenir_shopping: "Shopping",
+  food_trucks: "Food Truck"
 };
 
 const foodTypeLabels = {

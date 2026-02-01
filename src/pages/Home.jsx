@@ -274,7 +274,7 @@ export default function Home() {
                     <li>✓ Complete the challenge</li>
                   </ul>
                 </div>
-                <Link to={createPageUrl('Profile?tab=boots')} className="flex-shrink-0">
+                <Link to={createPageUrl('Profile?defaultValue=bigboots')} className="flex-shrink-0">
                   <Button className="bg-white text-amber-700 hover:bg-amber-50 font-semibold text-lg px-8 py-6">
                     Start the Hunt
                   </Button>

@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { createPageUrl } from '@/utils';
 import BootRating from '../components/BootRating';
 
 // Black Railroad Spike Icon from image

@@ -145,72 +145,72 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
         >
           <Card className="mb-8 border-stone-200">
-            <CardHeader className="bg-gradient-to-r from-amber-50 to-stone-50 border-b border-stone-200">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    {user.profile_picture ? (
-                      <img
-                        src={user.profile_picture}
-                        alt={user.full_name}
-                        className="w-20 h-20 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
-                        <User className="w-10 h-10 text-amber-700" />
-                      </div>
-                    )}
-                    {editMode && (
-                      <label className="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 text-white rounded-full p-2 cursor-pointer transition-colors">
-                        {uploadingImage ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Camera className="w-4 h-4" />
-                        )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          disabled={uploadingImage}
-                          className="hidden"
-                        />
-                      </label>
-                    )}
-                  </div>
-                  <div>
-                    {editMode ? (
-                      <div className="space-y-2">
-                        <Label htmlFor="full_name">Full Name</Label>
-                        <Input
-                          id="full_name"
-                          value={formData.full_name}
-                          onChange={(e) => setFormData({ full_name: e.target.value })}
-                          className="max-w-xs"
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <CardTitle className="text-3xl text-stone-800">
-                          {user.full_name || 'Anonymous User'}
-                        </CardTitle>
-                        <CardDescription className="text-base">
-                          {user.email}
-                        </CardDescription>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="flex gap-2">
+             <CardHeader className="bg-gradient-to-r from-amber-50 to-stone-50 border-b border-stone-200">
+               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                 <div className="flex items-center gap-4 w-full">
+                   <div className="relative">
+                     {user.profile_picture ? (
+                       <img
+                         src={user.profile_picture}
+                         alt={user.full_name}
+                         className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
+                       />
+                     ) : (
+                       <div className="w-16 h-16 sm:w-20 sm:h-20 bg-amber-100 rounded-full flex items-center justify-center">
+                         <User className="w-8 h-8 sm:w-10 sm:h-10 text-amber-700" />
+                       </div>
+                     )}
+                     {editMode && (
+                       <label className="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 text-white rounded-full p-2 cursor-pointer transition-colors">
+                         {uploadingImage ? (
+                           <Loader2 className="w-4 h-4 animate-spin" />
+                         ) : (
+                           <Camera className="w-4 h-4" />
+                         )}
+                         <input
+                           type="file"
+                           accept="image/*"
+                           onChange={handleImageUpload}
+                           disabled={uploadingImage}
+                           className="hidden"
+                         />
+                       </label>
+                     )}
+                   </div>
+                   <div className="flex-1 min-w-0">
+                     {editMode ? (
+                       <div className="space-y-2">
+                         <Label htmlFor="full_name">Full Name</Label>
+                         <Input
+                           id="full_name"
+                           value={formData.full_name}
+                           onChange={(e) => setFormData({ full_name: e.target.value })}
+                           className="w-full"
+                         />
+                       </div>
+                     ) : (
+                       <>
+                         <CardTitle className="text-2xl sm:text-3xl text-stone-800 truncate">
+                           {user.full_name || 'Anonymous User'}
+                         </CardTitle>
+                         <CardDescription className="text-sm sm:text-base truncate">
+                           {user.email}
+                         </CardDescription>
+                       </>
+                     )}
+                   </div>
+                 </div>
+                 <div className="flex gap-2 w-full sm:w-auto">
                   {editMode ? (
                     <>
                       <Button
                         onClick={handleSaveProfile}
                         size="sm"
-                        className="bg-amber-600 hover:bg-amber-700"
+                        className="bg-amber-600 hover:bg-amber-700 flex-1 sm:flex-none"
                         disabled={updateProfileMutation.isPending}
                       >
-                        <Save className="w-4 h-4 mr-2" />
-                        Save
+                        <Save className="w-4 h-4 mr-1 sm:mr-2" />
+                        <span className="hidden sm:inline">Save</span>
                       </Button>
                       <Button
                         onClick={() => {
@@ -219,9 +219,10 @@ export default function Profile() {
                         }}
                         size="sm"
                         variant="outline"
+                        className="flex-1 sm:flex-none"
                       >
-                        <X className="w-4 h-4 mr-2" />
-                        Cancel
+                        <X className="w-4 h-4 mr-1 sm:mr-2" />
+                        <span className="hidden sm:inline">Cancel</span>
                       </Button>
                     </>
                   ) : (
@@ -229,10 +230,11 @@ export default function Profile() {
                       onClick={() => setEditMode(true)}
                       size="sm"
                       variant="outline"
-                      className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                      className="border-amber-300 text-amber-700 hover:bg-amber-50 w-full sm:w-auto"
                     >
-                      <Edit2 className="w-4 h-4 mr-2" />
-                      Edit Profile
+                      <Edit2 className="w-4 h-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Edit Profile</span>
+                      <span className="sm:hidden">Edit</span>
                     </Button>
                   )}
                 </div>
@@ -269,34 +271,37 @@ export default function Profile() {
 
         {/* Tabs Section */}
         <Tabs defaultValue="favorites" className="w-full">
-          <TabsList className="bg-stone-100 p-1 rounded-full mb-6">
+          <TabsList className="bg-stone-100 p-1 rounded-full mb-6 flex flex-wrap h-auto gap-1">
             <TabsTrigger 
               value="favorites" 
-              className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700"
+              className="rounded-full px-3 sm:px-6 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-amber-700"
             >
-              <Heart className="w-4 h-4 mr-2" />
-              My Favorites ({userFavorites.length})
+              <Heart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">My Favorites</span>
+              <span className="sm:hidden">Fav</span> ({userFavorites.length})
             </TabsTrigger>
             <TabsTrigger 
               value="reviews"
-              className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700"
+              className="rounded-full px-3 sm:px-6 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-amber-700"
             >
-              <Star className="w-4 h-4 mr-2" />
-              My Reviews ({userRatings.length})
+              <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">My Reviews</span>
+              <span className="sm:hidden">Rev</span> ({userRatings.length})
             </TabsTrigger>
             <TabsTrigger 
               value="bigboots"
-              className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700"
+              className="rounded-full px-3 sm:px-6 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-amber-700"
             >
               👢
-              Big Boots
+              <span className="hidden sm:inline ml-1">Big Boots</span>
             </TabsTrigger>
             <TabsTrigger 
               value="settings"
-              className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700"
+              className="rounded-full px-3 sm:px-6 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-amber-700"
             >
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
+              <Settings className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Settings</span>
+              <span className="sm:hidden">Pref</span>
             </TabsTrigger>
           </TabsList>
 
@@ -352,42 +357,42 @@ export default function Profile() {
                     transition={{ delay: i * 0.05 }}
                   >
                     <Card className="hover:shadow-lg transition-shadow">
-                      <CardContent className="p-6">
-                        <div className="flex gap-4">
-                          <Link 
-                            to={createPageUrl('VenueDetails') + `?venueId=${venue.id}`}
-                            className="flex-shrink-0"
-                          >
-                            <img
-                              src={venue.image_url || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400'}
-                              alt={venue.name}
-                              className="w-24 h-24 object-cover rounded-lg"
-                            />
-                          </Link>
-                          <div className="flex-1">
-                            <Link 
-                              to={createPageUrl('VenueDetails') + `?venueId=${venue.id}`}
-                              className="hover:text-amber-600 transition-colors"
-                            >
-                              <h3 className="text-lg font-semibold text-stone-800 mb-1">
-                                {venue.name}
-                              </h3>
-                            </Link>
-                            <div className="flex items-center gap-2 mb-2">
-                              <BootRating rating={venue.userRating.boots} size="sm" />
-                              <span className="text-sm text-stone-600">
-                                {venue.userRating.boots} boots
-                              </span>
-                            </div>
-                            {venue.userRating.comment && (
-                              <p className="text-stone-600 text-sm line-clamp-2">
-                                "{venue.userRating.comment}"
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                       <CardContent className="p-4 sm:p-6">
+                         <div className="flex gap-3 sm:gap-4 flex-col sm:flex-row">
+                           <Link 
+                             to={createPageUrl('VenueDetails') + `?venueId=${venue.id}`}
+                             className="flex-shrink-0"
+                           >
+                             <img
+                               src={venue.image_url || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400'}
+                               alt={venue.name}
+                               className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg"
+                             />
+                           </Link>
+                           <div className="flex-1 min-w-0">
+                             <Link 
+                               to={createPageUrl('VenueDetails') + `?venueId=${venue.id}`}
+                               className="hover:text-amber-600 transition-colors"
+                             >
+                               <h3 className="text-base sm:text-lg font-semibold text-stone-800 mb-1 truncate">
+                                 {venue.name}
+                               </h3>
+                             </Link>
+                             <div className="flex items-center gap-2 mb-2">
+                               <BootRating rating={venue.userRating.boots} size="sm" />
+                               <span className="text-xs sm:text-sm text-stone-600 flex-shrink-0">
+                                 {venue.userRating.boots} boots
+                               </span>
+                             </div>
+                             {venue.userRating.comment && (
+                               <p className="text-stone-600 text-xs sm:text-sm line-clamp-2">
+                                 "{venue.userRating.comment}"
+                               </p>
+                             )}
+                           </div>
+                         </div>
+                       </CardContent>
+                     </Card>
                   </motion.div>
                 ))}
               </div>

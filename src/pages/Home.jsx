@@ -182,13 +182,6 @@ export default function Home() {
                 <MapPin className="w-4 h-4 mr-2" />
                 Venues
               </TabsTrigger>
-              <TabsTrigger 
-                value="events"
-                className="px-6 border-2 border-transparent data-[state=active]:bg-amber-800 data-[state=active]:text-amber-50 data-[state=active]:border-amber-950 data-[state=active]:shadow-lg"
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Events
-              </TabsTrigger>
             </TabsList>
           </div>
 

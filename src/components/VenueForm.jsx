@@ -49,25 +49,27 @@ const foodTypes = [
 
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
    const [formData, setFormData] = useState(venue ? {
-       ...venue,
-       menu_pictures: venue.menu_pictures || [],
-       locked_fields: venue.locked_fields || [],
-     } : {
-       name: '',
-       categories: [],
-       description: '',
-       address: '',
-       phone: '',
-       website: '',
-       image_url: '',
-       price_range: '$$',
-       hours: '',
-       features: [],
-       food_types: [],
-       menu_pictures: [],
-       quick_draw_boost: false,
-       locked_fields: [],
-     });
+        ...venue,
+        menu_pictures: venue.menu_pictures || [],
+        locked_fields: venue.locked_fields || [],
+        critter_friendly: venue.critter_friendly || false,
+      } : {
+        name: '',
+        categories: [],
+        description: '',
+        address: '',
+        phone: '',
+        website: '',
+        image_url: '',
+        price_range: '$$',
+        hours: '',
+        features: [],
+        food_types: [],
+        menu_pictures: [],
+        quick_draw_boost: false,
+        locked_fields: [],
+        critter_friendly: false,
+      });
 
    const [newFeature, setNewFeature] = useState('');
      const [uploading, setUploading] = useState(false);

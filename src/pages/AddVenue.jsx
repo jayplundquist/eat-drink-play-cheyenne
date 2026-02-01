@@ -100,6 +100,19 @@ export default function AddVenue() {
 
   return (
     <div className="min-h-screen bg-stone-50">
+      {/* Idle Tumbleweed Animation */}
+      {isIdle && (
+        <motion.div
+          key={tumbleweedKey}
+          initial={{ x: '-100px', y: '50%', opacity: 1 }}
+          animate={{ x: 'calc(100vw + 100px)', y: '50%', rotate: 360 }}
+          transition={{ duration: 8, ease: 'linear' }}
+          className="fixed pointer-events-none z-50"
+        >
+          <div className="text-6xl">🌵</div>
+        </motion.div>
+      )}
+
       {/* Header */}
       <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-amber-900 text-white py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">

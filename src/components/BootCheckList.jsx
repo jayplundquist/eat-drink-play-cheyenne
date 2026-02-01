@@ -93,7 +93,7 @@ export default function BootCheckList({ user }) {
   const getVisit = (bootName) => visits.find(v => v.boot_name === bootName);
 
   const visitedCount = visits.length;
-  const totalCount = BOOTS_LIST.length;
+  const totalCount = boots.length;
 
   return (
     <div className="space-y-6">

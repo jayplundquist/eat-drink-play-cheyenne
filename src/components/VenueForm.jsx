@@ -64,6 +64,10 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
   const [newFeature, setNewFeature] = useState('');
   const [uploading, setUploading] = useState(false);
   const [foodTypeOpen, setFoodTypeOpen] = useState(false);
+  const [newFoodType, setNewFoodType] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+  const [customFoodTypes, setCustomFoodTypes] = useState([]);
+  const [customCategories, setCustomCategories] = useState([]);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -95,6 +99,30 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
       return { ...prev, food_types: updated };
     });
   };
+
+  const addCustomFoodType = () => {
+    if (newFoodType.trim()) {
+      const value = newFoodType.toLowerCase().replace(/\s+/g, '_');
+      const label = newFoodType.trim();
+      setCustomFoodTypes(prev => [...prev, { value, label }]);
+      toggleFoodType(value);
+      setNewFoodType('');
+    }
+  };
+
+  const addCustomCategory = () => {
+    if (newCategory.trim()) {
+      const value = newCategory.toLowerCase().replace(/\s+/g, '_');
+      const label = newCategory.trim();
+      setCustomCategories(prev => [...prev, { value, label }]);
+      const current = formData.categories || [];
+      handleChange('categories', [...current, value]);
+      setNewCategory('');
+    }
+  };
+
+  const allFoodTypes = [...foodTypes, ...customFoodTypes];
+  const allCategories = [...categories, ...customCategories];
 
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -146,8 +174,8 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
 
             <div className="space-y-2">
               <Label>Categories *</Label>
-              <div className="flex flex-wrap gap-2">
-                {categories.map(cat => {
+              <div className="flex flex-wrap gap-2 mb-2">
+                {allCategories.map(cat => {
                   const isSelected = (formData.categories || []).includes(cat.value);
                   return (
                     <Button
@@ -169,6 +197,22 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
                     </Button>
                   );
                 })}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="Add custom category"
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomCategory())}
+                />
+                <Button 
+                  type="button" 
+                  onClick={addCustomCategory}
+                  variant="outline"
+                  className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           </div>
@@ -312,9 +356,34 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
                 <PopoverContent className="w-full p-0">
                   <Command>
                     <CommandInput placeholder="Search food types..." />
-                    <CommandEmpty>No food type found.</CommandEmpty>
+                    <CommandEmpty>
+                      <div className="p-2">
+                        <div className="text-sm text-stone-500 mb-2">No food type found</div>
+                        <div className="flex gap-2">
+                          <Input
+                            value={newFoodType}
+                            onChange={(e) => setNewFoodType(e.target.value)}
+                            placeholder="Add new food type"
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                addCustomFoodType();
+                              }
+                            }}
+                          />
+                          <Button 
+                            type="button" 
+                            onClick={addCustomFoodType}
+                            size="sm"
+                            className="bg-amber-600 hover:bg-amber-700"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CommandEmpty>
                     <CommandGroup>
-                      {foodTypes.map((foodType) => (
+                      {allFoodTypes.map((foodType) => (
                         <CommandItem
                           key={foodType.value}
                           onSelect={() => toggleFoodType(foodType.value)}
@@ -337,10 +406,10 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
               {(formData.food_types || []).length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
                   {(formData.food_types || []).map((type) => {
-                    const foodType = foodTypes.find(ft => ft.value === type);
+                    const foodType = allFoodTypes.find(ft => ft.value === type);
                     return (
                       <Badge key={type} variant="secondary" className="bg-amber-100 text-amber-800">
-                        {foodType?.label}
+                        {foodType?.label || type}
                         <button
                           type="button"
                           onClick={() => toggleFoodType(type)}

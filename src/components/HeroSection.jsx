@@ -14,7 +14,7 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
         }} />
       </div>
       
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-32 sm:py-40">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

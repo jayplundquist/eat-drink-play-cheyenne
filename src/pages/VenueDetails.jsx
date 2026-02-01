@@ -895,12 +895,12 @@ export default function VenueDetails() {
                   <p className="text-sm text-blue-700">Own this business? Request to manage this venue listing.</p>
                 </div>
                 <Button 
-                  className="bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap"
-                  onClick={() => setClaimModalOpen(true)}
-                >
-                  <Crown className="w-4 h-4 mr-2" />
-                  Submit Claim Request
-                </Button>
+                   className="bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap"
+                   onClick={() => setClaimModalOpen(true)}
+                 >
+                   <Crown className="w-4 h-4 mr-2" />
+                   Stake Your Claim
+                 </Button>
               </div>
             </Card>
           </section>

@@ -170,7 +170,7 @@ export default function UserProfile() {
                   </div>
                   <div>
                     <CardTitle className="text-3xl text-stone-800">
-                      {userEmail}
+                      {profileUserData?.full_name || userEmail.split('@')[0]}
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-2">
                       <UserBadge reviewCount={profileUserRatings.length} avgRating={avgRating} />

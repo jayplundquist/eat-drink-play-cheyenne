@@ -81,8 +81,8 @@ export default function Layout({ children, currentPageName }) {
                 "font-bold text-2xl",
                 isHome ? "text-white" : "text-amber-900"
               )} style={{ fontFamily: 'Rye, serif', textShadow: isHome ? '2px 2px 4px rgba(0,0,0,0.3)' : 'none' }}>
-                <span className={isHome ? "text-amber-300" : "text-amber-700"}>CHEYENNE</span>
-                <span className={isHome ? "text-white" : "text-amber-900"}> GUIDE</span>
+                <span className={isHome ? "text-amber-300" : "text-amber-700"}>LIVE</span>
+                <span className={isHome ? "text-white" : "text-amber-900"}> CHEYENNE</span>
               </div>
             </Link>
 
@@ -221,7 +221,7 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
               <div className="font-bold text-2xl text-amber-100 mb-2" style={{ fontFamily: 'Rye, serif' }}>
-                <span className="text-amber-400">CHEYENNE</span> GUIDE
+                <span className="text-amber-400">LIVE</span> CHEYENNE
               </div>
               <p className="text-sm text-amber-300">
                 Discover the best of the Magic City

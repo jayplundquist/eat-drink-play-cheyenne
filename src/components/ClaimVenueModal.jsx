@@ -42,18 +42,14 @@ export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId
     setStep('processing');
     
     try {
-      // Create Stripe checkout session
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userEmail: user.email,
-          venueId: venueId,
-          venueName: venueName,
-        }),
+      // Create Stripe checkout session using backend function
+      const response = await base44.functions.invoke('createCheckoutSession', {
+        userEmail: user.email,
+        venueId: venueId,
+        venueName: venueName,
       });
 
-      const session = await response.json();
+      const session = response.data;
 
       // Redirect to Stripe checkout
       if (window.Stripe) {

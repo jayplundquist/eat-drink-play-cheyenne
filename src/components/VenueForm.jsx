@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -641,16 +641,40 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             </div>
           )}
 
-          {/* Quick Draw Boost - Premium Feature */}
-          {venue && (user?.is_premium || user?.role === 'admin') && (
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-blue-600" />
-                  <Label className="text-blue-900 font-semibold">Quick Draw Boost</Label>
+          {/* Big Boot Flag - Admin/Premium Feature */}
+              {venue && (user?.is_premium || user?.role === 'admin') && (
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">👢</span>
+                      <Label className="text-amber-900 font-semibold">Big Boot Location</Label>
+                    </div>
+                  </div>
+                  <p className="text-sm text-amber-700">
+                    Is this one of the 29 iconic painted boots in Cheyenne?
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => handleChange('has_big_boot', !formData.has_big_boot)}
+                    variant={formData.has_big_boot ? "default" : "outline"}
+                    className={formData.has_big_boot ? "w-full bg-amber-600 hover:bg-amber-700 text-white" : "w-full border-amber-300 text-amber-700 hover:bg-amber-50"}
+                  >
+                    <span className="mr-2">👢</span>
+                    {formData.has_big_boot ? 'This is a Big Boot location' : 'Mark as Big Boot location'}
+                  </Button>
                 </div>
-                <span className="text-lg font-bold text-blue-600">$5/week</span>
-              </div>
+              )}
+
+              {/* Quick Draw Boost - Premium Feature */}
+              {venue && (user?.is_premium || user?.role === 'admin') && (
+                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-5 h-5 text-blue-600" />
+                      <Label className="text-blue-900 font-semibold">Quick Draw Boost</Label>
+                    </div>
+                    <span className="text-lg font-bold text-blue-600">$5/week</span>
+                  </div>
               <p className="text-sm text-blue-700">
                 Boost this venue to appear 3x more often in Quick Draw selections for 7 days
               </p>

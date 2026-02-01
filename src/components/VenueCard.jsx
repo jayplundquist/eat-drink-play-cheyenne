@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MapPin, ExternalLink } from "lucide-react";
+import { Heart, MapPin, ExternalLink, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
@@ -68,6 +68,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
               <Badge className={cn("absolute top-3 left-3 border", categoryColors[categories[0]])}>
                 {categoryLabels[categories[0]]}
               </Badge>
+            )}
+            
+            {venue.has_big_boot && (
+              <span className="absolute top-3 left-3 ml-28 bg-amber-500 text-white px-2 py-1 rounded-md text-xl font-bold">
+                👢
+              </span>
             )}
             
             {venue.price_range && (

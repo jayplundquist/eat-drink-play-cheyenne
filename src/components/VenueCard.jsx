@@ -76,6 +76,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
               </span>
             )}
             
+            {venue.critter_friendly && (
+              <span className="absolute top-3 left-3 ml-56 bg-green-500 text-white px-2 py-1 rounded-md text-lg">
+                <PawPrint className="w-5 h-5" />
+              </span>
+            )}
+            
             {venue.price_range && (
               <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-700 px-2 py-1 rounded-md text-sm font-medium">
                 {venue.price_range}

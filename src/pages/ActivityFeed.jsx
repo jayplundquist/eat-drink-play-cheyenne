@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +8,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, Star, Users, ArrowLeft, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { toast } from "sonner";
 import BootRating from "../components/BootRating";
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me()
@@ -20,6 +22,22 @@ export default function ActivityFeed() {
       .catch(() => base44.auth.redirectToLogin());
     setLoading(false);
   }, []);
+
+  const deletePhotoMutation = useMutation({
+    mutationFn: async (ratingId, photoUrl) => {
+      const rating = await base44.entities.Rating.filter({ id: ratingId });
+      if (rating.length > 0) {
+        const updatedImages = (rating[0].image_urls || []).filter(url => url !== photoUrl);
+        await base44.entities.Rating.update(ratingId, {
+          image_urls: updatedImages,
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['followedUserRatings'] });
+      toast.success('Photo removed');
+    },
+  });
 
   const { data: venues = [] } = useQuery({
     queryKey: ['venues'],
@@ -198,13 +216,12 @@ export default function ActivityFeed() {
                                   {item.data.image_urls.map((url, i) => (
                                     <div key={i} className="relative group">
                                       <img src={url} alt={`Review photo ${i}`} className="w-full h-24 object-cover rounded-md" />
-                                      {user && user.role === 'admin' && (
+                                      {currentUser && currentUser.role === 'admin' && (
                                         <button
                                           type="button"
                                           onClick={() => {
                                             if (confirm('Delete this photo?')) {
-                                              // This will need to be handled by a mutation
-                                              deletePhotoMutation.mutate(item.id, url);
+                                              deletePhotoMutation.mutate(item.data.id, url);
                                             }
                                           }}
                                           className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"

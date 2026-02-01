@@ -623,8 +623,8 @@ export default function VenueDetails() {
                     {userRating ? 'Update Review' : 'Submit Review'}
                   </Button>
                   </Card>
-                )
-              ) : (
+                  )
+                  ) : (
                 <Card className="p-6 bg-stone-50 border-stone-200 text-center">
                   <p className="text-stone-600 mb-4">Sign in to rate this venue</p>
                   <Button 

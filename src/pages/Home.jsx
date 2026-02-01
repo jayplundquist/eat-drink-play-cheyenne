@@ -207,6 +207,38 @@ export default function Home() {
         </section>
       )}
 
+      {/* Big Boots Challenge Section */}
+      {!searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-8 text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>
+            <div className="relative z-10">
+              <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
+                <div className="flex-1">
+                  <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: 'Rye, serif' }}>
+                    Hunt for the Big Boots
+                  </h2>
+                  <p className="text-amber-50 mb-4 text-lg">
+                    Cheyenne is home to 29 iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
+                  </p>
+                  <ul className="text-amber-100 space-y-2 mb-6 text-sm">
+                    <li>✓ 29 boots to discover</li>
+                    <li>✓ Upload photos as proof</li>
+                    <li>✓ Track your progress</li>
+                    <li>✓ Complete the challenge</li>
+                  </ul>
+                </div>
+                <Link to={createPageUrl('Profile')} className="flex-shrink-0">
+                  <Button className="bg-white text-amber-700 hover:bg-amber-50 font-semibold text-lg px-8 py-6">
+                    Start the Hunt
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Main Content */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="mb-6 flex gap-2 flex-wrap items-center">

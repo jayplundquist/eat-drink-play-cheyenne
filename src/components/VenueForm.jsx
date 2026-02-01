@@ -248,28 +248,49 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             <div className="space-y-2">
               <Label>Categories *</Label>
               <div className="flex flex-wrap gap-2 mb-2">
-                {allCategories.map(cat => {
-                  const isSelected = (formData.categories || []).includes(cat.value);
-                  return (
-                    <Button
-                      key={cat.value}
-                      type="button"
-                      variant={isSelected ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => {
-                        const current = formData.categories || [];
-                        if (isSelected) {
-                          handleChange('categories', current.filter(c => c !== cat.value));
-                        } else {
-                          handleChange('categories', [...current, cat.value]);
-                        }
-                      }}
-                      className={isSelected ? "bg-amber-600 hover:bg-amber-700" : ""}
-                    >
-                      {cat.label}
-                    </Button>
-                  );
-                })}
+                {customCategories.length > 0 ? allCategories.map(cat => {
+                   const isSelected = (formData.categories || []).includes(cat.value);
+                   return (
+                     <Button
+                       key={cat.value}
+                       type="button"
+                       variant={isSelected ? "default" : "outline"}
+                       size="sm"
+                       onClick={() => {
+                         const current = formData.categories || [];
+                         if (isSelected) {
+                           handleChange('categories', current.filter(c => c !== cat.value));
+                         } else {
+                           handleChange('categories', [...current, cat.value]);
+                         }
+                       }}
+                       className={isSelected ? "bg-amber-600 hover:bg-amber-700" : ""}
+                     >
+                       {cat.label}
+                     </Button>
+                   );
+                 }) : categories.map(cat => {
+                   const isSelected = (formData.categories || []).includes(cat.value);
+                   return (
+                     <Button
+                       key={cat.value}
+                       type="button"
+                       variant={isSelected ? "default" : "outline"}
+                       size="sm"
+                       onClick={() => {
+                         const current = formData.categories || [];
+                         if (isSelected) {
+                           handleChange('categories', current.filter(c => c !== cat.value));
+                         } else {
+                           handleChange('categories', [...current, cat.value]);
+                         }
+                       }}
+                       className={isSelected ? "bg-amber-600 hover:bg-amber-700" : ""}
+                     >
+                       {cat.label}
+                     </Button>
+                   );
+                 })}
               </div>
 
             </div>

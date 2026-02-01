@@ -56,6 +56,8 @@ import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import VenueDetails from './pages/VenueDetails';
+import UserProfile from './pages/UserProfile';
+import ActivityFeed from './pages/ActivityFeed';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +71,8 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "VenueDetails": VenueDetails,
+    "UserProfile": UserProfile,
+    "ActivityFeed": ActivityFeed,
 }
 
 export const pagesConfig = {

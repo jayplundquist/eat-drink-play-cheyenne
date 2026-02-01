@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -49,23 +49,25 @@ const foodTypes = [
 
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
    const [formData, setFormData] = useState(venue ? {
-      ...venue,
-      menu_pictures: venue.menu_pictures || [],
-    } : {
-      name: '',
-      categories: [],
-      description: '',
-      address: '',
-      phone: '',
-      website: '',
-      image_url: '',
-      price_range: '$$',
-      hours: '',
-      features: [],
-      food_types: [],
-      menu_pictures: [],
-      quick_draw_boost: false,
-    });
+       ...venue,
+       menu_pictures: venue.menu_pictures || [],
+       locked_fields: venue.locked_fields || [],
+     } : {
+       name: '',
+       categories: [],
+       description: '',
+       address: '',
+       phone: '',
+       website: '',
+       image_url: '',
+       price_range: '$$',
+       hours: '',
+       features: [],
+       food_types: [],
+       menu_pictures: [],
+       quick_draw_boost: false,
+       locked_fields: [],
+     });
 
    const [newFeature, setNewFeature] = useState('');
     const [uploading, setUploading] = useState(false);
@@ -84,6 +86,44 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const toggleFieldLock = (fieldName) => {
+    setFormData(prev => ({
+      ...prev,
+      locked_fields: prev.locked_fields.includes(fieldName)
+        ? prev.locked_fields.filter(f => f !== fieldName)
+        : [...prev.locked_fields, fieldName]
+    }));
+  };
+
+  const isFieldLocked = (fieldName) => {
+    return formData.locked_fields?.includes(fieldName);
+  };
+
+  const isFieldEditable = (fieldName) => {
+    if (user?.role === 'admin') return true;
+    return !isFieldLocked(fieldName);
+  };
+
+  const renderFieldLockButton = (fieldName) => {
+    if (user?.role !== 'admin') return null;
+    return (
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => toggleFieldLock(fieldName)}
+        className="p-1 h-auto"
+        title={isFieldLocked(fieldName) ? 'Unlock field' : 'Lock field'}
+      >
+        {isFieldLocked(fieldName) ? (
+          <Lock className="w-4 h-4 text-amber-600" />
+        ) : (
+          <Unlock className="w-4 h-4 text-stone-400" />
+        )}
+      </Button>
+    );
   };
 
   const addFeature = () => {
@@ -213,13 +253,17 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
           {/* Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Venue Name *</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="name">Venue Name *</Label>
+                {renderFieldLockButton('name')}
+              </div>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 placeholder="e.g. The Albany"
                 required
+                disabled={!isFieldEditable('name')}
               />
             </div>
 
@@ -270,7 +314,10 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
 
           <div className="space-y-2">
              <div className="flex items-center justify-between">
-               <Label htmlFor="description">Description</Label>
+               <div className="flex items-center justify-between flex-1">
+                 <Label htmlFor="description">Description</Label>
+                 {renderFieldLockButton('description')}
+               </div>
                <span className="text-sm text-stone-500">{(formData.description || '').length}/250</span>
              </div>
              <Textarea
@@ -285,39 +332,52 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                placeholder="Tell visitors about this place..."
                rows={4}
                maxLength={250}
+               disabled={!isFieldEditable('description')}
              />
            </div>
 
           {/* Contact & Location */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="address">Address</Label>
+                {renderFieldLockButton('address')}
+              </div>
               <Input
                 id="address"
                 value={formData.address}
                 onChange={(e) => handleChange('address', e.target.value)}
                 placeholder="Street address, Cheyenne, WY"
+                disabled={!isFieldEditable('address')}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="phone">Phone Number</Label>
+                {renderFieldLockButton('phone')}
+              </div>
               <Input
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => handleChange('phone', e.target.value)}
                 placeholder="(307) 555-1234"
+                disabled={!isFieldEditable('phone')}
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="website">Website</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="website">Website</Label>
+              {renderFieldLockButton('website')}
+            </div>
             <Input
                   id="website"
                   value={formData.website || ''}
                   onChange={(e) => handleChange('website', e.target.value)}
                   placeholder="https://example.com"
+                  disabled={!isFieldEditable('website')}
                 />
           </div>
 
@@ -385,12 +445,16 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hours">Hours</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="hours">Hours</Label>
+              {renderFieldLockButton('hours')}
+            </div>
             <Input
               id="hours"
               value={formData.hours}
               onChange={(e) => handleChange('hours', e.target.value)}
               placeholder="e.g. Mon-Sat 11am-10pm, Sun Closed"
+              disabled={!isFieldEditable('hours')}
             />
           </div>
 

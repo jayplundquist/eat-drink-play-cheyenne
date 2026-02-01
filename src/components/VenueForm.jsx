@@ -46,7 +46,7 @@ const foodTypes = [
   { value: "pizza", label: "Pizza" },
 ];
 
-export default function VenueForm({ venue, onSave, onCancel, isSaving, user }) {
+export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
    const [formData, setFormData] = useState(venue || {
      name: '',
      categories: [],
@@ -469,21 +469,28 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user }) {
           {/* Quick Draw Boost - Premium Feature */}
           {venue && user?.is_premium && (
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-4 space-y-3">
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-blue-600" />
-                <Label className="text-blue-900 font-semibold">Quick Draw Boost</Label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-blue-600" />
+                  <Label className="text-blue-900 font-semibold">Quick Draw Boost</Label>
+                </div>
+                <span className="text-lg font-bold text-blue-600">$5/week</span>
               </div>
               <p className="text-sm text-blue-700">
-                Boost this venue to appear 3x more often in Quick Draw selections
+                Boost this venue to appear 3x more often in Quick Draw selections for 7 days
               </p>
+              {formData.boost_expires_date && new Date(formData.boost_expires_date) > new Date() && (
+                <p className="text-sm text-green-600 font-medium">
+                  ✓ Boost active until {new Date(formData.boost_expires_date).toLocaleDateString()}
+                </p>
+              )}
               <Button
                 type="button"
-                variant={formData.quick_draw_boost ? "default" : "outline"}
-                onClick={() => handleChange('quick_draw_boost', !formData.quick_draw_boost)}
-                className={formData.quick_draw_boost ? "bg-blue-600 hover:bg-blue-700" : "border-blue-300 text-blue-700 hover:bg-blue-50"}
+                onClick={() => onInitiateBoostCheckout?.(venue.id)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Zap className="w-4 h-4 mr-2" />
-                {formData.quick_draw_boost ? 'Boost Active' : 'Enable Boost'}
+                {formData.boost_expires_date && new Date(formData.boost_expires_date) > new Date() ? 'Renew Boost' : 'Purchase Boost'}
               </Button>
             </div>
           )}

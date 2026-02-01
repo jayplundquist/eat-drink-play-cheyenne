@@ -107,7 +107,7 @@ export default function VisitedMap() {
               name: venue.name,
               address: venue.address,
               rating: rating?.boots || 0,
-              icon: venueIcon,
+              icon: spikeIcon,
             });
           } catch (e) {
             console.error('Failed to geocode venue:', venue.name);

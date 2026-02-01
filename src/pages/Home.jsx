@@ -5,7 +5,17 @@ import { motion } from 'framer-motion';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, Calendar, MapPin, Sparkles } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ArrowRight, Calendar, MapPin, Sparkles, Lightbulb } from "lucide-react";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -20,6 +30,8 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [user, setUser] = useState(null);
+  const [suggestionOpen, setSuggestionOpen] = useState(false);
+  const [suggestion, setSuggestion] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -70,6 +82,21 @@ export default function Home() {
   });
 
   const isFavorite = (venueId) => userFavorites.some(f => f.venue_id === venueId);
+
+  const submitSuggestionMutation = useMutation({
+    mutationFn: async () => {
+      await base44.integrations.Core.SendEmail({
+        to: 'admin@example.com',
+        subject: 'New Suggestion from Cheyenne Guide',
+        body: `User: ${user?.email || 'Anonymous'}\n\nSuggestion:\n${suggestion}`
+      });
+    },
+    onSuccess: () => {
+      toast.success('Thank you for your suggestion!');
+      setSuggestionOpen(false);
+      setSuggestion('');
+    },
+  });
 
   const filteredVenues = venues.filter(venue => {
     const matchesSearch = !searchQuery || 
@@ -257,8 +284,47 @@ export default function Home() {
               </Button>
             </div>
           </TabsContent>
-        </Tabs>
-      </section>
-    </div>
-  );
-}
+          </Tabs>
+          </section>
+
+          {/* Suggestions Button */}
+          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 text-center">
+          <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="border-2 border-amber-800 text-amber-800 hover:bg-amber-50"
+            >
+              <Lightbulb className="w-5 h-5 mr-2" />
+              Have a Suggestion?
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Share Your Suggestion</DialogTitle>
+              <DialogDescription>
+                Help us improve Cheyenne Guide by sharing your ideas!
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Textarea
+                value={suggestion}
+                onChange={(e) => setSuggestion(e.target.value)}
+                placeholder="Tell us what you'd like to see..."
+                className="resize-none"
+                rows={5}
+              />
+              <Button 
+                onClick={() => submitSuggestionMutation.mutate()}
+                disabled={!suggestion.trim() || submitSuggestionMutation.isPending}
+                className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+              >
+                Submit Suggestion
+              </Button>
+            </div>
+          </DialogContent>
+          </Dialog>
+          </section>
+          </div>
+          );
+          }

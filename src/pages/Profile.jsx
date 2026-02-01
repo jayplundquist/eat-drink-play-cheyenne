@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, Heart, Star, Edit2, Save, X, Camera, Loader2, Map } from "lucide-react";
+import { User, Heart, Star, Edit2, Save, X, Camera, Loader2, Map, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -113,6 +113,19 @@ export default function Profile() {
   const handleSaveProfile = () => {
     updateProfileMutation.mutate(formData);
   };
+
+  const cancelSubscriptionMutation = useMutation({
+    mutationFn: async () => {
+      await base44.functions.invoke('cancelSubscription', {});
+    },
+    onSuccess: () => {
+      setUser({ ...user, is_premium: false });
+      toast.success('Subscription cancelled successfully');
+    },
+    onError: () => {
+      toast.error('Failed to cancel subscription');
+    },
+  });
 
   const favoriteVenues = venues.filter(v => 
     userFavorites.some(f => f.venue_id === v.id)
@@ -258,14 +271,47 @@ export default function Profile() {
                   <div className="text-sm text-stone-600">Boots Found</div>
                 </div>
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
-                  <User className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-stone-800">{user.role || 'user'}</div>
-                  <div className="text-sm text-stone-600">Account Type</div>
-                </div>
+                   <User className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+                   <div className="text-2xl font-bold text-stone-800">{user.is_premium ? 'Premium' : 'Regular'}</div>
+                   <div className="text-sm text-stone-600">Account Type</div>
+                 </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Premium Subscription Section */}
+        {user.is_premium && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+              <CardContent className="pt-6 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CreditCard className="w-5 h-5 text-purple-600" />
+                  <div>
+                    <p className="font-semibold text-stone-800">Premium Subscriber</p>
+                    <p className="text-sm text-stone-600">You have access to premium features</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => {
+                    if (confirm('Are you sure you want to cancel your premium subscription?')) {
+                      cancelSubscriptionMutation.mutate();
+                    }
+                  }}
+                  disabled={cancelSubscriptionMutation.isPending}
+                  variant="outline"
+                  className="border-red-300 text-red-700 hover:bg-red-50 whitespace-nowrap"
+                >
+                  Cancel Subscription
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Badge Collection */}
         <BadgeCollection 

@@ -9,9 +9,16 @@ const CowboyBoot = ({ filled, className }) => (
     fill={filled ? "currentColor" : "none"}
     stroke="currentColor"
     strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
-    <path d="M6 20h12v-2H6v2zM18 18v-6c0-1-0.5-2-1.5-2.5L14 8V4c0-1-1-2-2-2s-2 1-2 2v4L7.5 9.5C6.5 10 6 11 6 12v6h12z" />
-    <path d="M8 14h2M14 14h2" strokeLinecap="round" />
+    {/* Boot sole */}
+    <path d="M5 20h11c1 0 1.5-0.5 1.5-1v-1H5v2z" />
+    {/* Boot shaft and heel */}
+    <path d="M17.5 18v-4.5c0-1-0.5-1.5-1-2l-2-1.5V4.5c0-0.8-0.7-1.5-1.5-1.5s-1.5 0.7-1.5 1.5V10l-2.5 2c-0.5 0.4-1 1-1 2v4" />
+    {/* Boot decoration lines */}
+    <path d="M11 6v3" strokeWidth="1" />
+    <path d="M7 14h3" strokeWidth="1" />
   </svg>
 );
 

@@ -185,31 +185,45 @@ export default function VisitedMap() {
                     attribution='&copy; OpenStreetMap contributors'
                   />
                   {markers.map(marker => (
-                    <Marker
-                      key={marker.id}
-                      position={marker.coords}
-                      icon={marker.icon}
-                    >
-                      <Popup>
-                        <div className="p-2">
-                          <h3 className="font-semibold text-stone-800">{marker.name}</h3>
-                          {marker.address && (
-                            <p className="text-xs text-stone-600 mt-1">{marker.address}</p>
-                          )}
-                          {marker.type === 'venue' && marker.rating > 0 && (
-                            <div className="mt-2">
-                              <div className="flex items-center gap-1">
-                                <BootRating rating={marker.rating} size="sm" />
-                                <span className="text-xs text-stone-600">{marker.rating} boots</span>
-                              </div>
-                            </div>
-                          )}
-                          {marker.type === 'boot' && marker.photo && (
-                            <img src={marker.photo} alt={marker.name} className="w-full h-24 object-cover rounded mt-2" />
-                          )}
-                        </div>
-                      </Popup>
-                    </Marker>
+                   <Marker
+                     key={marker.id}
+                     position={marker.coords}
+                     icon={marker.icon}
+                   >
+                     <Popup>
+                       <div className="p-2 space-y-2">
+                         {marker.type === 'venue' && marker.venueId ? (
+                           <a href={createPageUrl(`VenueDetails?id=${marker.venueId}`)} className="font-semibold text-blue-600 hover:underline block">
+                             {marker.name}
+                           </a>
+                         ) : (
+                           <h3 className="font-semibold text-stone-800">{marker.name}</h3>
+                         )}
+                         {marker.address && (
+                           <button 
+                             onClick={() => {
+                               const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(marker.address)}`;
+                               window.open(url, '_blank', 'noopener,noreferrer');
+                             }}
+                             className="text-xs text-blue-600 hover:underline block text-left"
+                           >
+                             {marker.address}
+                           </button>
+                         )}
+                         {marker.type === 'venue' && marker.rating > 0 && (
+                           <div className="mt-2">
+                             <div className="flex items-center gap-1">
+                               <BootRating rating={marker.rating} size="sm" />
+                               <span className="text-xs text-stone-600">{marker.rating} boots</span>
+                             </div>
+                           </div>
+                         )}
+                         {marker.type === 'boot' && marker.photo && (
+                           <img src={marker.photo} alt={marker.name} className="w-full h-24 object-cover rounded mt-2" />
+                         )}
+                       </div>
+                     </Popup>
+                   </Marker>
                   ))}
                 </MapContainer>
               )}

@@ -5,6 +5,7 @@ import { Sparkles, Zap, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import BootRating from "./BootRating";
 
 export default function SpinTheSpur({ favorites, venues, userRatings, user, onSignInRequired }) {
   const [spinning, setSpinning] = useState(false);
@@ -423,15 +424,25 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
               </div>
               
               <div className="p-6 text-center space-y-4">
-                <div className="space-y-2">
-                  <div className="text-4xl">🎯</div>
-                  <h3 className="text-2xl font-bold text-stone-800">
-                    {result.name}
-                  </h3>
-                  {result.address && (
-                    <p className="text-stone-600 text-sm">{result.address}</p>
-                  )}
-                </div>
+                 <div className="space-y-3">
+                   <div className="text-4xl">🎯</div>
+                   <h3 className="text-2xl font-bold text-stone-800">
+                     {result.name}
+                   </h3>
+                   {spinType === 'quickdraw' && (
+                     <>
+                       {result.description && (
+                         <p className="text-stone-600 text-sm">{result.description}</p>
+                       )}
+                       <div className="flex justify-center">
+                         <BootRating rating={Math.round(result.rating_count > 0 ? result.rating_sum / result.rating_count : 0)} showCount count={result.rating_count || 0} />
+                       </div>
+                     </>
+                   )}
+                   {spinType === 'spur' && result.address && (
+                     <p className="text-stone-600 text-sm">{result.address}</p>
+                   )}
+                 </div>
                 
                 <div className="flex gap-3">
                   <Button

@@ -825,18 +825,19 @@ export default function VenueDetails() {
                    </div>
                  )}
                 {venue.website && (
-                  <div className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-amber-600" />
-                    <a 
-                      href={venue.website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-amber-700 hover:underline truncate"
-                    >
-                      Visit Website
-                    </a>
-                  </div>
-                )}
+                   <div className="flex items-center gap-3">
+                     <Globe className="w-5 h-5 text-amber-600" />
+                     <button
+                       onClick={() => {
+                         const url = venue.website.startsWith('http') ? venue.website : `https://${venue.website}`;
+                         window.open(url, '_blank', 'noopener,noreferrer');
+                       }}
+                       className="text-amber-700 hover:underline truncate text-left"
+                     >
+                       Visit Website
+                     </button>
+                   </div>
+                 )}
                 {venue.hours && (
                   <div className="flex items-start gap-3">
                     <Clock className="w-5 h-5 text-amber-600 mt-0.5" />

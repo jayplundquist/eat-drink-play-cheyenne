@@ -1,34 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Share2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 
 export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
-  const [shared, setShared] = useState(false);
-
-  const handleShare = async () => {
-    const url = window.location.origin;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Eat, Drink, Play Cheyenne',
-          text: 'Discover the best restaurants, bars, and entertainment in Cheyenne!',
-          url: url
-        });
-      } catch (err) {
-        if (err.name !== 'AbortError') console.error(err);
-      }
-    } else {
-      navigator.clipboard.writeText(url);
-      setShared(true);
-      toast.success('Link copied to clipboard!');
-      setTimeout(() => setShared(false), 2000);
-    }
-  };
-
   return (
     <div className="relative overflow-hidden text-white">
       {/* Historic Cheyenne background */}
@@ -72,14 +48,6 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
             Explore the best restaurants, bars, breweries, and entertainment 
             that Cheyenne has to offer
           </p>
-
-          <Button 
-            onClick={handleShare}
-            className={`mb-8 ${shared ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-600 hover:bg-amber-700'} text-white font-semibold`}
-          >
-            <Share2 className="w-4 h-4 mr-2" />
-            {shared ? 'Copied!' : 'Share App'}
-          </Button>
           
           <form 
             onSubmit={(e) => { e.preventDefault(); onSearch?.(); }}

@@ -52,14 +52,14 @@ import AddVenue from './pages/AddVenue';
 import EditVenue from './pages/EditVenue';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
+import ManageBadges from './pages/ManageBadges';
+import ManageBoots from './pages/ManageBoots';
 import ManageClaimRequests from './pages/ManageClaimRequests';
 import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
-import ManageBoots from './pages/ManageBoots';
-import ManageBadges from './pages/ManageBadges';
 import __Layout from './Layout.jsx';
 
 
@@ -69,14 +69,14 @@ export const PAGES = {
     "EditVenue": EditVenue,
     "Favorites": Favorites,
     "Home": Home,
+    "ManageBadges": ManageBadges,
+    "ManageBoots": ManageBoots,
     "ManageClaimRequests": ManageClaimRequests,
     "ManageVenues": ManageVenues,
     "Profile": Profile,
     "Settings": Settings,
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
-    "ManageBoots": ManageBoots,
-    "ManageBadges": ManageBadges,
 }
 
 export const pagesConfig = {

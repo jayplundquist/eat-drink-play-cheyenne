@@ -23,10 +23,34 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
+import { Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [shared, setShared] = useState(false);
+
+  const handleShare = async () => {
+    const url = window.location.origin;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Eat, Drink, Play Cheyenne',
+          text: 'Discover the best restaurants, bars, and entertainment in Cheyenne!',
+          url: url
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') console.error(err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      setShared(true);
+      toast.success('Link copied to clipboard!');
+      setTimeout(() => setShared(false), 2000);
+    }
+  };
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -228,7 +252,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Footer */}
       <footer className="bg-gradient-to-b from-amber-950 to-stone-950 text-amber-200 py-12 border-t-4 border-amber-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
             <div className="text-center md:text-left">
               <div className="font-bold text-2xl text-amber-100 mb-2" style={{ fontFamily: 'Rye, serif' }}>
                 <span className="text-amber-400">EAT</span>, DRINK, PLAY CHEYENNE
@@ -237,7 +261,7 @@ export default function Layout({ children, currentPageName }) {
                 Discover the best of the Magic City
               </p>
             </div>
-            
+
             <div className="flex items-center gap-6 text-sm">
               <Link to={createPageUrl('Home')} className="hover:text-amber-400 transition-colors">
                 Explore
@@ -245,6 +269,14 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('Favorites')} className="hover:text-amber-400 transition-colors">
                 Favorites
               </Link>
+              <Button 
+                onClick={handleShare}
+                className={`${shared ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-600 hover:bg-amber-700'} text-white font-semibold`}
+                size="sm"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                {shared ? 'Copied!' : 'Share'}
+              </Button>
             </div>
           </div>
           

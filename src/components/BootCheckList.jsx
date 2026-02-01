@@ -135,7 +135,16 @@ export default function BootCheckList({ user }) {
                       <h4 className={`font-semibold ${visited ? 'text-amber-900' : 'text-stone-800'}`}>
                         {boot.name}
                       </h4>
-                      <p className="text-sm text-stone-600 mt-1">{boot.address}</p>
+                      <button
+                        onClick={() => {
+                          const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(boot.address)}`;
+                          window.open(url, '_blank', 'noopener,noreferrer');
+                        }}
+                        className="text-sm text-amber-700 hover:text-amber-900 mt-1 flex items-center gap-1 transition-colors"
+                      >
+                        <MapPin className="w-3 h-3" />
+                        <span>{boot.address}</span>
+                      </button>
 
                       {visited && visit?.photo_url && (
                         <div className="mt-3 relative">

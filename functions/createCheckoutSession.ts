@@ -4,7 +4,7 @@ import Stripe from 'npm:stripe@15.8.0';
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 
 const PRICES = {
-  venue_claim: 'price_1SvudvGuyms0jVKHXxXxXxXx', // Will be replaced with new price
+  venue_claim: 'price_1SvuhCGuyms0jVKHcSPJtHFA',
   venue_boost: 'price_1SvudtGuyms0jVKHy9nJZQ0J',
   review_boost: 'price_1SvudtGuyms0jVKHVfzFSuDp',
 };

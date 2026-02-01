@@ -33,6 +33,7 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
+    { name: 'ActivityFeed', icon: Plus, label: 'Activity' },
     ...(user?.role === 'admin' ? [{ name: 'ManageVenues', icon: Plus, label: 'Manage' }] : []),
   ];
 

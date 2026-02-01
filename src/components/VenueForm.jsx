@@ -48,20 +48,24 @@ const foodTypes = [
 ];
 
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
-   const [formData, setFormData] = useState(venue || {
-     name: '',
-     categories: [],
-     description: '',
-     address: '',
-     phone: '',
-     website: '',
-     image_url: '',
-     price_range: '$$',
-     hours: '',
-     features: [],
-     food_types: [],
-     quick_draw_boost: false,
-   });
+   const [formData, setFormData] = useState(venue ? {
+      ...venue,
+      menu_pictures: venue.menu_pictures || [],
+    } : {
+      name: '',
+      categories: [],
+      description: '',
+      address: '',
+      phone: '',
+      website: '',
+      image_url: '',
+      price_range: '$$',
+      hours: '',
+      features: [],
+      food_types: [],
+      menu_pictures: [],
+      quick_draw_boost: false,
+    });
 
    const [newFeature, setNewFeature] = useState('');
     const [uploading, setUploading] = useState(false);
@@ -301,12 +305,11 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
           <div className="space-y-2">
             <Label htmlFor="website">Website</Label>
             <Input
-              id="website"
-              type="text"
-              value={formData.website || ''}
-              onChange={(e) => handleChange('website', e.target.value)}
-              placeholder="https://example.com"
-            />
+                  id="website"
+                  value={formData.website || ''}
+                  onChange={(e) => handleChange('website', e.target.value)}
+                  placeholder="https://example.com"
+                />
           </div>
 
           {/* Image & Details */}

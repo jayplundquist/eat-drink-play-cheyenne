@@ -147,41 +147,66 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="text-amber-400"
-            >
-              <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-                {/* Center circle */}
-                <circle cx="60" cy="60" r="15" fill="currentColor" stroke="#92400e" strokeWidth="2"/>
-                
-                {/* Spur spikes */}
-                {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
-                  const rad = (angle * Math.PI) / 180;
-                  const x1 = 60 + Math.cos(rad) * 15;
-                  const y1 = 60 + Math.sin(rad) * 15;
-                  const x2 = 60 + Math.cos(rad) * 50;
-                  const y2 = 60 + Math.sin(rad) * 50;
+            <motion.div className="relative">
+              {/* Spinning rowel (the wheel part) */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="relative"
+              >
+                <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+                  {/* Center circle */}
+                  <circle cx="100" cy="100" r="20" fill="#fbbf24" stroke="#92400e" strokeWidth="3"/>
                   
-                  return (
-                    <g key={i}>
-                      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-                      <circle cx={x2} cy={y2} r="6" fill="currentColor" stroke="#92400e" strokeWidth="1.5"/>
-                    </g>
-                  );
-                })}
-                
-                {/* Inner decorative ring */}
-                <circle cx="60" cy="60" r="8" fill="none" stroke="#92400e" strokeWidth="1.5"/>
-              </svg>
+                  {/* Rowel spikes - 12 points like a real spur */}
+                  {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => {
+                    const rad = (angle * Math.PI) / 180;
+                    const x1 = 100 + Math.cos(rad) * 20;
+                    const y1 = 100 + Math.sin(rad) * 20;
+                    const x2 = 100 + Math.cos(rad) * 70;
+                    const y2 = 100 + Math.sin(rad) * 70;
+                    const x3 = 100 + Math.cos(rad) * 75;
+                    const y3 = 100 + Math.sin(rad) * 75;
+                    
+                    return (
+                      <g key={i}>
+                        <line 
+                          x1={x1} y1={y1} 
+                          x2={x2} y2={y2} 
+                          stroke="#d97706" 
+                          strokeWidth="3" 
+                          strokeLinecap="round"
+                        />
+                        <circle cx={x3} cy={y3} r="4" fill="#fbbf24" stroke="#92400e" strokeWidth="2"/>
+                      </g>
+                    );
+                  })}
+                  
+                  {/* Decorative inner ring */}
+                  <circle cx="100" cy="100" r="12" fill="none" stroke="#92400e" strokeWidth="2" strokeDasharray="2 2"/>
+                </svg>
+              </motion.div>
+              
+              {/* Static spur strap/heel band */}
+              <div className="absolute top-1/2 -translate-y-1/2 -left-32">
+                <svg width="100" height="80" viewBox="0 0 100 80" fill="none">
+                  <ellipse cx="50" cy="40" rx="45" ry="25" fill="#92400e" opacity="0.9"/>
+                  <ellipse cx="50" cy="40" rx="38" ry="20" fill="#78350f"/>
+                  {/* Decorative engraving lines */}
+                  <path d="M 30 35 Q 40 30 50 35" stroke="#d97706" strokeWidth="1.5" fill="none"/>
+                  <path d="M 50 35 Q 60 30 70 35" stroke="#d97706" strokeWidth="1.5" fill="none"/>
+                  <circle cx="50" cy="40" r="3" fill="#fbbf24"/>
+                </svg>
+              </div>
             </motion.div>
+            
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="absolute bottom-1/3 text-white text-2xl font-bold"
+              style={{ fontFamily: 'Rye, serif' }}
             >
-              Spinning...
+              Spinning the Spur...
             </motion.p>
           </motion.div>
         )}

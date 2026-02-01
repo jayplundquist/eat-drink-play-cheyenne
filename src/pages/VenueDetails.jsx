@@ -553,31 +553,35 @@ export default function VenueDetails() {
                           <Skeleton className="h-4 w-1/4 mb-2" />
                           <Skeleton className="h-4 w-full" />
                         </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                        </div>
+                        </Card>
+                        );
+                        })}
+                        </div>
               ) : ratings.length === 0 ? (
                 <Card className="p-8 text-center bg-stone-50 border-stone-200">
                   <p className="text-stone-500">No reviews yet. Be the first to review!</p>
                 </Card>
               ) : (
                 <div className="space-y-4">
-                    {ratings.map((rating) => (
+                    {ratings.map((rating) => {
+                      const userReviewCount = ratings.filter(r => r.user_email === rating.user_email).length;
+                      return (
                       <Card key={rating.id} className="p-4 bg-white border-stone-200">
                         <div className="flex gap-4">
                           <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
                             <User className="w-5 h-5 text-amber-700" />
                           </div>
                           <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <div className="flex items-center gap-2">
-                                <Button asChild variant="link" className="text-stone-800 font-medium p-0 h-auto">
-                                  <Link to={`${createPageUrl('UserProfile')}?email=${rating.user_email}`}>
-                                    {rating.user_email?.split('@')[0]}
-                                  </Link>
-                                </Button>
-                              </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Button asChild variant="link" className="text-stone-800 font-medium p-0 h-auto">
+                                <Link to={`${createPageUrl('UserProfile')}?email=${rating.user_email}`}>
+                                  {rating.user_email?.split('@')[0]}
+                                </Link>
+                              </Button>
+                              <UserBadge reviewCount={userReviewCount} size="sm" />
+                            </div>
+                            <div className="flex items-center justify-between mb-2">
                               <div className="flex items-center gap-2">
                               <span className="text-sm text-stone-500">
                                 {format(new Date(rating.created_date), 'MMM d, yyyy')}

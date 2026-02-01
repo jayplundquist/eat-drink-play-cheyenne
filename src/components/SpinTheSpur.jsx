@@ -63,9 +63,12 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
     // Simulate spinning animation
     setTimeout(() => {
-      // Weight boosted venues 3x higher
-      const boostedVenues = untriedVenues.filter(v => v.quick_draw_boost);
-      const weights = untriedVenues.map(v => v.quick_draw_boost ? 3 : 1);
+      // Weight boosted venues 3x higher (if boost is still active)
+        const now = new Date();
+        const weights = untriedVenues.map(v => {
+          const isBoosted = v.quick_draw_boost && v.boost_expires_date && new Date(v.boost_expires_date) > now;
+          return isBoosted ? 3 : 1;
+        });
       const totalWeight = weights.reduce((a, b) => a + b, 0);
 
       let random = Math.random() * totalWeight;

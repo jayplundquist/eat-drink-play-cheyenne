@@ -269,15 +269,24 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Tell visitors about this place..."
-              rows={4}
-            />
-          </div>
+             <div className="flex items-center justify-between">
+               <Label htmlFor="description">Description</Label>
+               <span className="text-sm text-stone-500">{(formData.description || '').length}/250</span>
+             </div>
+             <Textarea
+               id="description"
+               value={formData.description}
+               onChange={(e) => {
+                 const value = e.target.value;
+                 if (value.length <= 250) {
+                   handleChange('description', value);
+                 }
+               }}
+               placeholder="Tell visitors about this place..."
+               rows={4}
+               maxLength={250}
+             />
+           </div>
 
           {/* Contact & Location */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -476,6 +476,24 @@ export default function VenueDetails() {
               </motion.div>
             )}
 
+            {/* Critter Friendly Badge */}
+            {venue.critter_friendly && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 p-4">
+                  <div className="flex items-center gap-3">
+                    <PawPrint className="w-8 h-8 text-green-600" />
+                    <div>
+                      <h3 className="font-bold text-green-900">Critter Friendly</h3>
+                      <p className="text-sm text-green-700">Bring your furry friends! This venue welcomes pets.</p>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+
             {/* Description */}
             {venue.description && (
               <motion.div

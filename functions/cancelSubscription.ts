@@ -27,6 +27,16 @@ Deno.serve(async (req) => {
       await stripe.subscriptions.cancel(subscription.id);
     }
 
+    // Remove premium features from user's claimed venues
+    const claimedVenues = await base44.asServiceRole.entities.Venue.filter({ claimed_by: user.email });
+    for (const venue of claimedVenues) {
+      await base44.asServiceRole.entities.Venue.update(venue.id, {
+        menu_pictures: [],
+        critter_friendly: false,
+        has_big_boot: false,
+      });
+    }
+
     // Update user to remove premium status
     await base44.asServiceRole.auth.updateUser(user.id, {
       is_premium: false

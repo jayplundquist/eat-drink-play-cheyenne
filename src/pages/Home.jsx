@@ -78,6 +78,11 @@ export default function Home() {
     queryFn: () => base44.entities.Rating.list('-created_date', 5),
   });
 
+  const { data: boots = [] } = useQuery({
+    queryKey: ['boots'],
+    queryFn: () => base44.entities.Boot.list(),
+  });
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
       const existing = userFavorites.find(f => f.venue_id === venueId);

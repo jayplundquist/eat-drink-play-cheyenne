@@ -71,6 +71,9 @@ export default function VenueDetails() {
   const [reportReviewDialogOpen, setReportReviewDialogOpen] = useState(false);
   const [reportReviewReason, setReportReviewReason] = useState('');
   const [selectedReviewId, setSelectedReviewId] = useState(null);
+  const [reportPhotoDialogOpen, setReportPhotoDialogOpen] = useState(false);
+  const [reportPhotoReason, setReportPhotoReason] = useState('');
+  const [selectedPhotoUrl, setSelectedPhotoUrl] = useState(null);
   const [claimModalOpen, setClaimModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
@@ -224,6 +227,38 @@ export default function VenueDetails() {
       queryClient.invalidateQueries({ queryKey: ['ratings', venueId] });
       queryClient.invalidateQueries({ queryKey: ['venue', venueId] });
       toast.success('Review deleted');
+    },
+  });
+
+  const submitPhotoReportMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.PhotoReport.create({
+        rating_id: selectedReviewId,
+        venue_id: venueId,
+        photo_url: selectedPhotoUrl,
+        reporter_email: user?.email || 'anonymous',
+        reason: reportPhotoReason,
+      });
+    },
+    onSuccess: () => {
+      toast.success('Photo reported successfully');
+      setReportPhotoDialogOpen(false);
+      setReportPhotoReason('');
+      setSelectedPhotoUrl(null);
+    },
+  });
+
+  const deletePhotoFromReviewMutation = useMutation({
+    mutationFn: async (reviewId, photoUrl) => {
+      const review = ratings.find(r => r.id === reviewId);
+      const updatedImages = (review.image_urls || []).filter(url => url !== photoUrl);
+      await base44.entities.Rating.update(reviewId, {
+        image_urls: updatedImages,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ratings', venueId] });
+      toast.success('Photo removed');
     },
   });
 
@@ -574,7 +609,35 @@ export default function VenueDetails() {
                           {rating.image_urls && rating.image_urls.length > 0 && (
                             <div className="grid grid-cols-2 gap-2 mt-3">
                               {rating.image_urls.map((url, i) => (
-                                <img key={i} src={url} alt={`Review photo ${i}`} className="w-full h-20 object-cover rounded-md" />
+                                <div key={i} className="relative group">
+                                  <img src={url} alt={`Review photo ${i}`} className="w-full h-20 object-cover rounded-md" />
+                                  {user && user.email !== rating.user_email && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setSelectedReviewId(rating.id);
+                                        setSelectedPhotoUrl(url);
+                                        setReportPhotoDialogOpen(true);
+                                      }}
+                                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded px-1.5 py-0.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      Report
+                                    </button>
+                                  )}
+                                  {user && user.role === 'admin' && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        if (confirm('Delete this photo?')) {
+                                          deletePhotoFromReviewMutation.mutate(rating.id, url);
+                                        }
+                                      }}
+                                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      ×
+                                    </button>
+                                  )}
+                                </div>
                               ))}
                             </div>
                           )}
@@ -718,6 +781,38 @@ export default function VenueDetails() {
                 <Button 
                   onClick={() => submitReviewReportMutation.mutate()}
                   disabled={!reportReviewReason.trim() || submitReviewReportMutation.isPending}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Report
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Report Photo Dialog */}
+          <Dialog open={reportPhotoDialogOpen} onOpenChange={setReportPhotoDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Report Photo</DialogTitle>
+                <DialogDescription>
+                  Let us know why this photo should be removed.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                {selectedPhotoUrl && (
+                  <img src={selectedPhotoUrl} alt="Reported photo" className="w-full h-32 object-cover rounded-md" />
+                )}
+                <Textarea
+                  value={reportPhotoReason}
+                  onChange={(e) => setReportPhotoReason(e.target.value)}
+                  placeholder="Why are you reporting this photo?"
+                  className="resize-none"
+                  rows={5}
+                />
+                <Button 
+                  onClick={() => submitPhotoReportMutation.mutate()}
+                  disabled={!reportPhotoReason.trim() || submitPhotoReportMutation.isPending}
                   className="w-full bg-amber-600 hover:bg-amber-700 text-white"
                 >
                   <Send className="w-4 h-4 mr-2" />

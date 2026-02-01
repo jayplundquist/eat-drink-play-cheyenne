@@ -724,7 +724,7 @@ export default function VenueDetails() {
                                   <Flag className="w-4 h-4" />
                                 </Button>
                               )}
-                              {user && user.role === 'admin' && user.email === rating.user_email && (
+                              {user && (user.role === 'admin' || user.email === rating.user_email) && (
                                 <Button
                                   variant="ghost"
                                   size="sm"

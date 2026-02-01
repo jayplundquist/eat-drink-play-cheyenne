@@ -335,10 +335,9 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
             />
           </div>
 
-          {/* Food Types - Only for restaurants */}
-          {(formData.categories || []).includes('restaurant') && (
-            <div className="space-y-2">
-              <Label>Food Types</Label>
+          {/* Food Types */}
+          <div className="space-y-2">
+            <Label>Food Types</Label>
               <Popover open={foodTypeOpen} onOpenChange={setFoodTypeOpen}>
                 <PopoverTrigger asChild>
                   <Button
@@ -423,7 +422,6 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
                 </div>
               )}
             </div>
-          )}
 
           {/* Features */}
           <div className="space-y-3">

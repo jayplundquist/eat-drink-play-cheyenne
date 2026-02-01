@@ -148,6 +148,8 @@ export default function VisitedMap() {
     );
   }
 
+  const visitedVenues = venues.filter(v => userFavorites.some(f => f.venue_id === v.id));
+
   return (
     <div className="min-h-screen bg-stone-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">

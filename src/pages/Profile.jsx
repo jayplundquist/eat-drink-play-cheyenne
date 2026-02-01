@@ -459,8 +459,9 @@ export default function Profile() {
           <TabsContent value="bigboots" className="mt-0">
             <BootCheckList user={user} />
           </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
-}
+          </Tabs>
+          </div>
+          </div>
+          </div>
+          );
+          }

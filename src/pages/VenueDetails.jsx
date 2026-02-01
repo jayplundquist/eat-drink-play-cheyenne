@@ -510,7 +510,54 @@ export default function VenueDetails() {
                       rows={3}
                     />
                   </div>
-                  
+
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                      Add Photos (optional)
+                    </label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={uploadingImage}
+                      className="border-amber-300 text-amber-700 hover:bg-amber-50 mb-3"
+                      onClick={() => document.getElementById('review-image-upload').click()}
+                    >
+                      {uploadingImage ? (
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      ) : (
+                        <Image className="w-4 h-4 mr-2" />
+                      )}
+                      Upload Image
+                    </Button>
+                    <input
+                      id="review-image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                    {reviewImages.length > 0 && (
+                      <div className="grid grid-cols-3 gap-2">
+                        {reviewImages.map((image, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={image}
+                              alt={`Review ${index + 1}`}
+                              className="w-full h-20 object-cover rounded-md border border-stone-200"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(index)}
+                              className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   <Button 
                     onClick={() => submitRatingMutation.mutate()}
                     disabled={!newRating || submitRatingMutation.isPending}

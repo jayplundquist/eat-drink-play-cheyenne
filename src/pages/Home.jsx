@@ -220,56 +220,6 @@ export default function Home() {
                 ))}
               </div>
             )}
-          </TabsContent>
-
-          <TabsContent value="events" className="mt-0">
-            {eventsLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <Skeleton className="aspect-[16/9] rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            ) : upcomingEvents.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="w-8 h-8 text-stone-400" />
-                </div>
-                <h3 className="text-lg font-medium text-stone-700 mb-2">No upcoming events</h3>
-                <p className="text-stone-500">Check back soon for new events</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {upcomingEvents.map((event, i) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <EventCard event={event} />
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            <div className="text-center mt-8">
-              <Button 
-                variant="outline" 
-                className="border-amber-300 text-amber-700 hover:bg-amber-50"
-                asChild
-              >
-                <Link to={createPageUrl('Events')}>
-                  View All Events
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-            </div>
-          </TabsContent>
-          </Tabs>
           </section>
 
           {/* Suggestions Button */}

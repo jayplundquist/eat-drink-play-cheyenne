@@ -229,7 +229,17 @@ export default function ActivityFeed() {
                                   "{item.data.comment}"
                                 </p>
                               )}
-                              <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser?.email} />
+                              <div className="flex items-center justify-between">
+                                <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser?.email} />
+                                {item.type === 'review' && (
+                                  <ReviewBoostButton 
+                                    ratingId={item.data.id} 
+                                    userEmail={item.user_email}
+                                    currentUserEmail={currentUser?.email}
+                                    isAlreadyBoosted={item.isBoosted}
+                                  />
+                                )}
+                              </div>
                               {item.data.image_urls && item.data.image_urls.length > 0 && (
                                 <div className="grid grid-cols-2 gap-2 mt-3">
                                   {item.data.image_urls.map((url, i) => (

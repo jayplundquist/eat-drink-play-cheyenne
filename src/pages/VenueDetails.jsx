@@ -16,9 +16,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { 
-  Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users, Image, Loader2
-} from "lucide-react";
+        Heart, MapPin, Phone, Globe, Clock, 
+        ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users, Image, Loader2, PawPrint
+      } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";

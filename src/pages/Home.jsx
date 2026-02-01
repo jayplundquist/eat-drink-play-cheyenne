@@ -443,6 +443,8 @@ export default function Home() {
                 ))}
                 </div>
                 )}
+                </>
+                )}
 
                 {/* Pagination */}
                 {allFilteredVenues.length > itemsPerPage && (

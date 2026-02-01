@@ -29,6 +29,8 @@ export const getBadgeInfo = (reviewCount, avgRating) => {
 export default function UserBadge({ reviewCount, avgRating, size = 'default' }) {
   const badge = getBadgeInfo(reviewCount, avgRating);
   
+  if (!badge) return null;
+  
   if (size === 'sm') {
     return (
       <span className="text-xs font-semibold flex items-center gap-1">

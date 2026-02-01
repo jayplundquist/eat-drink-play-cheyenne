@@ -45,7 +45,7 @@ const getCategories = (venue) => {
   return [];
 };
 
-export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true, hideImage = false, hideDescription = false }) {
+export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true, hideImage = false, hideDescription = false, hideAddress = false }) {
   const [imageError, setImageError] = useState(false);
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
   const categories = getCategories(venue);

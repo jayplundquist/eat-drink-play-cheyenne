@@ -33,7 +33,8 @@ const categoryLabels = {
   brewery: "Brewery",
   music_hall: "Music Hall",
   activity: "Activity",
-  recreation: "Recreation"
+  recreation: "Recreation",
+  souvenir_shopping: "Souvenir Shopping"
 };
 
 // Fallback for old venues with single category

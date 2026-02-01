@@ -166,6 +166,10 @@ export default function VenueDetails() {
 
   const submitRatingMutation = useMutation({
     mutationFn: async () => {
+      if (venue.claimed_by === user.email) {
+        throw new Error('You cannot review your own venue');
+      }
+
       if (newComment && containsSwearWords(newComment)) {
         throw new Error('Please keep your review family-friendly');
       }
@@ -532,6 +536,11 @@ export default function VenueDetails() {
               </h2>
               
               {user ? (
+                venue.claimed_by === user.email ? (
+                  <Card className="p-6 bg-stone-50 border-stone-200 text-center">
+                    <p className="text-stone-600">You cannot review your own venue</p>
+                  </Card>
+                ) : (
                 <Card className="p-6 bg-white border-stone-200">
                   <div className="mb-4">
                      <label className="block text-sm font-medium text-stone-700 mb-2">

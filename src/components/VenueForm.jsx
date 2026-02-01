@@ -438,7 +438,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                   >
                     {(formData.food_types || []).length > 0
                       ? `${(formData.food_types || []).length} selected`
-                      : "Select food types..."}
+                      : optionsLoading ? "Loading..." : "Select food types..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -447,11 +447,11 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                     <CommandInput placeholder="Search food types..." />
                     <CommandEmpty>
                        <div className="p-2 text-sm text-stone-500">
-                         No food type found. Contact an admin to add new types.
+                         {optionsLoading ? "Loading..." : "No food type found. Contact an admin to add new types."}
                        </div>
                      </CommandEmpty>
                     <CommandGroup>
-                      {allFoodTypes.map((foodType) => (
+                      {allFoodTypes.length > 0 ? allFoodTypes.map((foodType) => (
                         <CommandItem
                           key={foodType.value}
                           onSelect={() => toggleFoodType(foodType.value)}
@@ -466,7 +466,9 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                           />
                           {foodType.label}
                         </CommandItem>
-                      ))}
+                      )) : (
+                        <div className="p-2 text-sm text-stone-500">No food types available</div>
+                      )}
                     </CommandGroup>
                   </Command>
                 </PopoverContent>

@@ -40,7 +40,9 @@ export default function Home() {
     all: [],
     eat: ['restaurant'],
     drink: ['bar', 'brewery', 'coffee_shop'],
-    play: ['activity', 'recreation', 'music_hall', 'souvenir_shopping']
+    play: ['activity', 'recreation', 'music_hall'],
+    shop: ['souvenir_shopping'],
+    chuck_wagons: ['food_trucks']
   };
 
   const queryClient = useQueryClient();

@@ -6,9 +6,19 @@ import { motion } from "framer-motion";
 
 export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-amber-950 via-orange-900 to-amber-900 text-white">
+    <div className="relative overflow-hidden text-white">
+      {/* Historic Cheyenne background */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url("https://images.unsplash.com/photo-1516490701203-682cecc05499?q=80&w=2000")`
+        }}
+      />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/70" />
+      
       {/* Western leather texture */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40z' fill-opacity='0.1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           backgroundSize: '80px 80px'

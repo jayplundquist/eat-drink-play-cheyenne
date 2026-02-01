@@ -58,6 +58,22 @@ const foodTypeLabels = {
   pizza: "Pizza"
 };
 
+// Helper to get label for category/food type, handling custom options
+const getLabelForValue = (value, customOptions, type) => {
+  if (type === 'category') {
+    const predefined = Object.entries(categoryLabels).find(([key]) => key === value);
+    if (predefined) return predefined[1];
+    const custom = customOptions.find(opt => opt.value === value && opt.type === 'category');
+    return custom?.name || value;
+  } else if (type === 'food_type') {
+    const predefined = Object.entries(foodTypeLabels).find(([key]) => key === value);
+    if (predefined) return predefined[1];
+    const custom = customOptions.find(opt => opt.value === value && opt.type === 'food_type');
+    return custom?.name || value;
+  }
+  return value;
+};
+
 export default function VenueDetails() {
   const urlParams = new URLSearchParams(window.location.search);
   const venueId = urlParams.get('id');
@@ -118,6 +134,11 @@ export default function VenueDetails() {
     queryKey: ['allUserReviews', user?.email],
     queryFn: () => user ? base44.entities.Rating.filter({ user_email: user.email }) : [],
     enabled: !!user,
+  });
+
+  const { data: customOptions = [] } = useQuery({
+    queryKey: ['customVenueOptions'],
+    queryFn: () => base44.entities.CustomVenueOption.list(),
   });
 
   const isFavorite = favorites.some(f => f.venue_id === venueId);
@@ -473,7 +494,7 @@ export default function VenueDetails() {
                 <div className="flex flex-wrap gap-2">
                   {venue.food_types.map((type, i) => (
                     <Badge key={i} variant="secondary" className="bg-amber-100 text-amber-800">
-                      {foodTypeLabels[type]}
+                      {getLabelForValue(type, customOptions, 'food_type')}
                     </Badge>
                   ))}
                 </div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import NotificationManager from '@/components/NotificationManager';
+import InstallPrompt from '@/components/InstallPrompt';
 import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
 import { 

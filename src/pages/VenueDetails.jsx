@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle
+  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -64,6 +64,9 @@ export default function VenueDetails() {
   const [newComment, setNewComment] = useState('');
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [reportIssue, setReportIssue] = useState('');
+  const [reportReviewDialogOpen, setReportReviewDialogOpen] = useState(false);
+  const [reportReviewReason, setReportReviewReason] = useState('');
+  const [selectedReviewId, setSelectedReviewId] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -118,8 +121,19 @@ export default function VenueDetails() {
     },
   });
 
+  const swearWords = ['fuck', 'shit', 'damn', 'ass', 'bitch', 'bastard', 'hell', 'crap'];
+  
+  const containsSwearWords = (text) => {
+    const lowerText = text.toLowerCase();
+    return swearWords.some(word => lowerText.includes(word));
+  };
+
   const submitRatingMutation = useMutation({
     mutationFn: async () => {
+      if (newComment && containsSwearWords(newComment)) {
+        throw new Error('Please keep your review family-friendly');
+      }
+
       const ratingData = {
         venue_id: venueId,
         user_email: user.email,
@@ -149,6 +163,10 @@ export default function VenueDetails() {
       queryClient.invalidateQueries({ queryKey: ['userRating', venueId] });
       setNewRating(0);
       setNewComment('');
+      toast.success('Review submitted successfully');
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -165,6 +183,40 @@ export default function VenueDetails() {
       toast.success('Report submitted successfully');
       setReportDialogOpen(false);
       setReportIssue('');
+    },
+  });
+
+  const submitReviewReportMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.ReviewReport.create({
+        review_id: selectedReviewId,
+        venue_id: venueId,
+        reporter_email: user?.email || 'anonymous',
+        reason: reportReviewReason,
+      });
+    },
+    onSuccess: () => {
+      toast.success('Review reported successfully');
+      setReportReviewDialogOpen(false);
+      setReportReviewReason('');
+      setSelectedReviewId(null);
+    },
+  });
+
+  const deleteReviewMutation = useMutation({
+    mutationFn: async (reviewId) => {
+      const review = ratings.find(r => r.id === reviewId);
+      await base44.entities.Rating.delete(reviewId);
+      // Update venue totals
+      await base44.entities.Venue.update(venueId, {
+        rating_sum: Math.max(0, (venue.rating_sum || 0) - review.boots),
+        rating_count: Math.max(0, (venue.rating_count || 0) - 1),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ratings', venueId] });
+      queryClient.invalidateQueries({ queryKey: ['venue', venueId] });
+      toast.success('Review deleted');
     },
   });
 
@@ -445,9 +497,38 @@ export default function VenueDetails() {
                             <span className="font-medium text-stone-800">
                               {rating.user_email?.split('@')[0]}
                             </span>
-                            <span className="text-sm text-stone-500">
-                              {format(new Date(rating.created_date), 'MMM d, yyyy')}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-stone-500">
+                                {format(new Date(rating.created_date), 'MMM d, yyyy')}
+                              </span>
+                              {user && user.role === 'admin' && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    if (confirm('Delete this review?')) {
+                                      deleteReviewMutation.mutate(rating.id);
+                                    }
+                                  }}
+                                  className="h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              )}
+                              {user && user.email !== rating.user_email && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedReviewId(rating.id);
+                                    setReportReviewDialogOpen(true);
+                                  }}
+                                  className="h-7 px-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                                >
+                                  <Flag className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
                           </div>
                           <BootRating rating={rating.boots} size="sm" />
                           {rating.comment && (
@@ -553,8 +634,37 @@ export default function VenueDetails() {
               </div>
             </Card>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+
+          {/* Report Review Dialog */}
+          <Dialog open={reportReviewDialogOpen} onOpenChange={setReportReviewDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Report Review</DialogTitle>
+                <DialogDescription>
+                  Let us know why this review should be removed.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Textarea
+                  value={reportReviewReason}
+                  onChange={(e) => setReportReviewReason(e.target.value)}
+                  placeholder="Why are you reporting this review?"
+                  className="resize-none"
+                  rows={5}
+                />
+                <Button 
+                  onClick={() => submitReviewReportMutation.mutate()}
+                  disabled={!reportReviewReason.trim() || submitReviewReportMutation.isPending}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Report
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+          </div>
+          </div>
+          </div>
+          );
+          }

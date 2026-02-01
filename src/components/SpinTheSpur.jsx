@@ -145,69 +145,77 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-gradient-to-b from-amber-900/90 to-stone-900/90 flex items-center justify-center z-50"
           >
-            <motion.div className="relative">
-              {/* Spinning rowel (the wheel part) */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="relative"
-              >
-                <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
-                  {/* Center circle */}
-                  <circle cx="100" cy="100" r="20" fill="#fbbf24" stroke="#92400e" strokeWidth="3"/>
-                  
-                  {/* Rowel spikes - 12 points like a real spur */}
-                  {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => {
-                    const rad = (angle * Math.PI) / 180;
-                    const x1 = 100 + Math.cos(rad) * 20;
-                    const y1 = 100 + Math.sin(rad) * 20;
-                    const x2 = 100 + Math.cos(rad) * 70;
-                    const y2 = 100 + Math.sin(rad) * 70;
-                    const x3 = 100 + Math.cos(rad) * 75;
-                    const y3 = 100 + Math.sin(rad) * 75;
-                    
-                    return (
-                      <g key={i}>
-                        <line 
-                          x1={x1} y1={y1} 
-                          x2={x2} y2={y2} 
-                          stroke="#d97706" 
-                          strokeWidth="3" 
-                          strokeLinecap="round"
-                        />
-                        <circle cx={x3} cy={y3} r="4" fill="#fbbf24" stroke="#92400e" strokeWidth="2"/>
-                      </g>
-                    );
-                  })}
-                  
-                  {/* Decorative inner ring */}
-                  <circle cx="100" cy="100" r="12" fill="none" stroke="#92400e" strokeWidth="2" strokeDasharray="2 2"/>
-                </svg>
-              </motion.div>
-              
-              {/* Static spur strap/heel band */}
-              <div className="absolute top-1/2 -translate-y-1/2 -left-32">
-                <svg width="100" height="80" viewBox="0 0 100 80" fill="none">
-                  <ellipse cx="50" cy="40" rx="45" ry="25" fill="#92400e" opacity="0.9"/>
-                  <ellipse cx="50" cy="40" rx="38" ry="20" fill="#78350f"/>
-                  {/* Decorative engraving lines */}
-                  <path d="M 30 35 Q 40 30 50 35" stroke="#d97706" strokeWidth="1.5" fill="none"/>
-                  <path d="M 50 35 Q 60 30 70 35" stroke="#d97706" strokeWidth="1.5" fill="none"/>
-                  <circle cx="50" cy="40" r="3" fill="#fbbf24"/>
-                </svg>
+            <div className="relative">
+              {/* Spinning cards/venues animation */}
+              <div className="relative w-64 h-64">
+                {favorites.slice(0, 8).map((fav, i) => {
+                  const venue = venues.find(v => v.venue_id === fav.id);
+                  return (
+                    <motion.div
+                      key={i}
+                      className="absolute inset-0 flex items-center justify-center"
+                      animate={{
+                        rotate: 360,
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                        delay: i * 0.1,
+                      }}
+                    >
+                      <motion.div
+                        className="w-32 h-20 bg-amber-100 border-4 border-amber-800 rounded-lg shadow-xl flex items-center justify-center"
+                        style={{
+                          transformOrigin: 'center',
+                          transform: `translateY(-${80 + i * 10}px)`,
+                        }}
+                        animate={{
+                          opacity: [0.3, 1, 0.3],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.1,
+                        }}
+                      >
+                        <span className="text-amber-900 font-bold text-sm text-center px-2">
+                          ?
+                        </span>
+                      </motion.div>
+                    </motion.div>
+                  );
+                })}
+                
+                {/* Center glow */}
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 0.8, 0.5],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <div className="w-24 h-24 bg-amber-400/30 rounded-full blur-2xl" />
+                </motion.div>
               </div>
-            </motion.div>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="absolute bottom-1/3 text-white text-2xl font-bold"
-              style={{ fontFamily: 'Rye, serif' }}
-            >
-              Spinning the Spur...
-            </motion.p>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-8 text-white text-2xl font-bold text-center"
+                style={{ fontFamily: 'Rye, serif' }}
+              >
+                Spinning the Spur...
+              </motion.p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

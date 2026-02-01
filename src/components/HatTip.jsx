@@ -23,7 +23,10 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
   // Get top favorited venue per category
   const trendingVenues = categories
     .map(cat => {
-      const categoryVenues = venues.filter(v => v.category === cat.value);
+      const categoryVenues = venues.filter(v => {
+        const venueCategories = v.categories || (v.category ? [v.category] : []);
+        return venueCategories.includes(cat.value);
+      });
       if (categoryVenues.length === 0) return null;
       
       // Sort by favorite count, then by rating
@@ -84,7 +87,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
             transition={{ delay: i * 0.1 }}
           >
             <VenueCard 
-              venue={venue}
+              venue={{...venue, food_types: []}}
               isFavorite={isFavorite(venue.id)}
               onToggleFavorite={() => onToggleFavorite(venue.id)}
               hideImage={true}

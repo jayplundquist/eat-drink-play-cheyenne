@@ -65,30 +65,6 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
               />
             </div>
           </form>
-          
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-sm text-amber-200">
-            <span className="font-semibold">Popular:</span>
-            <button 
-              onClick={() => onSearchChange?.("brewery")}
-              className="hover:text-amber-400 transition-colors px-3 py-1 rounded border border-amber-700 hover:border-amber-500 hover:bg-amber-900/30"
-            >
-              Breweries
-            </button>
-            <span>★</span>
-            <button 
-              onClick={() => onSearchChange?.("live music")}
-              className="hover:text-amber-400 transition-colors px-3 py-1 rounded border border-amber-700 hover:border-amber-500 hover:bg-amber-900/30"
-            >
-              Live Music
-            </button>
-            <span>★</span>
-            <button 
-              onClick={() => onSearchChange?.("downtown")}
-              className="hover:text-amber-400 transition-colors px-3 py-1 rounded border border-amber-700 hover:border-amber-500 hover:bg-amber-900/30"
-            >
-              Downtown
-            </button>
-          </div>
         </motion.div>
       </div>
       

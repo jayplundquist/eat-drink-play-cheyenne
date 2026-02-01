@@ -81,23 +81,41 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
         <span className="text-amber-700 text-sm ml-2">Trending favorites by category</span>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {trendingVenues.map((venue, i) => (
-          <motion.div
-            key={venue.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-          >
-            <VenueCard 
-              venue={{...venue, food_types: []}}
-              isFavorite={isFavorite(venue.id)}
-              onToggleFavorite={() => onToggleFavorite(venue.id)}
-              hideImage={true}
-              hideDescription={true}
-            />
-          </motion.div>
-        ))}
+      <div className="flex items-center justify-center gap-4">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setCurrentIndex(prev => (prev - 1 + trendingVenues.length) % trendingVenues.length)}
+          className="border-amber-700 text-amber-700 hover:bg-amber-50"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </Button>
+
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+          className="w-full max-w-sm"
+        >
+          <VenueCard 
+            venue={{...trendingVenues[currentIndex], food_types: []}}
+            isFavorite={isFavorite(trendingVenues[currentIndex].id)}
+            onToggleFavorite={() => onToggleFavorite(trendingVenues[currentIndex].id)}
+            hideImage={true}
+            hideDescription={true}
+          />
+        </motion.div>
+
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setCurrentIndex(prev => (prev + 1) % trendingVenues.length)}
+          className="border-amber-700 text-amber-700 hover:bg-amber-50"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </Button>
       </div>
     </section>
   );

@@ -559,7 +559,8 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
               disabled={!formData.name || !(formData.categories || []).length || isSaving}
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
-              <Save className="w-4 h-4 mr-2" />
+              {isSaving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {!isSaving && <Save className="w-4 h-4 mr-2" />}
               {venue ? 'Update Venue' : 'Create Venue'}
             </Button>
           </div>

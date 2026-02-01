@@ -60,6 +60,7 @@ export default function IdleTumbleweed() {
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e9c14c196b53cce1321b1/208f6af59_Gemini_Generated_Image_ev6hpyev6hpyev6h.png"
           alt="Tumbleweed"
           className="w-full h-full object-contain drop-shadow-lg"
+          style={{ mixBlendMode: 'darken' }}
         />
       </motion.div>
 

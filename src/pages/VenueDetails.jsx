@@ -431,12 +431,12 @@ export default function VenueDetails() {
               </Link>
             )}
             <div className="flex flex-wrap gap-2 mb-3">
-              {getCategories(venue).map(cat => (
-                <Badge key={cat} className="bg-amber-600 text-white">
-                  {categoryLabels[cat]}
-                </Badge>
-              ))}
-            </div>
+             {getCategories(venue).map(cat => (
+               <Badge key={cat} className="bg-amber-600 text-white">
+                 {getLabelForValue(cat, customOptions, 'category')}
+               </Badge>
+             ))}
+           </div>
             <h1 className="text-3xl sm:text-4xl font-bold mb-2">
               {venue.name}
             </h1>

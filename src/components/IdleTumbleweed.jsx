@@ -57,40 +57,28 @@ export default function IdleTumbleweed() {
         className="w-48 h-48 flex items-center justify-center"
       >
         <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-lg">
-          {/* Main tumbleweed body */}
-          <circle cx="100" cy="100" r="60" fill="#8b6914" opacity="0.8"/>
-          <circle cx="100" cy="100" r="50" fill="#a0791a" opacity="0.6"/>
-
-          {/* Spokes/branches */}
-          {[...Array(12)].map((_, i) => {
-            const angle = (i * 30) * Math.PI / 180;
-            const x1 = 100 + Math.cos(angle) * 50;
-            const y1 = 100 + Math.sin(angle) * 50;
-            const x2 = 100 + Math.cos(angle) * 70;
-            const y2 = 100 + Math.sin(angle) * 70;
+          {/* Bushy tumbleweed with strands and empty space */}
+          {/* Multiple radiating strands */}
+          {[...Array(24)].map((_, i) => {
+            const angle = (i * 15) * Math.PI / 180;
+            const x2 = 100 + Math.cos(angle) * 75;
+            const y2 = 100 + Math.sin(angle) * 75;
             return (
-              <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#8b6914" strokeWidth="3" opacity="0.7"/>
+              <g key={i}>
+                {/* Main strand */}
+                <line x1="100" y1="100" x2={x2} y2={y2} stroke="#8b6914" strokeWidth="2.5" opacity="0.7"/>
+                {/* Twigs along strand */}
+                <line x1={100 + Math.cos(angle) * 40} y1={100 + Math.sin(angle) * 40} 
+                      x2={100 + Math.cos(angle + 0.4) * 55} y2={100 + Math.sin(angle + 0.4) * 55} 
+                      stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
+                <line x1={100 + Math.cos(angle) * 50} y1={100 + Math.sin(angle) * 50} 
+                      x2={100 + Math.cos(angle - 0.4) * 65} y2={100 + Math.sin(angle - 0.4) * 65} 
+                      stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
+              </g>
             );
           })}
-
-          {/* Eyes */}
-          <circle cx="85" cy="95" r="6" fill="#fff"/>
-          <circle cx="115" cy="95" r="6" fill="#fff"/>
-          <circle cx="86" cy="96" r="3" fill="#000"/>
-          <circle cx="116" cy="96" r="3" fill="#000"/>
-
-          {/* Smile */}
-          <path d="M 90 110 Q 100 115 110 110" stroke="#8b6914" strokeWidth="2" fill="none" strokeLinecap="round"/>
-
-          {/* Leaves/dust detail */}
-          {[...Array(8)].map((_, i) => {
-            const angle = (i * 45) * Math.PI / 180;
-            const x = 100 + Math.cos(angle) * 75;
-            const y = 100 + Math.sin(angle) * 75;
-            return (
-              <ellipse key={i} cx={x} cy={y} rx="4" ry="8" fill="#8b6914" opacity="0.5" transform={`rotate(${i * 45} ${x} ${y})`}/>
-            );
-          })}
+          {/* Light outer circle structure */}
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#8b6914" strokeWidth="1.5" opacity="0.3" strokeDasharray="5,5"/>
         </svg>
       </motion.div>
 

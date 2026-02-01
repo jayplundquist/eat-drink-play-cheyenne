@@ -196,7 +196,23 @@ export default function ActivityFeed() {
                               {item.data.image_urls && item.data.image_urls.length > 0 && (
                                 <div className="grid grid-cols-2 gap-2 mt-3">
                                   {item.data.image_urls.map((url, i) => (
-                                    <img key={i} src={url} alt={`Review photo ${i}`} className="w-full h-24 object-cover rounded-md" />
+                                    <div key={i} className="relative group">
+                                      <img src={url} alt={`Review photo ${i}`} className="w-full h-24 object-cover rounded-md" />
+                                      {user && user.role === 'admin' && (
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            if (confirm('Delete this photo?')) {
+                                              // This will need to be handled by a mutation
+                                              deletePhotoMutation.mutate(item.id, url);
+                                            }
+                                          }}
+                                          className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                          ×
+                                        </button>
+                                      )}
+                                    </div>
                                   ))}
                                 </div>
                               )}

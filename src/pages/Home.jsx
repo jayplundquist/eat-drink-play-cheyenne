@@ -177,20 +177,6 @@ export default function Home() {
 
       {/* Main Content */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <Tabs defaultValue="venues" className="w-full">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <TabsList className="bg-amber-100 p-1 border-2 border-amber-900">
-              <TabsTrigger 
-                value="venues" 
-                className="px-6 border-2 border-transparent data-[state=active]:bg-amber-800 data-[state=active]:text-amber-50 data-[state=active]:border-amber-950 data-[state=active]:shadow-lg"
-              >
-                <MapPin className="w-4 h-4 mr-2" />
-                Venues
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="venues" className="mt-0">
             <div className="mb-6">
               <CategoryFilter 
                 selected={selectedCategory}

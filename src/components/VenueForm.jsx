@@ -76,16 +76,18 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
 
    const queryClient = useQueryClient();
 
-   const { data: customOptions = [] } = useQuery({
+   const { data: customOptions = [], isLoading: optionsLoading } = useQuery({
       queryKey: ['customVenueOptions'],
-      queryFn: () => base44.entities.CustomVenueOption.list(),
-      refetchOnWindowFocus: true,
-      staleTime: 0,
-      gcTime: 0,
+      queryFn: async () => {
+        const options = await base44.entities.CustomVenueOption.list();
+        return options;
+      },
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
     });
 
-   const customFoodTypes = customOptions.filter(opt => opt.type === 'food_type');
-   const customCategories = customOptions.filter(opt => opt.type === 'category');
+    const customFoodTypes = customOptions.filter(opt => opt.type === 'food_type');
+    const customCategories = customOptions.filter(opt => opt.type === 'category');
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

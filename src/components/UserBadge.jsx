@@ -8,7 +8,12 @@ const BADGE_LEVELS = [
   { name: 'Legend of the Plains', minReviews: 50, color: 'bg-purple-100 text-purple-800', icon: '👑' },
 ];
 
-export const getBadgeInfo = (reviewCount) => {
+export const getBadgeInfo = (reviewCount, avgRating) => {
+  // "The Duster" badge - for users who average 1-2 star ratings
+  if (reviewCount >= 5 && avgRating >= 1 && avgRating <= 2) {
+    return { name: 'The Duster', color: 'bg-orange-100 text-orange-800', icon: '🌪️' };
+  }
+  
   if (!reviewCount) return BADGE_LEVELS[0];
   
   let currentBadge = BADGE_LEVELS[0];
@@ -20,8 +25,8 @@ export const getBadgeInfo = (reviewCount) => {
   return currentBadge;
 };
 
-export default function UserBadge({ reviewCount, size = 'default' }) {
-  const badge = getBadgeInfo(reviewCount);
+export default function UserBadge({ reviewCount, avgRating, size = 'default' }) {
+  const badge = getBadgeInfo(reviewCount, avgRating);
   
   if (size === 'sm') {
     return (

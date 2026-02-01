@@ -27,6 +27,7 @@ import HatTip from "../components/HatTip";
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [minBootRating, setMinBootRating] = useState(0);
   const [user, setUser] = useState(null);
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
@@ -114,7 +115,10 @@ export default function Home() {
     const tabCats = tabCategories[activeTab];
     const matchesTab = tabCats.length === 0 || venueCategories.some(cat => tabCats.includes(cat));
 
-    return matchesSearch && matchesTab;
+    const venueAvgRating = venue.rating_count > 0 ? Math.round(venue.rating_sum / venue.rating_count) : 0;
+    const matchesRating = minBootRating === 0 || venueAvgRating >= minBootRating;
+
+    return matchesSearch && matchesTab && matchesRating;
   }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
 
 
@@ -180,7 +184,7 @@ export default function Home() {
 
       {/* Main Content */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <div className="mb-6 flex gap-2 flex-wrap">
+        <div className="mb-6 flex gap-2 flex-wrap items-center">
           <Button
             variant={activeTab === 'all' ? 'default' : 'outline'}
             onClick={() => setActiveTab('all')}
@@ -209,6 +213,21 @@ export default function Home() {
           >
             🎭 Play
           </Button>
+
+          <div className="flex gap-1 ml-auto">
+            <span className="text-sm text-stone-600 font-medium self-center">Min Rating:</span>
+            {[0, 1, 2, 3, 4, 5].map(rating => (
+              <Button
+                key={rating}
+                variant={minBootRating === rating ? 'default' : 'outline'}
+                onClick={() => setMinBootRating(rating)}
+                className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2'}
+                size="sm"
+              >
+                {rating === 0 ? 'All' : `${rating}${rating === 1 ? ' 🤠' : '🤠'}`}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {venuesLoading ? (

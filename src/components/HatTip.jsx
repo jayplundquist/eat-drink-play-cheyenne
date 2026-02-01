@@ -53,7 +53,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
       <div className="flex items-center gap-3 mb-6">
         <motion.div
           animate={{
-            rotateY: [0, 180, 360],
+            rotateX: [0, -180, -360],
             y: [0, -10, 0],
           }}
           transition={{

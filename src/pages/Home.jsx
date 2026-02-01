@@ -103,6 +103,19 @@ export default function Home() {
 
   const isFavorite = (venueId) => userFavorites.some(f => f.venue_id === venueId);
 
+  const exportVenuesToExcel = () => {
+    const data = venues.map(venue => ({
+      'Venue Name': venue.name,
+      'Categories': (venue.categories || []).join(', '),
+      'Food Types': (venue.food_types || []).join(', ')
+    }));
+
+    const ws = utils.json_to_sheet(data);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Venues');
+    writeFile(wb, 'cheyenne-venues.xlsx');
+  };
+
   const submitSuggestionMutation = useMutation({
     mutationFn: async () => {
       await base44.integrations.Core.SendEmail({

@@ -11,7 +11,7 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url("https://images.unsplash.com/photo-1516490701203-682cecc05499?q=80&w=2000")`
+          backgroundImage: `url("https://assets.simpleviewinc.com/simpleview/image/upload/c_fill,f_jpg,h_536,q_65,w_1440/v1/clients/cheyenne/Downtown_Historic_Photo_2045b6a9-c35a-4340-a113-f9545329e3ef.png")`
         }}
       />
       {/* Dark overlay for text readability */}

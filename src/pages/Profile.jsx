@@ -55,6 +55,12 @@ export default function Profile() {
     enabled: !!user,
   });
 
+  const { data: userBootVisits = [] } = useQuery({
+    queryKey: ['userBootVisits', user?.email],
+    queryFn: () => user ? base44.entities.BootVisit.filter({ user_email: user.email }) : [],
+    enabled: !!user,
+  });
+
   const updateProfileMutation = useMutation({
     mutationFn: (data) => base44.auth.updateMe(data),
     onSuccess: (updatedUser) => {
@@ -258,6 +264,7 @@ export default function Profile() {
         <BadgeCollection 
           reviewCount={userRatings.length}
           avgRating={userRatings.length > 0 ? userRatings.reduce((sum, r) => sum + (r.boots || 0), 0) / userRatings.length : 0}
+          bootVisitCount={userBootVisits.length}
         />
 
         {/* Tabs Section */}

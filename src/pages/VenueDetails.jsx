@@ -278,7 +278,7 @@ export default function VenueDetails() {
               Back
             </Button>
           </Link>
-          
+
           {user && (user.role === 'admin' || (user.is_premium && venue.claimed_by === user.email)) && (
             <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
               <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white">
@@ -286,28 +286,6 @@ export default function VenueDetails() {
                 Edit
               </Button>
             </Link>
-          )}
-
-          {user && !venue.claimed_by && user.is_premium && (
-            <Button 
-              size="sm" 
-              className="bg-amber-600 hover:bg-amber-700 text-white"
-              onClick={() => setClaimModalOpen(true)}
-            >
-              <Crown className="w-4 h-4 mr-2" />
-              Claim Venue
-            </Button>
-          )}
-
-          {user && !venue.claimed_by && !user.is_premium && (
-            <Button 
-              size="sm" 
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-              onClick={() => setClaimModalOpen(true)}
-            >
-              <Crown className="w-4 h-4 mr-2" />
-              Claim Venue
-            </Button>
           )}
         </div>
         

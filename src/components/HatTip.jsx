@@ -112,6 +112,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
             onToggleFavorite={() => onToggleFavorite(trendingVenues[currentIndex].id)}
             hideImage={true}
             hideDescription={true}
+            hideAddress={true}
           />
         </motion.div>
 

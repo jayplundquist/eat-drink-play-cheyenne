@@ -221,6 +221,9 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
 
+      {/* Ad Banner */}
+      <AdBanner />
+
       {/* Footer */}
       <footer className="bg-gradient-to-b from-amber-950 to-stone-950 text-amber-200 py-12 border-t-4 border-amber-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">

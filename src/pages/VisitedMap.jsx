@@ -96,37 +96,47 @@ export default function VisitedMap() {
       setMapLoading(true);
       const newMarkers = [];
 
-      // Add venue markers
+      // Add venue markers for favorites
       const visitedVenues = venues.filter(v => userFavorites.some(f => f.venue_id === v.id));
       
       for (const venue of visitedVenues) {
-        const rating = userRatings.find(r => r.venue_id === venue.id);
-        const coords = await geocodeAddress(venue.address);
-        newMarkers.push({
-          id: `venue-${venue.id}`,
-          type: 'venue',
-          coords,
-          name: venue.name,
-          address: venue.address,
-          rating: rating?.boots || 0,
-          icon: venueIcon,
-        });
+        if (venue.address) {
+          const rating = userRatings.find(r => r.venue_id === venue.id);
+          try {
+            const coords = await geocodeAddress(venue.address);
+            newMarkers.push({
+              id: `venue-${venue.id}`,
+              type: 'venue',
+              coords,
+              name: venue.name,
+              address: venue.address,
+              rating: rating?.boots || 0,
+              icon: venueIcon,
+            });
+          } catch (e) {
+            console.error('Failed to geocode venue:', venue.name);
+          }
+        }
       }
 
       // Add boot markers
       for (const visit of bootVisits) {
         const boot = boots.find(b => b.name === visit.boot_name);
-        if (boot) {
-          const coords = await geocodeAddress(boot.address);
-          newMarkers.push({
-            id: `boot-${visit.id}`,
-            type: 'boot',
-            coords,
-            name: boot.name,
-            address: boot.address,
-            photo: visit.photo_url,
-            icon: bootIcon,
-          });
+        if (boot && boot.address) {
+          try {
+            const coords = await geocodeAddress(boot.address);
+            newMarkers.push({
+              id: `boot-${visit.id}`,
+              type: 'boot',
+              coords,
+              name: boot.name,
+              address: boot.address,
+              photo: visit.photo_url,
+              icon: bootIcon,
+            });
+          } catch (e) {
+            console.error('Failed to geocode boot:', boot.name);
+          }
         }
       }
 
@@ -134,7 +144,7 @@ export default function VisitedMap() {
       setMapLoading(false);
     };
 
-    if (user && venues.length > 0 && boots.length > 0) {
+    if (user && venues.length >= 0 && boots.length >= 0) {
       loadMarkers();
     }
   }, [user, venues, userFavorites, userRatings, bootVisits, boots]);

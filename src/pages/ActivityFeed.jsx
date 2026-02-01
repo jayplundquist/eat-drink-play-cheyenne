@@ -166,7 +166,7 @@ export default function ActivityFeed() {
             <div className="relative">
               <Input
                 type="text"
-                placeholder="Search users by email..."
+                placeholder="Search by username..."
                 value={searchEmail}
                 onChange={(e) => setSearchEmail(e.target.value)}
                 className="pr-10"

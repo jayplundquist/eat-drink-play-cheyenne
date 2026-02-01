@@ -64,10 +64,11 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
    });
 
    const [newFeature, setNewFeature] = useState('');
-   const [uploading, setUploading] = useState(false);
-   const [foodTypeOpen, setFoodTypeOpen] = useState(false);
-   const [newFoodType, setNewFoodType] = useState('');
-   const [newCategory, setNewCategory] = useState('');
+    const [uploading, setUploading] = useState(false);
+    const [menuUploading, setMenuUploading] = useState(false);
+    const [foodTypeOpen, setFoodTypeOpen] = useState(false);
+    const [newFoodType, setNewFoodType] = useState('');
+    const [newCategory, setNewCategory] = useState('');
 
    const { data: customOptions = [] } = useQuery({
      queryKey: ['customVenueOptions'],
@@ -160,6 +161,35 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleMenuUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    setMenuUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const current = formData.menu_pictures || [];
+      handleChange('menu_pictures', [...current, file_url]);
+      toast.success('Menu picture added');
+    } catch (error) {
+      toast.error('Failed to upload menu picture');
+    } finally {
+      setMenuUploading(false);
+    }
+  };
+
+  const removeMenuPicture = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      menu_pictures: (prev.menu_pictures || []).filter((_, i) => i !== index)
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -481,6 +511,59 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
               </div>
             )}
           </div>
+
+          {/* Menu Pictures - Premium Feature */}
+          {user?.is_premium && (
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-4 space-y-3">
+              <Label className="text-purple-900 font-semibold">Menu Pictures (Premium)</Label>
+              <p className="text-sm text-purple-700">
+                Upload photos of your menu to showcase your offerings
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={menuUploading}
+                  className="relative border-purple-300 text-purple-700 hover:bg-purple-50"
+                  onClick={() => document.getElementById('menu-upload').click()}
+                >
+                  {menuUploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2" />
+                  )}
+                  Add Menu Picture
+                </Button>
+                <input
+                  id="menu-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleMenuUpload}
+                  className="hidden"
+                />
+              </div>
+              {(formData.menu_pictures || []).length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {(formData.menu_pictures || []).map((picture, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={picture}
+                        alt={`Menu ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-md border border-purple-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeMenuPicture(index)}
+                        className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Quick Draw Boost - Premium Feature */}
           {venue && user?.is_premium && (

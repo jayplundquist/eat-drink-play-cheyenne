@@ -36,6 +36,18 @@ const categoryLabels = {
   recreation: "Recreation"
 };
 
+const foodTypeLabels = {
+  asian: "Asian",
+  international: "International",
+  mexican: "Mexican",
+  american: "American",
+  steaks: "Steaks",
+  bbq: "BBQ",
+  dessert: "Dessert",
+  fine_dining: "Fine Dining",
+  pizza: "Pizza"
+};
+
 export default function VenueDetails() {
   const urlParams = new URLSearchParams(window.location.search);
   const venueId = urlParams.get('id');

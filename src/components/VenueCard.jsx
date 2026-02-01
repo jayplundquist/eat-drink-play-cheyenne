@@ -17,6 +17,18 @@ const categoryLabels = {
   recreation: "Recreation"
 };
 
+const foodTypeLabels = {
+  asian: "Asian",
+  international: "International",
+  mexican: "Mexican",
+  american: "American",
+  steaks: "Steaks",
+  bbq: "BBQ",
+  dessert: "Dessert",
+  fine_dining: "Fine Dining",
+  pizza: "Pizza"
+};
+
 const categoryColors = {
   restaurant: "bg-amber-100 text-amber-800 border-amber-200",
   bar: "bg-rose-100 text-rose-800 border-rose-200",

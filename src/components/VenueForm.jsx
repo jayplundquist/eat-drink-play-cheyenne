@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { X, Plus, Save, Upload, Loader2 } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
@@ -21,6 +22,18 @@ const categories = [
 
 const priceRanges = ["$", "$$", "$$$", "$$$$"];
 
+const foodTypes = [
+  { value: "asian", label: "Asian" },
+  { value: "international", label: "International" },
+  { value: "mexican", label: "Mexican" },
+  { value: "american", label: "American" },
+  { value: "steaks", label: "Steaks" },
+  { value: "bbq", label: "BBQ" },
+  { value: "dessert", label: "Dessert" },
+  { value: "fine_dining", label: "Fine Dining" },
+  { value: "pizza", label: "Pizza" },
+];
+
 export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
   const [formData, setFormData] = useState(venue || {
     name: '',
@@ -33,6 +46,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
     price_range: '$$',
     hours: '',
     features: [],
+    food_types: [],
   });
 
   const [newFeature, setNewFeature] = useState('');
@@ -57,6 +71,16 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
       ...prev,
       features: prev.features.filter((_, i) => i !== index)
     }));
+  };
+
+  const toggleFoodType = (foodType) => {
+    setFormData(prev => {
+      const current = prev.food_types || [];
+      const updated = current.includes(foodType)
+        ? current.filter(t => t !== foodType)
+        : [...current, foodType];
+      return { ...prev, food_types: updated };
+    });
   };
 
   const handleImageUpload = async (e) => {
@@ -244,6 +268,30 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
               placeholder="e.g. Mon-Sat 11am-10pm, Sun Closed"
             />
           </div>
+
+          {/* Food Types - Only for restaurants */}
+          {formData.category === 'restaurant' && (
+            <div className="space-y-3">
+              <Label>Food Types</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {foodTypes.map((foodType) => (
+                  <div key={foodType.value} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={foodType.value}
+                      checked={(formData.food_types || []).includes(foodType.value)}
+                      onCheckedChange={() => toggleFoodType(foodType.value)}
+                    />
+                    <Label
+                      htmlFor={foodType.value}
+                      className="text-sm font-normal cursor-pointer"
+                    >
+                      {foodType.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Features */}
           <div className="space-y-3">

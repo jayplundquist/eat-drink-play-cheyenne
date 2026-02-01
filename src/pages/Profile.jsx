@@ -33,7 +33,7 @@ export default function Profile() {
   useEffect(() => {
     if (defaultTab === 'bigboots' && tabsRef.current) {
       setTimeout(() => {
-        tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 300);
     }
   }, [defaultTab, loading]);

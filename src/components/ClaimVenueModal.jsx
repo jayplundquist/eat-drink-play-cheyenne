@@ -18,25 +18,23 @@ const STRIPE_PUBLISHABLE_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId, user }) {
   const [step, setStep] = useState('pricing'); // 'pricing' or 'processing'
   
-  const claimMutation = useMutation({
+  const submitClaimMutation = useMutation({
     mutationFn: async () => {
-      // Update venue with claimed_by
-      await base44.entities.Venue.update(venueId, {
-        claimed_by: user.email,
-      });
-
-      // Update user to premium
-      await base44.auth.updateMe({
-        is_premium: true,
+      // Submit a claim request
+      await base44.entities.ClaimRequest.create({
+        venue_id: venueId,
+        venue_name: venueName,
+        user_email: user.email,
+        status: 'pending',
       });
     },
     onSuccess: () => {
-      toast.success('You successfully claimed this venue!');
+      toast.success('Claim request submitted! Admin will review it soon.');
       setStep('pricing');
       onOpenChange(false);
     },
     onError: () => {
-      toast.error('Failed to claim venue. Please try again.');
+      toast.error('Failed to submit claim request. Please try again.');
     },
   });
 

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import VenueCard from "./VenueCard";
 
 export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   // Count favorites per venue
   const favoriteCounts = {};
   favorites.forEach(fav => {

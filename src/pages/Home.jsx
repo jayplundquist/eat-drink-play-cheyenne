@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -30,6 +30,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('all');
   const [minBootRating, setMinBootRating] = useState(0);
   const [selectedPrice, setSelectedPrice] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   const [user, setUser] = useState(null);
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
@@ -292,55 +293,81 @@ export default function Home() {
             🎭 Play
           </Button>
 
-          <div className="flex gap-3 ml-auto items-center flex-wrap">
-            <span className="text-sm text-stone-600 font-medium">Min Rating:</span>
-            <div className="flex gap-2">
-              <Button
-                variant={minBootRating === 0 ? 'default' : 'outline'}
-                onClick={() => setMinBootRating(0)}
-                className={minBootRating === 0 ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
-                size="sm"
-              >
-                All
-              </Button>
-              {[1, 2, 3, 4, 5].map(rating => (
-                <Button
-                  key={rating}
-                  variant={minBootRating === rating ? 'default' : 'outline'}
-                  onClick={() => setMinBootRating(rating)}
-                  className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2 flex items-center gap-1' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2 flex items-center gap-1'}
-                  size="sm"
-                >
-                  <CowboyBoot filled size="sm" />
-                  <span className="text-xs">x{rating}</span>
-                </Button>
-              ))}
-            </div>
-
-            <span className="text-sm text-stone-600 font-medium">Price:</span>
-            <div className="flex gap-2">
-              <Button
-                variant={selectedPrice === '' ? 'default' : 'outline'}
-                onClick={() => setSelectedPrice('')}
-                className={selectedPrice === '' ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
-                size="sm"
-              >
-                All
-              </Button>
-              {['Free', '$', '$$', '$$$', '$$$$'].map(price => (
-                <Button
-                  key={price}
-                  variant={selectedPrice === price ? 'default' : 'outline'}
-                  onClick={() => setSelectedPrice(price)}
-                  className={selectedPrice === price ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
-                  size="sm"
-                >
-                  {price}
-                </Button>
-              ))}
-            </div>
+          <div className="ml-auto">
+            <Button
+              variant={showFilters ? 'default' : 'outline'}
+              onClick={() => setShowFilters(!showFilters)}
+              className={showFilters ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
+              {showFilters ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
+            </Button>
           </div>
         </div>
+
+        {/* Expandable Filters */}
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-6 p-4 bg-amber-50 border-2 border-amber-200 rounded-lg space-y-4"
+          >
+            <div className="space-y-3">
+              <div>
+                <span className="text-sm font-medium text-stone-600 block mb-2">Minimum Rating</span>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant={minBootRating === 0 ? 'default' : 'outline'}
+                    onClick={() => setMinBootRating(0)}
+                    className={minBootRating === 0 ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
+                    size="sm"
+                  >
+                    All
+                  </Button>
+                  {[1, 2, 3, 4, 5].map(rating => (
+                    <Button
+                      key={rating}
+                      variant={minBootRating === rating ? 'default' : 'outline'}
+                      onClick={() => setMinBootRating(rating)}
+                      className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2 flex items-center gap-1' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2 flex items-center gap-1'}
+                      size="sm"
+                    >
+                      <CowboyBoot filled size="sm" />
+                      <span className="text-xs">x{rating}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <span className="text-sm font-medium text-stone-600 block mb-2">Price Range</span>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant={selectedPrice === '' ? 'default' : 'outline'}
+                    onClick={() => setSelectedPrice('')}
+                    className={selectedPrice === '' ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
+                    size="sm"
+                  >
+                    All
+                  </Button>
+                  {['Free', '$', '$$', '$$$', '$$$$'].map(price => (
+                    <Button
+                      key={price}
+                      variant={selectedPrice === price ? 'default' : 'outline'}
+                      onClick={() => setSelectedPrice(price)}
+                      className={selectedPrice === price ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
+                      size="sm"
+                    >
+                      {price}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {venuesLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

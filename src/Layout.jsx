@@ -14,14 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { 
-  MapPin, 
-  Heart, 
-  Menu, 
-  X, 
-  User,
-  LogOut,
-  Plus
-} from "lucide-react";
+        MapPin, 
+        Heart, 
+        Menu, 
+        X, 
+        User,
+        LogOut,
+        Plus,
+        Settings
+      } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
 import { Share2 } from "lucide-react";
@@ -61,10 +62,6 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
     { name: 'ActivityFeed', icon: Plus, label: 'Activity' },
-    ...(user?.role === 'admin' ? [
-      { name: 'ManageVenues', icon: Plus, label: 'Manage Venues' },
-      { name: 'ManageVenueOptions', icon: Plus, label: 'Venue Options' }
-    ] : []),
   ];
 
   const isHome = currentPageName === 'Home';
@@ -138,6 +135,40 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </Link>
               ))}
+
+              {user?.role === 'admin' && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className={cn(
+                        "transition-colors border-2",
+                        isHome 
+                          ? "text-white/90 hover:text-white hover:bg-white/10 border-transparent" 
+                          : "text-amber-900 hover:text-amber-50 hover:bg-amber-800 border-amber-700"
+                      )}
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Admin
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageVenues')} className="cursor-pointer">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Manage Venues
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageVenueOptions')} className="cursor-pointer">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Venue Options
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             {/* User Menu */}
@@ -241,6 +272,25 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </Link>
               ))}
+              {user?.role === 'admin' && (
+                <>
+                  <div className="border-t border-amber-200 pt-2 mt-2">
+                    <p className="text-xs font-semibold text-amber-700 uppercase px-3 py-2">Admin</p>
+                    <Link to={createPageUrl('ManageVenues')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Plus className="w-5 h-5 mr-3" />
+                        Manage Venues
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('ManageVenueOptions')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Settings className="w-5 h-5 mr-3" />
+                        Venue Options
+                      </Button>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

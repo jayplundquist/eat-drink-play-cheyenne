@@ -19,12 +19,18 @@ export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchEmail, setSearchEmail] = useState('');
+  const [allUsers, setAllUsers] = useState([]);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me()
       .then(setCurrentUser)
       .catch(() => base44.auth.redirectToLogin());
+    
+    base44.entities.User.list()
+      .then(users => setAllUsers(users))
+      .catch(() => {});
+    
     setLoading(false);
   }, []);
 
@@ -132,6 +138,10 @@ export default function ActivityFeed() {
     ? activityItems.filter(item => item.user_email.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()))
     : activityItems;
 
+  const searchResults = searchEmail
+    ? allUsers.filter(user => user.email?.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()) && user.email !== currentUser?.email)
+    : [];
+
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50 py-12">
@@ -162,25 +172,38 @@ export default function ActivityFeed() {
             <h1 className="text-3xl font-bold text-stone-800">Activity Feed</h1>
           </div>
           
-          {userFollows.length > 0 && (
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="Search by username..."
-                value={searchEmail}
-                onChange={(e) => setSearchEmail(e.target.value)}
-                className="pr-10"
-              />
-              {searchEmail && (
-                <button
-                  onClick={() => setSearchEmail('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          )}
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search for users..."
+              value={searchEmail}
+              onChange={(e) => setSearchEmail(e.target.value)}
+              className="pr-10"
+            />
+            {searchEmail && (
+              <button
+                onClick={() => setSearchEmail('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+            {searchEmail && searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-lg shadow-lg z-10">
+                {searchResults.map(user => (
+                  <Link
+                    key={user.email}
+                    to={`${createPageUrl('UserProfile')}?email=${user.email}`}
+                    onClick={() => setSearchEmail('')}
+                    className="block px-4 py-3 hover:bg-stone-50 border-b last:border-b-0"
+                  >
+                    <p className="font-semibold text-stone-800">{user.email?.split('@')[0]}</p>
+                    <p className="text-xs text-stone-500">{user.email}</p>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </motion.div>
 
         {userFollows.length === 0 ? (

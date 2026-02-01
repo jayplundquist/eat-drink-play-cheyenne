@@ -135,6 +135,55 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
         </Card>
       </div>
 
+      {/* Spinning Spur Animation */}
+      <AnimatePresence>
+        {spinning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="text-amber-400"
+            >
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                {/* Center circle */}
+                <circle cx="60" cy="60" r="15" fill="currentColor" stroke="#92400e" strokeWidth="2"/>
+                
+                {/* Spur spikes */}
+                {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
+                  const rad = (angle * Math.PI) / 180;
+                  const x1 = 60 + Math.cos(rad) * 15;
+                  const y1 = 60 + Math.sin(rad) * 15;
+                  const x2 = 60 + Math.cos(rad) * 50;
+                  const y2 = 60 + Math.sin(rad) * 50;
+                  
+                  return (
+                    <g key={i}>
+                      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+                      <circle cx={x2} cy={y2} r="6" fill="currentColor" stroke="#92400e" strokeWidth="1.5"/>
+                    </g>
+                  );
+                })}
+                
+                {/* Inner decorative ring */}
+                <circle cx="60" cy="60" r="8" fill="none" stroke="#92400e" strokeWidth="1.5"/>
+              </svg>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute bottom-1/3 text-white text-2xl font-bold"
+            >
+              Spinning...
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Result Modal */}
       <AnimatePresence>
         {showResult && result && (

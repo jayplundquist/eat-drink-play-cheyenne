@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, Heart, Star, Edit2, Save, X, Camera, Loader2 } from "lucide-react";
+import { User, Heart, Star, Edit2, Save, X, Camera, Loader2, Map } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -241,7 +241,7 @@ export default function Profile() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
                   <Heart className="w-6 h-6 text-rose-500 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-stone-800">{userFavorites.length}</div>
@@ -251,6 +251,11 @@ export default function Profile() {
                   <Star className="w-6 h-6 text-amber-500 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-stone-800">{userRatings.length}</div>
                   <div className="text-sm text-stone-600">Reviews</div>
+                </div>
+                <div className="text-center p-4 bg-stone-50 rounded-lg">
+                  <Map className="w-6 h-6 text-teal-500 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-stone-800">{userBootVisits.length}</div>
+                  <div className="text-sm text-stone-600">Boots Found</div>
                 </div>
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
                   <User className="w-6 h-6 text-blue-500 mx-auto mb-2" />

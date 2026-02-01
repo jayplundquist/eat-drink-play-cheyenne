@@ -145,76 +145,89 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gradient-to-b from-amber-900/90 to-stone-900/90 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
           >
             <div className="relative">
-              {/* Spinning cards/venues animation */}
-              <div className="relative w-64 h-64">
-                {favorites.slice(0, 8).map((fav, i) => {
-                  const venue = venues.find(v => v.venue_id === fav.id);
-                  return (
-                    <motion.div
-                      key={i}
-                      className="absolute inset-0 flex items-center justify-center"
-                      animate={{
-                        rotate: 360,
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: i * 0.1,
-                      }}
-                    >
-                      <motion.div
-                        className="w-32 h-20 bg-amber-100 border-4 border-amber-800 rounded-lg shadow-xl flex items-center justify-center"
-                        style={{
-                          transformOrigin: 'center',
-                          transform: `translateY(-${80 + i * 10}px)`,
-                        }}
-                        animate={{
-                          opacity: [0.3, 1, 0.3],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          delay: i * 0.1,
-                        }}
-                      >
-                        <span className="text-amber-900 font-bold text-sm text-center px-2">
-                          ?
-                        </span>
-                      </motion.div>
-                    </motion.div>
-                  );
-                })}
+              <svg width="300" height="200" viewBox="0 0 300 200" className="drop-shadow-2xl">
+                {/* Spur heel band (static) */}
+                <ellipse cx="80" cy="100" rx="60" ry="35" fill="#78350f" stroke="#92400e" strokeWidth="4"/>
+                <ellipse cx="80" cy="100" rx="50" ry="28" fill="#a0522d"/>
                 
-                {/* Center glow */}
-                <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 0.8, 0.5],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                {/* Decorative engravings on band */}
+                <path d="M 50 95 Q 65 90 80 95 Q 95 90 110 95" stroke="#d97706" strokeWidth="2" fill="none"/>
+                <path d="M 50 105 Q 65 110 80 105 Q 95 110 110 105" stroke="#d97706" strokeWidth="2" fill="none"/>
+                
+                {/* Spur shank (static arm) */}
+                <path d="M 140 100 L 200 100" stroke="#78350f" strokeWidth="12" strokeLinecap="round"/>
+                <path d="M 140 100 L 200 100" stroke="#a0522d" strokeWidth="8" strokeLinecap="round"/>
+                
+                {/* Rotating rowel */}
+                <motion.g
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                  style={{ transformOrigin: "220px 100px" }}
                 >
-                  <div className="w-24 h-24 bg-amber-400/30 rounded-full blur-2xl" />
-                </motion.div>
-              </div>
+                  {/* Center hub */}
+                  <circle cx="220" cy="100" r="18" fill="#fbbf24" stroke="#92400e" strokeWidth="3"/>
+                  
+                  {/* Rowel points */}
+                  {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => {
+                    const rad = (angle * Math.PI) / 180;
+                    const x1 = 220 + Math.cos(rad) * 18;
+                    const y1 = 100 + Math.sin(rad) * 18;
+                    const x2 = 220 + Math.cos(rad) * 55;
+                    const y2 = 100 + Math.sin(rad) * 55;
+                    
+                    return (
+                      <g key={angle}>
+                        <line 
+                          x1={x1} y1={y1} 
+                          x2={x2} y2={y2} 
+                          stroke="#d97706" 
+                          strokeWidth="4" 
+                          strokeLinecap="round"
+                        />
+                        <circle cx={x2} cy={y2} r="5" fill="#fef3c7" stroke="#92400e" strokeWidth="2"/>
+                      </g>
+                    );
+                  })}
+                  
+                  {/* Inner decorative circle */}
+                  <circle cx="220" cy="100" r="10" fill="none" stroke="#92400e" strokeWidth="2"/>
+                </motion.g>
+              </svg>
               
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8 text-white text-2xl font-bold text-center"
+                className="mt-8 text-amber-300 text-3xl font-bold text-center"
                 style={{ fontFamily: 'Rye, serif' }}
               >
                 Spinning the Spur...
               </motion.p>
+              
+              {/* Sparkle effects */}
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute text-amber-400 text-2xl"
+                  style={{
+                    left: `${150 + Math.cos((i * 60 * Math.PI) / 180) * 120}px`,
+                    top: `${-20 + Math.sin((i * 60 * Math.PI) / 180) * 80}px`,
+                  }}
+                  animate={{
+                    scale: [0, 1, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                >
+                  ✨
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         )}

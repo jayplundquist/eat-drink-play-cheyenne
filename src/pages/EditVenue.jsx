@@ -35,8 +35,14 @@ export default function EditVenue() {
 
   const updateVenueMutation = useMutation({
     mutationFn: (venueData) => {
-      // Preserve rating data
-      const { rating_sum, rating_count, ...updateData } = venueData;
+      // Remove only rating fields, keep everything else
+      const updateData = { ...venueData };
+      delete updateData.rating_sum;
+      delete updateData.rating_count;
+      delete updateData.id;
+      delete updateData.created_date;
+      delete updateData.updated_date;
+      delete updateData.created_by;
       return base44.entities.Venue.update(venueId, updateData);
     },
     onSuccess: () => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import NotificationManager from '@/components/NotificationManager';
 import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
 import { 

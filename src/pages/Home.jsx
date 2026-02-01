@@ -23,6 +23,7 @@ import VenueCard from "../components/VenueCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
 import HatTip from "../components/HatTip";
+import BootRating from "../components/BootRating";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -214,19 +215,29 @@ export default function Home() {
             🎭 Play
           </Button>
 
-          <div className="flex gap-1 ml-auto">
-            <span className="text-sm text-stone-600 font-medium self-center">Min Rating:</span>
-            {[0, 1, 2, 3, 4, 5].map(rating => (
+          <div className="flex gap-3 ml-auto items-center">
+            <span className="text-sm text-stone-600 font-medium">Min Rating:</span>
+            <div className="flex gap-2">
               <Button
-                key={rating}
-                variant={minBootRating === rating ? 'default' : 'outline'}
-                onClick={() => setMinBootRating(rating)}
-                className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2'}
+                variant={minBootRating === 0 ? 'default' : 'outline'}
+                onClick={() => setMinBootRating(0)}
+                className={minBootRating === 0 ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
                 size="sm"
               >
-                {rating === 0 ? 'All' : `${rating}${rating === 1 ? ' 🤠' : '🤠'}`}
+                All
               </Button>
-            ))}
+              {[1, 2, 3, 4, 5].map(rating => (
+                <Button
+                  key={rating}
+                  variant={minBootRating === rating ? 'default' : 'outline'}
+                  onClick={() => setMinBootRating(rating)}
+                  className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2'}
+                  size="sm"
+                >
+                  <BootRating rating={rating} size="sm" />
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
 

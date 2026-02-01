@@ -4,7 +4,7 @@ import Stripe from 'npm:stripe@15.8.0';
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 
 const PRICES = {
-  venue_claim: 'price_1SvudtGuyms0jVKHBjCYMWEV',
+  venue_claim: 'price_1SvudvGuyms0jVKHXxXxXxXx', // Will be replaced with new price
   venue_boost: 'price_1SvudtGuyms0jVKHy9nJZQ0J',
   review_boost: 'price_1SvudtGuyms0jVKHVfzFSuDp',
 };
@@ -28,6 +28,7 @@ Deno.serve(async (req) => {
     const successUrl = `${new URL(req.url).origin}/?checkout_success=true`;
     const cancelUrl = `${new URL(req.url).origin}/`;
 
+    const mode = type === 'venue_claim' ? 'subscription' : 'payment';
     const sessionData = {
       payment_method_types: ['card'],
       line_items: [
@@ -36,7 +37,7 @@ Deno.serve(async (req) => {
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode,
       success_url: successUrl,
       cancel_url: cancelUrl,
       metadata: {

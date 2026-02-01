@@ -311,18 +311,34 @@ export default function ActivityFeed() {
                     <Card className="hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center gap-2">
-                            <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
-                              <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
-                                <span className="font-semibold">{item.user_email.split('@')[0]}</span>
-                              </Link>
-                            </Button>
-                            <span className="text-stone-500">found</span>
+                            <div className="flex items-center gap-2">
+                              <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
+                                <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
+                                  <span className="font-semibold">{item.user_email.split('@')[0]}</span>
+                                </Link>
+                              </Button>
+                              <span className="text-stone-500">found</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-stone-500">
+                                {new Date(item.timestamp).toLocaleDateString()}
+                              </span>
+                              {item.isOwn && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    if (confirm('Delete this boot share?')) {
+                                      deleteBootShareMutation.mutate(item.data.id);
+                                    }
+                                  }}
+                                  className="h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
                           </div>
-                          <span className="text-sm text-stone-500">
-                            {new Date(item.timestamp).toLocaleDateString()}
-                          </span>
-                        </div>
                         
                         <div className="mb-4">
                           <h3 className="font-semibold text-stone-800 flex items-center gap-2">

@@ -139,6 +139,18 @@ export default function ActivityFeed() {
     enabled: followingEmails.length > 0,
   });
 
+  const { data: currentUserRatings = [] } = useQuery({
+    queryKey: ['currentUserRatings', currentUser?.email],
+    queryFn: () => currentUser ? base44.entities.Rating.filter({ user_email: currentUser.email }, '-created_date') : [],
+    enabled: !!currentUser,
+  });
+
+  const { data: currentUserBootShares = [] } = useQuery({
+    queryKey: ['currentUserBootShares', currentUser?.email],
+    queryFn: () => currentUser ? base44.entities.BootShare.filter({ user_email: currentUser.email }, '-shared_date') : [],
+    enabled: !!currentUser,
+  });
+
   const activityItems = [
     ...followedUserRatings.map(rating => ({
       type: 'review',

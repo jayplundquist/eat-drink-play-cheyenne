@@ -173,7 +173,7 @@ export default function UserProfile() {
                       {userEmail}
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-2">
-                      <UserBadge reviewCount={profileUserRatings.length} />
+                      <UserBadge reviewCount={profileUserRatings.length} avgRating={avgRating} />
                     </div>
                   </div>
                 </div>

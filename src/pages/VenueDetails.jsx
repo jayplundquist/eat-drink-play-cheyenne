@@ -413,9 +413,9 @@ export default function VenueDetails() {
               {user ? (
                 <Card className="p-6 bg-white border-stone-200">
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
-                      Your Boot Rating
-                    </label>
+                     <label className="block text-sm font-medium text-stone-700 mb-2">
+                       Give 'Em the Boot
+                     </label>
                     <BootRating 
                       rating={newRating} 
                       size="lg" 

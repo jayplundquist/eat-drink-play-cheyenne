@@ -40,6 +40,13 @@ const categoryLabels = {
   recreation: "Recreation"
 };
 
+// Fallback for old venues with single category
+const getCategories = (venue) => {
+  if (venue.categories && venue.categories.length > 0) return venue.categories;
+  if (venue.category) return [venue.category];
+  return [];
+};
+
 export default function ManageVenues() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -86,7 +93,8 @@ export default function ManageVenues() {
     const matchesSearch = !searchQuery || 
       venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       venue.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || venue.category === selectedCategory;
+    const venueCategories = getCategories(venue);
+    const matchesCategory = selectedCategory === 'all' || venueCategories.includes(selectedCategory);
     return matchesSearch && matchesCategory;
   });
 
@@ -240,9 +248,13 @@ export default function ManageVenues() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="bg-stone-100 text-stone-700">
-                            {categoryLabels[venue.category]}
-                          </Badge>
+                          <div className="flex flex-wrap gap-1">
+                            {getCategories(venue).map(cat => (
+                              <Badge key={cat} variant="secondary" className="bg-stone-100 text-stone-700">
+                                {categoryLabels[cat]}
+                              </Badge>
+                            ))}
+                          </div>
                         </TableCell>
                         <TableCell className="hidden md:table-cell text-stone-600 max-w-xs truncate">
                           {venue.address || '—'}

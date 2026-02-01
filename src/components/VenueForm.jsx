@@ -49,7 +49,7 @@ const foodTypes = [
 export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
   const [formData, setFormData] = useState(venue || {
     name: '',
-    category: 'restaurant',
+    categories: [],
     description: '',
     address: '',
     phone: '',
@@ -145,22 +145,31 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) => handleChange('category', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map(cat => (
-                    <SelectItem key={cat.value} value={cat.value}>
+              <Label>Categories *</Label>
+              <div className="flex flex-wrap gap-2">
+                {categories.map(cat => {
+                  const isSelected = (formData.categories || []).includes(cat.value);
+                  return (
+                    <Button
+                      key={cat.value}
+                      type="button"
+                      variant={isSelected ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => {
+                        const current = formData.categories || [];
+                        if (isSelected) {
+                          handleChange('categories', current.filter(c => c !== cat.value));
+                        } else {
+                          handleChange('categories', [...current, cat.value]);
+                        }
+                      }}
+                      className={isSelected ? "bg-amber-600 hover:bg-amber-700" : ""}
+                    >
                       {cat.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -283,7 +292,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
           </div>
 
           {/* Food Types - Only for restaurants */}
-          {formData.category === 'restaurant' && (
+          {(formData.categories || []).includes('restaurant') && (
             <div className="space-y-2">
               <Label>Food Types</Label>
               <Popover open={foodTypeOpen} onOpenChange={setFoodTypeOpen}>
@@ -401,7 +410,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
             </Button>
             <Button
               type="submit"
-              disabled={!formData.name || !formData.category || isSaving}
+              disabled={!formData.name || !(formData.categories || []).length || isSaving}
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
               <Save className="w-4 h-4 mr-2" />

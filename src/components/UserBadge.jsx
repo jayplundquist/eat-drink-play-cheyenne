@@ -9,14 +9,15 @@ const BADGE_LEVELS = [
 ];
 
 export const getBadgeInfo = (reviewCount, avgRating) => {
+  // No badge until first review
+  if (!reviewCount) return null;
+  
   // "The Duster" badge - for users who average 1-2 star ratings
   if (reviewCount >= 5 && avgRating >= 1 && avgRating <= 2) {
     return { name: 'The Duster', color: 'bg-orange-100 text-orange-800', icon: '🌪️' };
   }
   
-  if (!reviewCount) return BADGE_LEVELS[0];
-  
-  let currentBadge = BADGE_LEVELS[0];
+  let currentBadge = null;
   for (const badge of BADGE_LEVELS) {
     if (reviewCount >= badge.minReviews) {
       currentBadge = badge;

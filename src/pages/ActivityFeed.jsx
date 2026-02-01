@@ -378,22 +378,38 @@ export default function ActivityFeed() {
                         </div>
                       )}
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
-                            <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
-                              <span className="font-semibold">{item.user_email.split('@')[0]}</span>
-                            </Link>
-                          </Button>
-                          {item.type === 'review' && (
-                            <UserBadge reviewCount={followedUserRatings.filter(r => r.user_email === item.user_email).length} size="sm" />
-                          )}
-                          <span className="text-stone-500">
-                            {item.type === 'review' ? 'reviewed' : 'favorited'}
-                          </span>
-                        </div>
-                        <span className="text-sm text-stone-500">
-                          {new Date(item.timestamp).toLocaleDateString()}
-                        </span>
+                       <div className="flex items-center gap-2">
+                         <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
+                           <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
+                             <span className="font-semibold">{item.user_email.split('@')[0]}</span>
+                           </Link>
+                         </Button>
+                         {item.type === 'review' && (
+                           <UserBadge reviewCount={followedUserRatings.filter(r => r.user_email === item.user_email).length} size="sm" />
+                         )}
+                         <span className="text-stone-500">
+                           {item.type === 'review' ? 'reviewed' : 'favorited'}
+                         </span>
+                       </div>
+                       <div className="flex items-center gap-3">
+                         <span className="text-sm text-stone-500">
+                           {new Date(item.timestamp).toLocaleDateString()}
+                         </span>
+                         {item.isOwn && item.type === 'review' && (
+                           <Button
+                             variant="ghost"
+                             size="sm"
+                             onClick={() => {
+                               if (confirm('Delete this review?')) {
+                                 deleteReviewMutation.mutate(item.data.id);
+                               }
+                             }}
+                             className="h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </Button>
+                         )}
+                       </div>
                       </div>
 
                       <div className="flex gap-4">

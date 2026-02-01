@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import VenueCard from "./VenueCard";
 
 export default function HatTip({ venues, favorites, user, onToggleFavorite }) {

@@ -257,6 +257,8 @@ export default function VenueDetails() {
       setNewRating(userRating.boots);
       setNewComment(userRating.comment || '');
       setReviewImages(userRating.image_urls || []);
+    } else {
+      setReviewImages([]);
     }
   }, [userRating]);
 

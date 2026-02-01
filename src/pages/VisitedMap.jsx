@@ -217,20 +217,20 @@ export default function VisitedMap() {
 
           {/* Sidebar */}
           <div className="space-y-4">
-            <Card className="p-4 bg-gradient-to-br from-red-50 to-red-100">
+            <Card className="p-4 bg-gradient-to-br from-amber-50 to-amber-100">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 bg-red-500 rounded-full" />
-                <h3 className="font-semibold text-red-900">Venues ({visitedVenues.length})</h3>
+                <div className="text-lg">🔗</div>
+                <h3 className="font-semibold text-amber-900">Venues ({visitedVenues.length})</h3>
               </div>
-              <p className="text-xs text-red-700">Places you've visited and rated</p>
+              <p className="text-xs text-amber-700">Places you've visited and rated</p>
             </Card>
 
-            <Card className="p-4 bg-gradient-to-br from-yellow-50 to-yellow-100">
+            <Card className="p-4 bg-gradient-to-br from-amber-50 to-amber-100">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 bg-yellow-500 rounded-full" />
-                <h3 className="font-semibold text-yellow-900">Big Boots ({bootVisits.length})</h3>
+                <div className="text-lg">👢</div>
+                <h3 className="font-semibold text-amber-900">Big Boots ({bootVisits.length})</h3>
               </div>
-              <p className="text-xs text-yellow-700">Iconic painted boots you've collected</p>
+              <p className="text-xs text-amber-700">Iconic painted boots you've collected</p>
             </Card>
 
             {markers.length === 0 && !mapLoading && (

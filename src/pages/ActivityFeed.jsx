@@ -18,6 +18,7 @@ import ReviewBoostButton from "../components/ReviewBoostButton";
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchEmail, setSearchEmail] = useState('');
   const queryClient = useQueryClient();
 
   useEffect(() => {

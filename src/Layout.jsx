@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
@@ -30,10 +30,6 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
 
   const navItems = [
     { name: 'Home', icon: MapPin, label: 'Explore' },

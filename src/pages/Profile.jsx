@@ -381,19 +381,6 @@ export default function Profile() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="p-4 bg-stone-50 rounded-lg">
-                  <h4 className="font-medium text-stone-800 mb-2">Custom Boot Rating Icon</h4>
-                  <p className="text-sm text-stone-600 mb-3">
-                    Upload a custom image to use as your rating icon instead of the default boot.
-                  </p>
-                  <Button asChild variant="outline">
-                    <Link to={createPageUrl('Settings')}>
-                      <Settings className="w-4 h-4 mr-2" />
-                      Manage Settings
-                    </Link>
-                  </Button>
-                </div>
-                
-                <div className="p-4 bg-stone-50 rounded-lg">
                   <h4 className="font-medium text-stone-800 mb-2">Account Information</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">

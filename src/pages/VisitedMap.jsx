@@ -10,25 +10,27 @@ import { MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import BootRating from '../components/BootRating';
 
-// Black Railroad Spike SVG
+// Black Railroad Spike SVG - angled with point at location
 const goldenSpikeSvg = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 60" width="32" height="48">
-  <!-- Spike body -->
-  <path d="M 20 5 L 18 50 Q 18 55 20 58 Q 22 55 22 50 L 20 5 Z" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="1"/>
-  <!-- Highlight for dimension -->
-  <path d="M 19 10 L 18 45" stroke="#404040" stroke-width="0.5" opacity="0.8"/>
-  <!-- Head/cap -->
-  <ellipse cx="20" cy="7" rx="3.5" ry="2.5" fill="#0a0a0a"/>
-  <ellipse cx="20" cy="6.5" rx="3.5" ry="2" fill="#1a1a1a"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="48" height="48" style="transform: rotate(-25deg); transform-origin: center;">
+  <!-- Spike body - tapered -->
+  <path d="M 40 8 L 37 65 Q 37 72 40 78 Q 43 72 43 65 L 40 8 Z" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="0.5"/>
+  <!-- Metallic highlight -->
+  <path d="M 39 15 L 37.5 60" stroke="#404040" stroke-width="0.8" opacity="0.6"/>
+  <!-- Head - wider at top like railroad spike -->
+  <ellipse cx="40" cy="12" rx="5.5" ry="4.5" fill="#0a0a0a"/>
+  <ellipse cx="40" cy="10" rx="5.5" ry="3.5" fill="#2a2a2a"/>
+  <!-- Curved top of head -->
+  <path d="M 34.5 10 Q 40 7 45.5 10" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="0.5"/>
 </svg>
 `;
 
 const spikeIcon = L.divIcon({
   html: goldenSpikeSvg,
   className: 'golden-spike-icon',
-  iconSize: [32, 48],
-  iconAnchor: [16, 48],
-  popupAnchor: [0, -48],
+  iconSize: [48, 48],
+  iconAnchor: [24, 45],
+  popupAnchor: [0, -45],
 });
 
 // Simple geocoding mock - in production, use a real geocoding service

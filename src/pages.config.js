@@ -58,6 +58,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
+import ManageBoots from './pages/ManageBoots';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "Settings": Settings,
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
+    "ManageBoots": ManageBoots,
 }
 
 export const pagesConfig = {

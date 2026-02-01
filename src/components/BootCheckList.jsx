@@ -8,41 +8,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Camera, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
-const BOOTS_LIST = [
-  { name: "Gamblers Boot", address: "4610 Carey Ave (Old West Museum)" },
-  { name: "Springtime in Cheyenne", address: "6106 Yellowstone Rd" },
-  { name: "Licensed to Boot", address: "2301 Central Ave" },
-  { name: "Atmospheric Research", address: "8120 Veta Dr" },
-  { name: "Memories of the Old West", address: "Cheyenne Depot Plaza (by the tracks)" },
-  { name: "Journey of the Soul", address: "710 S. Lions Park Dr (Cheyenne Botanic Gardens)" },
-  { name: "All Things Wyoming", address: "502 Bonanza Trail" },
-  { name: "Wyoming Bank & Trust 100th Anniversary", address: "5827 Yellowstone Rd" },
-  { name: "Wyoming Financial Properties", address: "6101 Yellowstone Rd (in lobby)" },
-  { name: "First American Title", address: "Downtown Cheyenne" },
-  { name: "We're With You", address: "1715 Stillwater Ave" },
-  { name: "LCCC Eagle Eye on the Future", address: "1400 E College Dr (campus, south side)" },
-  { name: "People Places and Things", address: "311 Cleveland Place (lobby)" },
-  { name: "Outlaws of Wyoming", address: "Morrie Ave/Lincolnway" },
-  { name: "8-Second Steps to the Big Time", address: "1912 Capitol Ave" },
-  { name: "Book Boot", address: "2200 Pioneer Avenue" },
-  { name: "Cheyenne Vision Clinic", address: "1854 Dell Range Blvd" },
-  { name: "Hub International", address: "Downtown Cheyenne" },
-  { name: "Our Legacy, Improving Life with Energy", address: "Cheyenne" },
-  { name: "Religion's a Kick", address: "2101 O'Neil Ave (Chamber of Commerce)" },
-  { name: "Where the Deer and the Antelope Play", address: "Cheyenne Depot Plaza" },
-  { name: "Don't Feed the Animals", address: "Cheyenne Depot Plaza" },
-  { name: "Governors of Wyoming", address: "Cheyenne Depot Plaza" },
-  { name: "Milestones: Chamber 100th Anniversary", address: "Cheyenne Depot Plaza" },
-  { name: "Wyoming Women 1st to Vote", address: "Capitol Ave (between 17th & 18th)" },
-  { name: "Honoring Healthcare Heroes", address: "214 E. 23rd St" },
-  { name: "Exeter's Pony Express", address: "Cheyenne Depot Plaza" },
-  { name: "South High Class of 2022", address: "1213 W. Allison Rd (South High)" },
-  { name: "Lewis Auto Repair", address: "285 North American Rd" },
-];
-
 export default function BootCheckList({ user }) {
   const [uploadingBoot, setUploadingBoot] = useState(null);
   const queryClient = useQueryClient();
+
+  const { data: boots = [] } = useQuery({
+    queryKey: ['boots'],
+    queryFn: () => base44.entities.Boot.list('-created_date'),
+  });
 
   const { data: visits = [] } = useQuery({
     queryKey: ['bootVisits', user?.email],
@@ -139,7 +112,7 @@ export default function BootCheckList({ user }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {BOOTS_LIST.map((boot, i) => {
+        {boots.map((boot, i) => {
           const visited = isVisited(boot.name);
           const visit = getVisit(boot.name);
 

@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueForm from "../components/VenueForm";
@@ -15,6 +15,7 @@ export default function EditVenue() {
   
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     base44.auth.me()
@@ -43,6 +44,39 @@ export default function EditVenue() {
       window.location.href = createPageUrl(`VenueDetails?id=${venueId}`);
     },
   });
+
+  const initiateBoostCheckout = async (venuId) => {
+    setCheckoutLoading(true);
+    try {
+      const { checkout_url } = await base44.integrations.Stripe.CreateCheckoutSession({
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: `Quick Draw Boost - ${venue.name}`,
+                description: 'Boost your venue to appear 3x more often in Quick Draw for 7 days',
+              },
+              unit_amount: 500, // $5.00 in cents
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${window.location.origin}${createPageUrl(`VenueDetails?id=${venueId}&boost=success`)}`,
+        cancel_url: window.location.href,
+        metadata: {
+          venue_id: venueId,
+          boost_duration_days: 7,
+        },
+      });
+      window.location.href = checkout_url;
+    } catch (error) {
+      toast.error('Failed to initiate checkout');
+      console.error(error);
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
 
   if (loading || venueLoading) {
     return (
@@ -121,8 +155,17 @@ export default function EditVenue() {
            onCancel={() => window.location.href = createPageUrl(`VenueDetails?id=${venueId}`)}
            isSaving={updateVenueMutation.isPending}
            user={user}
+           onInitiateBoostCheckout={initiateBoostCheckout}
          />
        </div>
+       {checkoutLoading && (
+         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+           <div className="bg-white rounded-lg p-8 flex flex-col items-center gap-4">
+             <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+             <p className="text-stone-700 font-medium">Redirecting to checkout...</p>
+           </div>
+         </div>
+       )}
     </div>
   );
 }

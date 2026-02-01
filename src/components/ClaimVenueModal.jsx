@@ -42,6 +42,13 @@ export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId
     setStep('processing');
     
     try {
+      // Check if running in iframe (preview mode)
+      if (window.self !== window.top) {
+        toast.error('Checkout only works from a published app. Please visit your live site.');
+        setStep('pricing');
+        return;
+      }
+
       // Create Stripe checkout session using backend function
       const response = await base44.functions.invoke('createCheckoutSession', {
         type: 'venue_claim',
@@ -57,6 +64,7 @@ export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId
         throw new Error('No checkout URL returned');
       }
     } catch (error) {
+      console.error('Checkout error:', error);
       toast.error('Failed to start checkout. Please try again.');
       setStep('pricing');
     }

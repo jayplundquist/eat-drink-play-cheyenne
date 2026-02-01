@@ -46,7 +46,41 @@ export default function ActivityFeed() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['followedUserRatings'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserRatings'] });
       toast.success('Photo removed');
+    },
+  });
+
+  const deleteReviewMutation = useMutation({
+    mutationFn: async (ratingId) => {
+      const rating = await base44.entities.Rating.filter({ id: ratingId });
+      if (rating.length > 0) {
+        const venueId = rating[0].venue_id;
+        await base44.entities.Rating.delete(ratingId);
+        // Update venue totals
+        const venue = await base44.entities.Venue.filter({ id: venueId });
+        if (venue.length > 0) {
+          await base44.entities.Venue.update(venueId, {
+            rating_sum: Math.max(0, (venue[0].rating_sum || 0) - rating[0].boots),
+            rating_count: Math.max(0, (venue[0].rating_count || 0) - 1),
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUserRatings'] });
+      queryClient.invalidateQueries({ queryKey: ['venues'] });
+      toast.success('Review deleted');
+    },
+  });
+
+  const deleteBootShareMutation = useMutation({
+    mutationFn: async (bootShareId) => {
+      await base44.entities.BootShare.delete(bootShareId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUserBootShares'] });
+      toast.success('Boot share deleted');
     },
   });
 

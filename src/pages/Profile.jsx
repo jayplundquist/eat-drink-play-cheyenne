@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, Heart, Star, Settings, Edit2, Save, X } from "lucide-react";
+import { User, Heart, Star, Settings, Edit2, Save, X, Camera, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -20,6 +20,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({ full_name: '' });
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -63,6 +64,28 @@ export default function Profile() {
       toast.error('Failed to update profile');
     },
   });
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.auth.updateMe({ profile_picture: file_url });
+      setUser({ ...user, profile_picture: file_url });
+      toast.success('Profile picture updated!');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
@@ -117,8 +140,34 @@ export default function Profile() {
             <CardHeader className="bg-gradient-to-r from-amber-50 to-stone-50 border-b border-stone-200">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
-                    <User className="w-10 h-10 text-amber-700" />
+                  <div className="relative">
+                    {user.profile_picture ? (
+                      <img
+                        src={user.profile_picture}
+                        alt={user.full_name}
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
+                        <User className="w-10 h-10 text-amber-700" />
+                      </div>
+                    )}
+                    {editMode && (
+                      <label className="absolute bottom-0 right-0 bg-amber-600 hover:bg-amber-700 text-white rounded-full p-2 cursor-pointer transition-colors">
+                        {uploadingImage ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Camera className="w-4 h-4" />
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={uploadingImage}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
                   </div>
                   <div>
                     {editMode ? (

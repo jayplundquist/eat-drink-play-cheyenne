@@ -99,9 +99,10 @@ export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId
                 </div>
 
                 <div className="mb-6">
-                  <p className="text-xs text-stone-600 mb-2">One-time payment</p>
+                  <p className="text-xs text-stone-600 mb-2">Monthly subscription</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-amber-900">$9.99</span>
+                    <span className="text-3xl font-bold text-amber-900">$1</span>
+                    <span className="text-sm text-stone-600">/month</span>
                   </div>
                 </div>
 

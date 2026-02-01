@@ -33,10 +33,10 @@ export default function Profile() {
   useEffect(() => {
     if (defaultTab === 'bigboots' && tabsRef.current) {
       setTimeout(() => {
-        tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+        tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
     }
-  }, [defaultTab]);
+  }, [defaultTab, loading]);
 
   useEffect(() => {
     base44.auth.me()

@@ -128,7 +128,7 @@ export default function VisitedMap() {
               name: boot.name,
               address: boot.address,
               photo: visit.photo_url,
-              icon: bootIcon,
+              icon: spikeIcon,
             });
           } catch (e) {
             console.error('Failed to geocode boot:', boot.name);

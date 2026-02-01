@@ -297,6 +297,7 @@ export default function Home() {
                   venue={venue}
                   isFavorite={isFavorite(venue.id)}
                   onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
+                  hideAddress
                 />
               </motion.div>
             ))}

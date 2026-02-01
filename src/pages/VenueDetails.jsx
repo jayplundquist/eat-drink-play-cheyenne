@@ -624,23 +624,16 @@ export default function VenueDetails() {
                   </div>
                 )}
                 {venue.phone && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5 text-amber-600" />
-                      <span className="text-stone-600">{venue.phone}</span>
-                    </div>
-                    <Button
-                      asChild
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                      size="sm"
-                    >
-                      <a href={`tel:${venue.phone}`}>
-                        <Phone className="w-4 h-4 mr-2" />
-                        Call Now
-                      </a>
-                    </Button>
-                  </div>
-                )}
+                   <div className="flex items-center gap-3">
+                     <Phone className="w-5 h-5 text-amber-600" />
+                     <a 
+                       href={`tel:${venue.phone}`}
+                       className="text-amber-700 hover:text-amber-800 hover:underline"
+                     >
+                       {venue.phone}
+                     </a>
+                   </div>
+                 )}
                 {venue.website && (
                   <div className="flex items-center gap-3">
                     <Globe className="w-5 h-5 text-amber-600" />

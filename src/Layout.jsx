@@ -62,6 +62,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
     { name: 'ActivityFeed', icon: Plus, label: 'The Hitching Post' },
+    { name: 'VisitedMap', icon: MapPin, label: 'My Map' },
   ];
 
   const isHome = currentPageName === 'Home';

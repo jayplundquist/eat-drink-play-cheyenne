@@ -157,6 +157,28 @@ export default function Home() {
         />
       )}
 
+      {/* Just Blew In Section */}
+      {venues.length > 0 && !searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-5 h-5 text-amber-800" />
+            <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <VenueCard 
+                venue={venues[0]}
+                isFavorite={isFavorite(venues[0].id)}
+                onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venues[0].id) : base44.auth.redirectToLogin()}
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Section */}
       {featuredVenues.length > 0 && !searchQuery && activeTab === 'all' && (
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">

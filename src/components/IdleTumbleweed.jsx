@@ -54,83 +54,13 @@ export default function IdleTumbleweed() {
           ease: 'linear',
           repeat: Infinity,
         }}
-        className="relative w-40 h-40 flex items-center justify-center"
+        className="w-48 h-48 flex items-center justify-center"
       >
-        {/* Tumbleweed SVG */}
-        <svg viewBox="0 0 200 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          {/* Main tumbleweed body - interlocking circles */}
-          <defs>
-            <linearGradient id="tumbleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{ stopColor: '#d4a574', stopOpacity: 1 }} />
-              <stop offset="50%" style={{ stopColor: '#c19a6b', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: '#8b6f47', stopOpacity: 1 }} />
-            </linearGradient>
-          </defs>
-
-          {/* Tumbleweed strands */}
-          {[...Array(12)].map((_, i) => {
-            const angle = (i / 12) * Math.PI * 2;
-            const x1 = 100 + Math.cos(angle) * 50;
-            const y1 = 100 + Math.sin(angle) * 50;
-            const x2 = 100 + Math.cos(angle) * 70;
-            const y2 = 100 + Math.sin(angle) * 70;
-            
-            return (
-              <path
-                key={`strand-${i}`}
-                d={`M ${x1} ${y1} Q ${100 + Math.cos(angle) * 80} ${100 + Math.sin(angle) * 80} ${x2} ${y2}`}
-                stroke="url(#tumbleGradient)"
-                strokeWidth="8"
-                fill="none"
-                strokeLinecap="round"
-              />
-            );
-          })}
-
-          {/* Main body circles */}
-          <circle cx="100" cy="100" r="45" fill="url(#tumbleGradient)" opacity="0.9" />
-          <circle cx="70" cy="70" r="35" fill="url(#tumbleGradient)" opacity="0.8" />
-          <circle cx="130" cy="70" r="35" fill="url(#tumbleGradient)" opacity="0.8" />
-          <circle cx="70" cy="130" r="35" fill="url(#tumbleGradient)" opacity="0.8" />
-          <circle cx="130" cy="130" r="35" fill="url(#tumbleGradient)" opacity="0.8" />
-
-          {/* Left Eye */}
-          <circle cx="85" cy="95" r="8" fill="white" />
-          <circle cx="85" cy="95" r="5" fill="black" />
-          <motion.circle
-            cx="87"
-            cy="93"
-            r="2"
-            fill="white"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
-          />
-
-          {/* Right Eye */}
-          <circle cx="115" cy="95" r="8" fill="white" />
-          <circle cx="115" cy="95" r="5" fill="black" />
-          <motion.circle
-            cx="117"
-            cy="93"
-            r="2"
-            fill="white"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
-          />
-
-          {/* Happy Mouth */}
-          <path
-            d="M 90 115 Q 100 125 110 115"
-            stroke="black"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
-          />
-
-          {/* Rosy Cheeks */}
-          <circle cx="65" cy="110" r="8" fill="rgba(220, 100, 100, 0.4)" />
-          <circle cx="135" cy="110" r="8" fill="rgba(220, 100, 100, 0.4)" />
-        </svg>
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e9c14c196b53cce1321b1/208f6af59_Gemini_Generated_Image_ev6hpyev6hpyev6h.png"
+          alt="Tumbleweed"
+          className="w-full h-full object-contain drop-shadow-lg"
+        />
       </motion.div>
 
       {/* Floating dust particles */}

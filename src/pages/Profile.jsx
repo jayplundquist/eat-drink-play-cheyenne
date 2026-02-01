@@ -20,6 +20,7 @@ import BootCheckList from "../components/BootCheckList";
 export default function Profile() {
   const urlParams = new URLSearchParams(window.location.search);
   const defaultTab = urlParams.get('defaultValue') || 'favorites';
+  const tabsRef = React.useRef(null);
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,14 @@ export default function Profile() {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (defaultTab === 'bigboots' && tabsRef.current) {
+      setTimeout(() => {
+        tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [defaultTab]);
 
   useEffect(() => {
     base44.auth.me()

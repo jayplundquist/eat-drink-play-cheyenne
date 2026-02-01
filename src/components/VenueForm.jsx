@@ -617,6 +617,30 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                 </div>
               )}
 
+          {/* Critter Friendly - Premium Feature */}
+              {venue && (user?.is_premium || user?.role === 'admin') && (
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <PawPrint className="w-5 h-5 text-green-600" />
+                      <Label className="text-green-900 font-semibold">Critter Friendly</Label>
+                    </div>
+                  </div>
+                  <p className="text-sm text-green-700">
+                    Is this venue pet-friendly? Let visitors know they can bring their furry friends!
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => handleChange('critter_friendly', !formData.critter_friendly)}
+                    variant={formData.critter_friendly ? "default" : "outline"}
+                    className={formData.critter_friendly ? "w-full bg-green-600 hover:bg-green-700 text-white" : "w-full border-green-300 text-green-700 hover:bg-green-50"}
+                  >
+                    <PawPrint className="w-4 h-4 mr-2" />
+                    {formData.critter_friendly ? 'Critter Friendly ✓' : 'Mark as Critter Friendly'}
+                  </Button>
+                </div>
+              )}
+
               {/* Quick Draw Boost - Premium Feature */}
               {venue && (user?.is_premium || user?.role === 'admin') && (
                 <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-4 space-y-3">

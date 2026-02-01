@@ -1,0 +1,107 @@
+import React, { useState } from 'react';
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Heart, MapPin, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { cn } from "@/lib/utils";
+import BootRating from "./BootRating";
+
+const categoryLabels = {
+  restaurant: "Restaurant",
+  bar: "Bar",
+  brewery: "Brewery",
+  music_hall: "Music Hall",
+  activity: "Activity",
+  recreation: "Recreation"
+};
+
+const categoryColors = {
+  restaurant: "bg-amber-100 text-amber-800 border-amber-200",
+  bar: "bg-rose-100 text-rose-800 border-rose-200",
+  brewery: "bg-orange-100 text-orange-800 border-orange-200",
+  music_hall: "bg-violet-100 text-violet-800 border-violet-200",
+  activity: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  recreation: "bg-sky-100 text-sky-800 border-sky-200"
+};
+
+export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true }) {
+  const [imageError, setImageError] = useState(false);
+  const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
+
+  const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80";
+
+  return (
+    <Card className="group overflow-hidden bg-white border-stone-200 hover:border-amber-300 transition-all duration-300 hover:shadow-lg hover:shadow-amber-100/50">
+      <Link to={createPageUrl(`VenueDetails?id=${venue.id}`)}>
+        <div className="relative aspect-[4/3] overflow-hidden">
+          <img
+            src={imageError ? defaultImage : (venue.image_url || defaultImage)}
+            alt={venue.name}
+            onError={() => setImageError(true)}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          
+          <Badge className={cn("absolute top-3 left-3 border", categoryColors[venue.category])}>
+            {categoryLabels[venue.category]}
+          </Badge>
+          
+          {venue.price_range && (
+            <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-700 px-2 py-1 rounded-md text-sm font-medium">
+              {venue.price_range}
+            </span>
+          )}
+          
+          <div className="absolute bottom-3 left-3 right-3">
+            <h3 className="text-white font-semibold text-lg leading-tight mb-1 drop-shadow-md">
+              {venue.name}
+            </h3>
+            {venue.address && (
+              <div className="flex items-center gap-1 text-white/90 text-sm">
+                <MapPin className="w-3.5 h-3.5" />
+                <span className="truncate">{venue.address}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </Link>
+      
+      <div className="p-4">
+        <div className="flex items-center justify-between">
+          <BootRating 
+            rating={Math.round(avgRating)} 
+            showCount 
+            count={venue.rating_count || 0} 
+          />
+          
+          {showFavorite && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.preventDefault();
+                onToggleFavorite?.(venue.id);
+              }}
+              className="h-9 w-9 rounded-full hover:bg-rose-50"
+            >
+              <Heart 
+                className={cn(
+                  "w-5 h-5 transition-all",
+                  isFavorite ? "fill-rose-500 text-rose-500" : "text-stone-400"
+                )} 
+              />
+            </Button>
+          )}
+        </div>
+        
+        {venue.description && (
+          <p className="text-stone-600 text-sm mt-3 line-clamp-2">
+            {venue.description}
+          </p>
+        )}
+      </div>
+    </Card>
+  );
+}

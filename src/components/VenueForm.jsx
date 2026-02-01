@@ -588,11 +588,24 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
               )}
               <Button
                 type="button"
-                onClick={() => onInitiateBoostCheckout?.(venue.id)}
+                onClick={() => {
+                  if (user?.role === 'admin') {
+                    // Apply boost for free for admins
+                    const boostExpireDate = new Date();
+                    boostExpireDate.setDate(boostExpireDate.getDate() + 7);
+                    handleChange('boost_expires_date', boostExpireDate.toISOString());
+                    handleChange('quick_draw_boost', true);
+                    toast.success('Boost applied for 7 days');
+                  } else {
+                    onInitiateBoostCheckout?.(venue.id);
+                  }
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Zap className="w-4 h-4 mr-2" />
-                {formData.boost_expires_date && new Date(formData.boost_expires_date) > new Date() ? 'Renew Boost' : 'Purchase Boost'}
+                {user?.role === 'admin' 
+                  ? 'Apply Boost (Free)' 
+                  : (formData.boost_expires_date && new Date(formData.boost_expires_date) > new Date() ? 'Renew Boost' : 'Purchase Boost')}
               </Button>
             </div>
           )}

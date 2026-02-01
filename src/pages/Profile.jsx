@@ -277,6 +277,13 @@ export default function Profile() {
               My Reviews ({userRatings.length})
             </TabsTrigger>
             <TabsTrigger 
+              value="bigboots"
+              className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700"
+            >
+              👢
+              Big Boots
+            </TabsTrigger>
+            <TabsTrigger 
               value="settings"
               className="rounded-full px-6 data-[state=active]:bg-white data-[state=active]:text-amber-700"
             >
@@ -377,6 +384,61 @@ export default function Profile() {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          {/* Big Boots Tab */}
+          <TabsContent value="bigboots" className="mt-0">
+            <Card>
+              <CardHeader>
+                <CardTitle>The 8ft Cheyenne Big Boots</CardTitle>
+                <CardDescription>One of Cheyenne's most iconic landmarks</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-gradient-to-r from-amber-50 to-stone-50 rounded-lg p-6 text-center">
+                  <div className="text-6xl mb-4">👢</div>
+                  <h3 className="text-2xl font-bold text-amber-900 mb-2">The World's Largest Boots</h3>
+                  <p className="text-stone-700 mb-4">
+                    Located on Interstate 80 westbound near Cheyenne, these iconic 8-foot tall cowboy boots are a must-see roadside attraction and symbol of Wyoming's western heritage.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 bg-stone-50 rounded-lg">
+                    <div className="text-2xl font-bold text-amber-700 mb-1">📍</div>
+                    <h4 className="font-semibold text-stone-800 mb-1">Location</h4>
+                    <p className="text-sm text-stone-600">I-80 Westbound near Cheyenne, WY</p>
+                  </div>
+                  <div className="p-4 bg-stone-50 rounded-lg">
+                    <div className="text-2xl font-bold text-amber-700 mb-1">🎟️</div>
+                    <h4 className="font-semibold text-stone-800 mb-1">Admission</h4>
+                    <p className="text-sm text-stone-600">Free • Open 24/7</p>
+                  </div>
+                </div>
+
+                {user.big_boots_visited ? (
+                  <div className="bg-green-50 border-2 border-green-300 rounded-lg p-4 text-center">
+                    <div className="text-3xl mb-2">✓</div>
+                    <p className="text-green-900 font-semibold">
+                      You've visited the Big Boots!
+                    </p>
+                    <p className="text-sm text-green-700 mt-1">
+                      On {new Date(user.big_boots_visited).toLocaleDateString()}
+                    </p>
+                  </div>
+                ) : (
+                  <Button 
+                    onClick={() => {
+                      base44.auth.updateMe({ big_boots_visited: new Date().toISOString() });
+                      setUser({ ...user, big_boots_visited: new Date().toISOString() });
+                      toast.success('Added to your adventures! 🤠');
+                    }}
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    Mark as Visited
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Settings Tab */}

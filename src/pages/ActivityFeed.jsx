@@ -168,8 +168,13 @@ export default function ActivityFeed() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <Card className="hover:shadow-lg transition-shadow">
+                  <Card className={`hover:shadow-lg transition-shadow ${item.isBoosted ? 'border-amber-300 border-2' : ''}`}>
                     <CardContent className="p-6">
+                      {item.isBoosted && (
+                        <div className="mb-4 inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">
+                          <span>⭐</span> Featured
+                        </div>
+                      )}
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Button asChild variant="link" className="text-amber-700 p-0 h-auto">

@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import {
   Tooltip,
   TooltipContent,
@@ -7,20 +9,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
-const BADGE_LEVELS = [
-  { name: 'Tenderfoot', minReviews: 1, icon: '🤠', description: 'Posted your first review' },
-  { name: 'Wrangler', minReviews: 10, icon: '🐴', description: '10+ reviews' },
-  { name: 'The Marshall', minReviews: 25, icon: '⭐', description: '25+ reviews' },
-  { name: 'Legend of the Plains', minReviews: 50, icon: '👑', description: '50+ reviews' },
-];
-
-const BOOT_BADGES = [
-  { name: 'Greenhorn', minBoots: 1, icon: '👢', description: 'Found your first boot' },
-  { name: 'Ranch Hand', minBoots: 5, icon: '🤠', description: 'Found 5+ boots' },
-  { name: 'Prospector', minBoots: 15, icon: '⛏️', description: 'Found 15+ boots' },
-  { name: 'Trail Boss', minBoots: 25, icon: '👑', description: 'Found all 25 boots' },
-];
 
 const DUSTER_BADGE = {
   name: 'The Duster',
@@ -31,8 +19,16 @@ const DUSTER_BADGE = {
 };
 
 export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0 }) {
-  const earned = BADGE_LEVELS.filter(b => reviewCount >= b.minReviews);
-  const bootEarned = BOOT_BADGES.filter(b => bootVisitCount >= b.minBoots);
+  const { data: allBadges = [] } = useQuery({
+    queryKey: ['badges'],
+    queryFn: () => base44.entities.Badge.list(),
+  });
+
+  const reviewBadges = allBadges.filter(b => b.type === 'review').sort((a, b) => a.min_count - b.min_count);
+  const bootBadges = allBadges.filter(b => b.type === 'boot').sort((a, b) => a.min_count - b.min_count);
+  
+  const earned = reviewBadges.filter(b => reviewCount >= b.min_count);
+  const bootEarned = bootBadges.filter(b => bootVisitCount >= b.min_count);
   const dusterEarned = reviewCount >= 5 && avgRating >= 1 && avgRating <= 2;
 
   return (
@@ -46,8 +42,8 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
           <div>
             <h3 className="text-sm font-semibold text-stone-700 mb-3">Review Badges</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {BADGE_LEVELS.map((badge) => {
-            const isEarned = reviewCount >= badge.minReviews;
+              {reviewBadges.map((badge) => {
+                const isEarned = reviewCount >= badge.min_count;
             return (
               <motion.div
                 key={badge.name}
@@ -65,7 +61,11 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                         }`}
                       >
                         <div className={`text-4xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
-                          {badge.icon}
+                          {badge.icon_url ? (
+                            <img src={badge.icon_url} alt={badge.name} className="w-10 h-10 mx-auto" />
+                          ) : (
+                            '🎖️'
+                          )}
                         </div>
                         <div className={`text-xs font-semibold ${
                           isEarned ? 'text-amber-900' : 'text-stone-600'
@@ -75,7 +75,7 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                         <div className={`text-xs mt-1 ${
                           isEarned ? 'text-amber-700' : 'text-stone-500'
                         }`}>
-                          {badge.minReviews}+ reviews
+                          {badge.min_count}+ reviews
                         </div>
                       </div>
                     </TooltipTrigger>
@@ -131,8 +131,8 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
           <div>
             <h3 className="text-sm font-semibold text-stone-700 mb-3">Big Boots Challenge</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {BOOT_BADGES.map((badge) => {
-                const isEarned = bootVisitCount >= badge.minBoots;
+              {bootBadges.map((badge) => {
+                const isEarned = bootVisitCount >= badge.min_count;
                 return (
                   <motion.div
                     key={badge.name}
@@ -150,7 +150,11 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                             }`}
                           >
                             <div className={`text-4xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
-                              {badge.icon}
+                              {badge.icon_url ? (
+                                <img src={badge.icon_url} alt={badge.name} className="w-10 h-10 mx-auto" />
+                              ) : (
+                                '🎖️'
+                              )}
                             </div>
                             <div className={`text-xs font-semibold ${
                               isEarned ? 'text-amber-900' : 'text-stone-600'
@@ -160,7 +164,7 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                             <div className={`text-xs mt-1 ${
                               isEarned ? 'text-amber-700' : 'text-stone-500'
                             }`}>
-                              {badge.minBoots}+ boots
+                              {badge.min_count}+ boots
                             </div>
                           </div>
                         </TooltipTrigger>

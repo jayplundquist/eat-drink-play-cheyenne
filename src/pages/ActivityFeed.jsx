@@ -198,7 +198,6 @@ export default function ActivityFeed() {
                     className="block px-4 py-3 hover:bg-stone-50 border-b last:border-b-0"
                   >
                     <p className="font-semibold text-stone-800">{user.email?.split('@')[0]}</p>
-                    <p className="text-xs text-stone-500">{user.email}</p>
                   </Link>
                 ))}
               </div>

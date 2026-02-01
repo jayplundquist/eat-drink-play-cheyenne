@@ -60,6 +60,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
+import ManageVenueOptions from './pages/ManageVenueOptions';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "Settings": Settings,
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
+    "ManageVenueOptions": ManageVenueOptions,
 }
 
 export const pagesConfig = {

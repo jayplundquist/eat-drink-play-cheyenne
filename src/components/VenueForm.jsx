@@ -70,11 +70,9 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
      });
 
    const [newFeature, setNewFeature] = useState('');
-    const [uploading, setUploading] = useState(false);
-    const [menuUploading, setMenuUploading] = useState(false);
-    const [foodTypeOpen, setFoodTypeOpen] = useState(false);
-    const [newFoodType, setNewFoodType] = useState('');
-    const [newCategory, setNewCategory] = useState('');
+     const [uploading, setUploading] = useState(false);
+     const [menuUploading, setMenuUploading] = useState(false);
+     const [foodTypeOpen, setFoodTypeOpen] = useState(false);
 
    const queryClient = useQueryClient();
 
@@ -153,39 +151,6 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
         : [...current, foodType];
       return { ...prev, food_types: updated };
     });
-  };
-
-  const addCustomFoodType = async () => {
-    if (newFoodType.trim()) {
-      const value = newFoodType.toLowerCase().replace(/\s+/g, '_');
-      const label = newFoodType.trim();
-      try {
-        await base44.entities.CustomVenueOption.create({ name: label, type: 'food_type', value });
-        queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
-        toggleFoodType(value);
-        setNewFoodType('');
-        toast.success(`Added "${label}" to food types`);
-      } catch (error) {
-        toast.error('Failed to save custom food type');
-      }
-    }
-  };
-
-  const addCustomCategory = async () => {
-    if (newCategory.trim()) {
-      const value = newCategory.toLowerCase().replace(/\s+/g, '_');
-      const label = newCategory.trim();
-      try {
-        await base44.entities.CustomVenueOption.create({ name: label, type: 'category', value });
-        queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
-        const current = formData.categories || [];
-        handleChange('categories', [...current, value]);
-        setNewCategory('');
-        toast.success(`Added "${label}" to categories`);
-      } catch (error) {
-        toast.error('Failed to save custom category');
-      }
-    }
   };
 
   const allFoodTypes = [...foodTypes, ...customFoodTypes];
@@ -305,22 +270,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                   );
                 })}
               </div>
-              <div className="flex gap-2">
-                <Input
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                  placeholder="Add custom category"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomCategory())}
-                />
-                <Button 
-                  type="button" 
-                  onClick={addCustomCategory}
-                  variant="outline"
-                  className="border-amber-300 text-amber-700 hover:bg-amber-50"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
+
             </div>
           </div>
 
@@ -491,31 +441,10 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                   <Command>
                     <CommandInput placeholder="Search food types..." />
                     <CommandEmpty>
-                      <div className="p-2">
-                        <div className="text-sm text-stone-500 mb-2">No food type found</div>
-                        <div className="flex gap-2">
-                          <Input
-                            value={newFoodType}
-                            onChange={(e) => setNewFoodType(e.target.value)}
-                            placeholder="Add new food type"
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                addCustomFoodType();
-                              }
-                            }}
-                          />
-                          <Button 
-                            type="button" 
-                            onClick={addCustomFoodType}
-                            size="sm"
-                            className="bg-amber-600 hover:bg-amber-700"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CommandEmpty>
+                       <div className="p-2 text-sm text-stone-500">
+                         No food type found. Contact an admin to add new types.
+                       </div>
+                     </CommandEmpty>
                     <CommandGroup>
                       {allFoodTypes.map((foodType) => (
                         <CommandItem

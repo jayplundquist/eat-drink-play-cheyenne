@@ -327,17 +327,6 @@ export default function VenueDetails() {
                 </Button>
               </Link>
             )}
-
-            {user && !venue.claimed_by && (
-              <Button 
-                size="sm" 
-                className="bg-blue-600 hover:bg-blue-700 text-white ml-2 mb-4"
-                onClick={() => setClaimModalOpen(true)}
-              >
-                <Crown className="w-4 h-4 mr-2" />
-                Claim Venue
-              </Button>
-            )}
             <div className="flex flex-wrap gap-2 mb-3">
               {getCategories(venue).map(cat => (
                 <Badge key={cat} className="bg-amber-600 text-white">

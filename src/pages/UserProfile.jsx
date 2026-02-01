@@ -23,6 +23,12 @@ export default function UserProfile() {
   const urlParams = new URLSearchParams(window.location.search);
   const userEmail = urlParams.get('email');
 
+  const { data: profileUserData = null } = useQuery({
+    queryKey: ['profileUser', userEmail],
+    queryFn: () => userEmail ? base44.entities.User.filter({ email: userEmail }).then(users => users[0] || null) : null,
+    enabled: !!userEmail,
+  });
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {

@@ -207,7 +207,7 @@ export default function ActivityFeed() {
              <Users className="w-16 h-16 text-stone-300 mx-auto mb-4" />
              <h3 className="text-lg font-medium text-stone-700 mb-2">No results found</h3>
              <p className="text-stone-500">
-               No activity from users matching "{searchEmail}"
+               No activity from users with username "{searchEmail}"
              </p>
            </Card>
          ) : (

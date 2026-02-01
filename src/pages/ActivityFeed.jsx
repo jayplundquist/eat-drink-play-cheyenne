@@ -129,7 +129,7 @@ export default function ActivityFeed() {
   });
 
   const filteredActivityItems = searchEmail
-    ? activityItems.filter(item => item.user_email.toLowerCase().includes(searchEmail.toLowerCase()))
+    ? activityItems.filter(item => item.user_email.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()))
     : activityItems;
 
   if (loading) {

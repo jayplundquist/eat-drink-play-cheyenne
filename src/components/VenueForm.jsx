@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap } from "lucide-react";
-import HoursSelector from './HoursSelector';
 import {
   Popover,
   PopoverContent,
@@ -49,28 +48,20 @@ const foodTypes = [
 ];
 
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
-   const [formData, setFormData] = useState(venue ? { ...venue } : {
-      name: '',
-      categories: [],
-      description: '',
-      address: '',
-      phone: '',
-      website: '',
-      image_url: '',
-      price_range: '$$',
-      hours: {
-        monday: null,
-        tuesday: null,
-        wednesday: null,
-        thursday: null,
-        friday: null,
-        saturday: null,
-        sunday: null,
-      },
-      features: [],
-      food_types: [],
-      quick_draw_boost: false,
-    });
+   const [formData, setFormData] = useState(venue || {
+     name: '',
+     categories: [],
+     description: '',
+     address: '',
+     phone: '',
+     website: '',
+     image_url: '',
+     price_range: '$$',
+     hours: '',
+     features: [],
+     food_types: [],
+     quick_draw_boost: false,
+   });
 
    const [newFeature, setNewFeature] = useState('');
    const [uploading, setUploading] = useState(false);
@@ -351,10 +342,15 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             </div>
           </div>
 
-          <HoursSelector
-            value={formData.hours}
-            onChange={(hours) => handleChange('hours', hours)}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="hours">Hours</Label>
+            <Input
+              id="hours"
+              value={formData.hours}
+              onChange={(e) => handleChange('hours', e.target.value)}
+              placeholder="e.g. Mon-Sat 11am-10pm, Sun Closed"
+            />
+          </div>
 
           {/* Food Types */}
           <div className="space-y-2">
@@ -530,8 +526,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
               disabled={!formData.name || !(formData.categories || []).length || isSaving}
               className="bg-amber-600 hover:bg-amber-700 text-white"
             >
-              {isSaving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {!isSaving && <Save className="w-4 h-4 mr-2" />}
+              <Save className="w-4 h-4 mr-2" />
               {venue ? 'Update Venue' : 'Create Venue'}
             </Button>
           </div>

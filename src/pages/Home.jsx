@@ -200,15 +200,12 @@ export default function Home() {
                 >
                   <Link to={createPageUrl(`VenueDetails?id=${review.venue_id}`)}>
                     <div className="bg-white rounded-lg border border-amber-200 p-4 h-full hover:shadow-md transition-shadow cursor-pointer">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-amber-900 truncate text-sm">{venue?.name || 'Venue'}</h3>
-                        <span className="text-lg">👢</span>
-                      </div>
+                      <h3 className="font-semibold text-amber-900 truncate text-sm mb-3">{venue?.name || 'Venue'}</h3>
                       <div className="flex gap-1 mb-3">
                         {[...Array(5)].map((_, idx) => (
-                          <span key={idx} className={idx < review.boots ? 'text-lg' : 'text-lg opacity-20'}>
-                            👢
-                          </span>
+                          <div key={idx} className="w-5 h-5">
+                            <CowboyBoot filled={idx < review.boots} size="sm" />
+                          </div>
                         ))}
                       </div>
                       {review.comment && (

@@ -32,6 +32,7 @@ export default function Home() {
   const [user, setUser] = useState(null);
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const tabCategories = {
     all: [],
@@ -102,7 +103,7 @@ export default function Home() {
     },
   });
 
-  const filteredVenues = venues.filter(venue => {
+  const allFilteredVenues = venues.filter(venue => {
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = !searchQuery || 
       venue.name?.toLowerCase().includes(searchLower) ||
@@ -121,6 +122,11 @@ export default function Home() {
 
     return matchesSearch && matchesTab && matchesRating;
   }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
+
+  const itemsPerPage = 20;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const filteredVenues = allFilteredVenues.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(allFilteredVenues.length / itemsPerPage);
 
 
 
@@ -256,28 +262,28 @@ export default function Home() {
         <div className="mb-6 flex gap-2 flex-wrap items-center">
           <Button
             variant={activeTab === 'all' ? 'default' : 'outline'}
-            onClick={() => setActiveTab('all')}
+            onClick={() => { setActiveTab('all'); setCurrentPage(1); }}
             className={activeTab === 'all' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
           >
             All Venues
           </Button>
           <Button
             variant={activeTab === 'eat' ? 'default' : 'outline'}
-            onClick={() => setActiveTab('eat')}
+            onClick={() => { setActiveTab('eat'); setCurrentPage(1); }}
             className={activeTab === 'eat' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
           >
             🍽️ Eat
           </Button>
           <Button
             variant={activeTab === 'drink' ? 'default' : 'outline'}
-            onClick={() => setActiveTab('drink')}
+            onClick={() => { setActiveTab('drink'); setCurrentPage(1); }}
             className={activeTab === 'drink' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
           >
             🍷 Drink
           </Button>
           <Button
             variant={activeTab === 'play' ? 'default' : 'outline'}
-            onClick={() => setActiveTab('play')}
+            onClick={() => { setActiveTab('play'); setCurrentPage(1); }}
             className={activeTab === 'play' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
           >
             🎭 Play
@@ -338,18 +344,43 @@ export default function Home() {
                 transition={{ delay: i * 0.05 }}
               >
                 <VenueCard 
-                  venue={venue}
-                  isFavorite={isFavorite(venue.id)}
-                  onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
-                  hideAddress
-                />
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </section>
+                    venue={venue}
+                    isFavorite={isFavorite(venue.id)}
+                    onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
+                    hideAddress
+                  />
+                </motion.div>
+                ))}
+                </div>
+                )}
 
-      {/* Suggestions Button */}
+                {/* Pagination */}
+                {allFilteredVenues.length > itemsPerPage && (
+                <div className="mt-8 flex items-center justify-center gap-4">
+                <Button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                variant="outline"
+                className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                >
+                Previous
+                </Button>
+                <span className="text-sm text-stone-600 font-medium">
+                Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                variant="outline"
+                className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                >
+                Next
+                </Button>
+                </div>
+                )}
+                </section>
+
+                {/* Suggestions Button */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-center">
         <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
           <DialogTrigger asChild>

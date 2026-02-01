@@ -193,6 +193,13 @@ export default function ActivityFeed() {
                                   "{item.data.comment}"
                                 </p>
                               )}
+                              {item.data.image_urls && item.data.image_urls.length > 0 && (
+                                <div className="grid grid-cols-2 gap-2 mt-3">
+                                  {item.data.image_urls.map((url, i) => (
+                                    <img key={i} src={url} alt={`Review photo ${i}`} className="w-full h-24 object-cover rounded-md" />
+                                  ))}
+                                </div>
+                              )}
                             </>
                           )}
 

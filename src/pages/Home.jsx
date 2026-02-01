@@ -134,10 +134,7 @@ export default function Home() {
 
 
 
-  const featuredVenues = venues
-    .filter(v => v.rating_count > 0)
-    .sort((a, b) => (b.rating_sum / b.rating_count) - (a.rating_sum / a.rating_count))
-    .slice(0, 4);
+
 
   return (
     <div className="min-h-screen bg-amber-50">
@@ -202,32 +199,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* Featured Section */}
-      {featuredVenues.length > 0 && !searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center gap-2 mb-6">
-            <Sparkles className="w-5 h-5 text-amber-800" />
-            <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Top Rated</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredVenues.map((venue, i) => (
-              <motion.div
-                key={venue.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <VenueCard 
-                  venue={venue}
-                  isFavorite={isFavorite(venue.id)}
-                  onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
-                  hideAddress
-                />
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      )}
+
 
       {/* Big Boots Challenge Section */}
       {!searchQuery && activeTab === 'all' && (

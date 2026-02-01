@@ -55,12 +55,12 @@ import Home from './pages/Home';
 import ManageBadges from './pages/ManageBadges';
 import ManageBoots from './pages/ManageBoots';
 import ManageClaimRequests from './pages/ManageClaimRequests';
+import ManageVenueOptions from './pages/ManageVenueOptions';
 import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
-import ManageVenueOptions from './pages/ManageVenueOptions';
 import __Layout from './Layout.jsx';
 
 
@@ -73,12 +73,12 @@ export const PAGES = {
     "ManageBadges": ManageBadges,
     "ManageBoots": ManageBoots,
     "ManageClaimRequests": ManageClaimRequests,
+    "ManageVenueOptions": ManageVenueOptions,
     "ManageVenues": ManageVenues,
     "Profile": Profile,
     "Settings": Settings,
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
-    "ManageVenueOptions": ManageVenueOptions,
 }
 
 export const pagesConfig = {

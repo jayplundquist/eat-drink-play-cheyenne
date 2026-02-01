@@ -14,6 +14,7 @@ import VenueCard from "../components/VenueCard";
 import EventCard from "../components/EventCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
+import HatTip from "../components/HatTip";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,7 +38,12 @@ export default function Home() {
   });
 
   const { data: favorites = [] } = useQuery({
-    queryKey: ['favorites', user?.email],
+    queryKey: ['favorites'],
+    queryFn: () => base44.entities.Favorite.list(),
+  });
+
+  const { data: userFavorites = [] } = useQuery({
+    queryKey: ['userFavorites', user?.email],
     queryFn: () => user ? base44.entities.Favorite.filter({ user_email: user.email }) : [],
     enabled: !!user,
   });
@@ -50,7 +56,7 @@ export default function Home() {
 
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
-      const existing = favorites.find(f => f.venue_id === venueId);
+      const existing = userFavorites.find(f => f.venue_id === venueId);
       if (existing) {
         await base44.entities.Favorite.delete(existing.id);
       } else {
@@ -59,10 +65,11 @@ export default function Home() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['userFavorites'] });
     },
   });
 
-  const isFavorite = (venueId) => favorites.some(f => f.venue_id === venueId);
+  const isFavorite = (venueId) => userFavorites.some(f => f.venue_id === venueId);
 
   const filteredVenues = venues.filter(venue => {
     const matchesSearch = !searchQuery || 
@@ -91,11 +98,21 @@ export default function Home() {
       {/* Spin the Spur & Quick Draw */}
       {!searchQuery && selectedCategory === 'all' && (
         <SpinTheSpur 
-          favorites={favorites}
+          favorites={userFavorites}
           venues={venues}
           userRatings={userRatings}
           user={user}
           onSignInRequired={() => base44.auth.redirectToLogin()}
+        />
+      )}
+
+      {/* Hat Tip Section */}
+      {!searchQuery && selectedCategory === 'all' && (
+        <HatTip 
+          venues={venues}
+          favorites={favorites}
+          user={user}
+          onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
         />
       )}
 

@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import BootRating from "../components/BootRating";
 import ClaimVenueModal from "../components/ClaimVenueModal";
+import UserBadge from "../components/UserBadge";
 import { toast } from "sonner";
 
 const categoryLabels = {
@@ -111,6 +112,12 @@ export default function VenueDetails() {
       return r[0] || null;
     },
     enabled: !!user && !!venueId,
+  });
+
+  const { data: allUserReviews = [] } = useQuery({
+    queryKey: ['allUserReviews', user?.email],
+    queryFn: () => user ? base44.entities.Rating.filter({ user_email: user.email }) : [],
+    enabled: !!user,
   });
 
   const isFavorite = favorites.some(f => f.venue_id === venueId);
@@ -564,12 +571,14 @@ export default function VenueDetails() {
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between mb-1">
-                              <Button asChild variant="link" className="text-stone-800 font-medium p-0 h-auto">
-                                <Link to={`${createPageUrl('UserProfile')}?email=${rating.user_email}`}>
-                                  {rating.user_email?.split('@')[0]}
-                                </Link>
-                              </Button>
-                            <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2">
+                                <Button asChild variant="link" className="text-stone-800 font-medium p-0 h-auto">
+                                  <Link to={`${createPageUrl('UserProfile')}?email=${rating.user_email}`}>
+                                    {rating.user_email?.split('@')[0]}
+                                  </Link>
+                                </Button>
+                              </div>
+                              <div className="flex items-center gap-2">
                               <span className="text-sm text-stone-500">
                                 {format(new Date(rating.created_date), 'MMM d, yyyy')}
                               </span>

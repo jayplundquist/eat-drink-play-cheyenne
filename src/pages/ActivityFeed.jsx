@@ -395,7 +395,7 @@ export default function ActivityFeed() {
                          <span className="text-sm text-stone-500">
                            {new Date(item.timestamp).toLocaleDateString()}
                          </span>
-                         {(item.isOwn || user?.role === 'admin') && item.type === 'review' && (
+                         {(item.isOwn || currentUser?.role === 'admin') && item.type === 'review' && (
                            <Button
                              variant="ghost"
                              size="sm"

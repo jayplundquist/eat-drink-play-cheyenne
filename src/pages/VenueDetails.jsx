@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown
+  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -489,21 +489,36 @@ export default function VenueDetails() {
                 </Card>
               ) : (
                 <div className="space-y-4">
-                  {ratings.map((rating) => (
-                    <Card key={rating.id} className="p-4 bg-white border-stone-200">
-                      <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                          <User className="w-5 h-5 text-amber-700" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-stone-800">
-                              {rating.user_email?.split('@')[0]}
-                            </span>
+                    {ratings.map((rating) => (
+                      <Card key={rating.id} className="p-4 bg-white border-stone-200">
+                        <div className="flex gap-4">
+                          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                            <User className="w-5 h-5 text-amber-700" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <Button asChild variant="link" className="text-stone-800 font-medium p-0 h-auto">
+                                <Link to={`${createPageUrl('UserProfile')}?email=${rating.user_email}`}>
+                                  {rating.user_email?.split('@')[0]}
+                                </Link>
+                              </Button>
                             <div className="flex items-center gap-2">
                               <span className="text-sm text-stone-500">
                                 {format(new Date(rating.created_date), 'MMM d, yyyy')}
                               </span>
+                              {user && user.email !== rating.user_email && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedReviewId(rating.id);
+                                    setReportReviewDialogOpen(true);
+                                  }}
+                                  className="h-7 px-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                                >
+                                  <Flag className="w-4 h-4" />
+                                </Button>
+                              )}
                               {user && user.role === 'admin' && (
                                 <Button
                                   variant="ghost"
@@ -516,19 +531,6 @@ export default function VenueDetails() {
                                   className="h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
                                 >
                                   <Trash2 className="w-4 h-4" />
-                                </Button>
-                              )}
-                              {user && user.email !== rating.user_email && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedReviewId(rating.id);
-                                    setReportReviewDialogOpen(true);
-                                  }}
-                                  className="h-7 px-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
-                                >
-                                  <Flag className="w-4 h-4" />
                                 </Button>
                               )}
                             </div>

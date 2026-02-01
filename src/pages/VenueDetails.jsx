@@ -693,18 +693,40 @@ export default function VenueDetails() {
             </DialogContent>
           </Dialog>
 
+          </div>
+          </div>
+
+          {/* Claim Venue Section at Bottom */}
+          {user && !venue.claimed_by && (
+          <section className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+            <Card className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-semibold text-lg text-blue-900 mb-1">Claim This Venue</h3>
+                  <p className="text-sm text-blue-700">Own this business? Request to manage this venue listing.</p>
+                </div>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap"
+                  onClick={() => setClaimModalOpen(true)}
+                >
+                  <Crown className="w-4 h-4 mr-2" />
+                  Submit Claim Request
+                </Button>
+              </div>
+            </Card>
+          </section>
+          )}
+
           {/* Claim Venue Modal */}
           {user && (
-            <ClaimVenueModal 
-              open={claimModalOpen}
-              onOpenChange={setClaimModalOpen}
-              venueName={venue.name}
-              venueId={venueId}
-              user={user}
-            />
+          <ClaimVenueModal 
+            open={claimModalOpen}
+            onOpenChange={setClaimModalOpen}
+            venueName={venue.name}
+            venueId={venueId}
+            user={user}
+          />
           )}
-          </div>
-          </div>
           </div>
           );
           }

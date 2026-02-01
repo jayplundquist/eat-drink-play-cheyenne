@@ -599,9 +599,25 @@ export default function VenueDetails() {
               <h3 className="font-semibold text-stone-800 mb-4">Information</h3>
               <div className="space-y-4">
                 {venue.address && (
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
-                    <span className="text-stone-600">{venue.address}</span>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
+                      <span className="text-stone-600">{venue.address}</span>
+                    </div>
+                    <Button
+                      asChild
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                      size="sm"
+                    >
+                      <a 
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.address)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Hit the Trail
+                      </a>
+                    </Button>
                   </div>
                 )}
                 {venue.phone && (

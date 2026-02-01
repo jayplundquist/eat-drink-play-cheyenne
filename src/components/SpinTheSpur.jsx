@@ -85,6 +85,11 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
     setResult(null);
     setShowResult(false);
 
+    // Play gunshot sounds for 3 bullets
+    setTimeout(() => playGunshot(), 300);
+    setTimeout(() => playGunshot(), 600);
+    setTimeout(() => playGunshot(), 900);
+
     // Simulate spinning animation
     setTimeout(() => {
       const randomVenue = untriedVenues[Math.floor(Math.random() * untriedVenues.length)];

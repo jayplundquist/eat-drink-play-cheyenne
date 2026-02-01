@@ -23,7 +23,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
     { value: 'recreation', label: 'Recreation' }
   ];
 
-  // Get top favorited venue per category
+  // Get top venue per category using favorites and boot ratings
   const trendingVenues = categories
     .map(cat => {
       const categoryVenues = venues.filter(v => {
@@ -32,18 +32,16 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
       });
       if (categoryVenues.length === 0) return null;
       
-      // Sort by favorite count, then by rating
-      const sorted = categoryVenues.sort((a, b) => {
-        const aFavs = favoriteCounts[a.id] || 0;
-        const bFavs = favoriteCounts[b.id] || 0;
-        if (aFavs !== bFavs) return bFavs - aFavs;
-        
-        const aRating = a.rating_count > 0 ? a.rating_sum / a.rating_count : 0;
-        const bRating = b.rating_count > 0 ? b.rating_sum / b.rating_count : 0;
-        return bRating - aRating;
+      // Score venues by favorite count and boot ratings
+      const scored = categoryVenues.map(venue => {
+        const favCount = favoriteCounts[venue.id] || 0;
+        const bootRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
+        const score = (favCount * 2) + bootRating;
+        return { venue, score };
       });
       
-      return sorted[0];
+      const sorted = scored.sort((a, b) => b.score - a.score);
+      return sorted[0]?.venue;
     })
     .filter(v => v !== null);
 
@@ -85,7 +83,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
           />
         </motion.div>
         <h2 className="text-3xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Hat Tip</h2>
-        <span className="text-amber-700 text-sm ml-2">Trending favorites by category</span>
+        <span className="text-amber-700 text-sm ml-2">Most loved & highest rated by category</span>
       </div>
       
       <div className="flex items-center justify-center gap-4">

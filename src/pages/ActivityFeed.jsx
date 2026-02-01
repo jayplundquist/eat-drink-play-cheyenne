@@ -88,15 +88,22 @@ export default function ActivityFeed() {
       type: 'review',
       data: rating,
       timestamp: rating.updated_date,
-      user_email: rating.user_email
+      user_email: rating.user_email,
+      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date()
     })),
     ...followedUserFavorites.map(fav => ({
       type: 'favorite',
       data: fav,
       timestamp: fav.updated_date,
-      user_email: fav.user_email
+      user_email: fav.user_email,
+      isBoosted: false
     }))
-  ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  ].sort((a, b) => {
+    // Boosted items first, then by timestamp
+    if (a.isBoosted && !b.isBoosted) return -1;
+    if (!a.isBoosted && b.isBoosted) return 1;
+    return new Date(b.timestamp) - new Date(a.timestamp);
+  });
 
   if (loading) {
     return (

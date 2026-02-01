@@ -49,7 +49,7 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
     const ratedVenueIds = userRatings.map(r => r.venue_id);
     const untriedVenues = venues.filter(v => 
-      !ratedVenueIds.includes(v.id) && v.category === 'restaurant'
+      !ratedVenueIds.includes(v.id) && (v.categories?.includes('restaurant') || v.category === 'restaurant')
     );
 
     if (untriedVenues.length === 0) {
@@ -63,8 +63,23 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
     // Simulate spinning animation
     setTimeout(() => {
-      const randomVenue = untriedVenues[Math.floor(Math.random() * untriedVenues.length)];
-      setResult(randomVenue);
+      // Weight boosted venues 3x higher
+      const boostedVenues = untriedVenues.filter(v => v.quick_draw_boost);
+      const weights = untriedVenues.map(v => v.quick_draw_boost ? 3 : 1);
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+      let random = Math.random() * totalWeight;
+      let selectedVenue = untriedVenues[0];
+
+      for (let i = 0; i < untriedVenues.length; i++) {
+        random -= weights[i];
+        if (random <= 0) {
+          selectedVenue = untriedVenues[i];
+          break;
+        }
+      }
+
+      setResult(selectedVenue);
       setSpinning(false);
       setShowResult(true);
     }, 2000);
@@ -72,7 +87,7 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
   const favoriteCount = venues.filter(v => favorites.some(f => f.venue_id === v.id)).length;
   const ratedVenueIds = userRatings.map(r => r.venue_id);
-  const untriedCount = venues.filter(v => !ratedVenueIds.includes(v.id) && v.category === 'restaurant').length;
+  const untriedCount = venues.filter(v => !ratedVenueIds.includes(v.id) && (v.categories?.includes('restaurant') || v.category === 'restaurant')).length;
 
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">

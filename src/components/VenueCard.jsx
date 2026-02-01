@@ -38,6 +38,13 @@ const categoryColors = {
   recreation: "bg-sky-100 text-sky-800 border-sky-200"
 };
 
+// Fallback for old venues with single category
+const getCategories = (venue) => {
+  if (venue.categories && venue.categories.length > 0) return venue.categories;
+  if (venue.category) return [venue.category];
+  return [];
+};
+
 export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true, hideImage = false, hideDescription = false }) {
   const [imageError, setImageError] = useState(false);
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
@@ -57,9 +64,11 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             <div className="absolute inset-0 bg-gradient-to-t from-amber-950/80 via-transparent to-transparent" />
             <div className="absolute inset-0 border-4 border-amber-900/50" />
             
-            <Badge className={cn("absolute top-3 left-3 border", categoryColors[venue.category])}>
-              {categoryLabels[venue.category]}
-            </Badge>
+            {categories.length > 0 && (
+              <Badge className={cn("absolute top-3 left-3 border", categoryColors[categories[0]])}>
+                {categoryLabels[categories[0]]}
+              </Badge>
+            )}
             
             {venue.price_range && (
               <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-700 px-2 py-1 rounded-md text-sm font-medium">
@@ -87,9 +96,11 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
               <h3 className="text-amber-900 font-bold text-lg leading-tight" style={{ fontFamily: 'Rye, serif' }}>
                 {venue.name}
               </h3>
-              <Badge className={cn("border shrink-0", categoryColors[venue.category])}>
-                {categoryLabels[venue.category]}
-              </Badge>
+              {categories.length > 0 && (
+                <Badge className={cn("border shrink-0", categoryColors[categories[0]])}>
+                  {categoryLabels[categories[0]]}
+                </Badge>
+              )}
             </div>
             {venue.address && (
               <div className="flex items-center gap-1 text-amber-800 text-sm">

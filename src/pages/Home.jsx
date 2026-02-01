@@ -158,8 +158,8 @@ export default function Home() {
       )}
 
       {/* Just Blew In Section */}
-      {venues.length > 0 && !searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+       {venues.length > 0 && !searchQuery && activeTab === 'all' && (
+         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-amber-800" />
             <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
@@ -182,7 +182,7 @@ export default function Home() {
 
       {/* Featured Section */}
       {featuredVenues.length > 0 && !searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-amber-800" />
             <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Top Rated</h2>
@@ -209,7 +209,7 @@ export default function Home() {
 
       {/* Big Boots Challenge Section */}
       {!searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-8 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>
             <div className="relative z-10">
@@ -338,7 +338,7 @@ export default function Home() {
       </section>
 
       {/* Suggestions Button */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 text-center">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-center">
         <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
           <DialogTrigger asChild>
             <Button 

@@ -96,10 +96,14 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
       ) : (
         <Link to={createPageUrl(`VenueDetails?id=${venue.id}`)}>
           <div className="p-4 bg-gradient-to-b from-amber-100 to-orange-100 border-b-4 border-amber-900">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="text-amber-900 font-bold text-lg leading-tight" style={{ fontFamily: 'Rye, serif' }}>
-                {venue.name}
-              </h3>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-2">
+                <h3 className="text-amber-900 font-bold text-lg leading-tight" style={{ fontFamily: 'Rye, serif' }}>
+                  {venue.name}
+                </h3>
+                {venue.has_big_boot && <span className="text-lg">👢</span>}
+                {venue.critter_friendly && <PawPrint className="w-4 h-4 text-green-600" />}
+              </div>
               {categories.length > 0 && (
                 <Badge className={cn("border shrink-0", categoryColors[categories[0]])}>
                   {categoryLabels[categories[0]]}

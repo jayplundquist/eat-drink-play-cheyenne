@@ -161,6 +161,26 @@ export default function ActivityFeed() {
             <Activity className="w-8 h-8 text-amber-700" />
             <h1 className="text-3xl font-bold text-stone-800">Activity Feed</h1>
           </div>
+          
+          {userFollows.length > 0 && (
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Search users by email..."
+                value={searchEmail}
+                onChange={(e) => setSearchEmail(e.target.value)}
+                className="pr-10"
+              />
+              {searchEmail && (
+                <button
+                  onClick={() => setSearchEmail('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          )}
         </motion.div>
 
         {userFollows.length === 0 ? (

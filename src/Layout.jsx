@@ -22,6 +22,7 @@ import {
   Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AdBanner from '@/components/AdBanner';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);

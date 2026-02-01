@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueCard from "../components/VenueCard";
 import BootRating from "../components/BootRating";
+import UserBadge from "../components/UserBadge";
 
 export default function UserProfile() {
   const [profileUser, setProfileUser] = useState(null);
@@ -127,9 +128,9 @@ export default function UserProfile() {
                     <CardTitle className="text-3xl text-stone-800">
                       {userEmail}
                     </CardTitle>
-                    <p className="text-stone-600 mt-1">
-                      Cheyenne Guide Member
-                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <UserBadge reviewCount={profileUserRatings.length} />
+                    </div>
                   </div>
                 </div>
                 {currentUser && !isSelfProfile && (

@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import BootRating from "../components/BootRating";
+import UserBadge from "../components/UserBadge";
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -167,6 +168,9 @@ export default function ActivityFeed() {
                               <span className="font-semibold">{item.user_email.split('@')[0]}</span>
                             </Link>
                           </Button>
+                          {item.type === 'review' && (
+                            <UserBadge reviewCount={followedUserRatings.filter(r => r.user_email === item.user_email).length} size="sm" />
+                          )}
                           <span className="text-stone-500">
                             {item.type === 'review' ? 'reviewed' : 'favorited'}
                           </span>

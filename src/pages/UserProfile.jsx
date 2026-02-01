@@ -242,7 +242,7 @@ export default function UserProfile() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
                   <Heart className="w-6 h-6 text-rose-500 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-stone-800">{profileUserFavorites.length}</div>
@@ -257,6 +257,16 @@ export default function UserProfile() {
                   <Map className="w-6 h-6 text-teal-500 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-stone-800">{profileUserBootVisits.length}</div>
                   <div className="text-sm text-stone-600">Boots Found</div>
+                </div>
+                <div className="text-center p-4 bg-stone-50 rounded-lg">
+                  <Users className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-stone-800">{profileFollowers.length}</div>
+                  <div className="text-sm text-stone-600">Followers</div>
+                </div>
+                <div className="text-center p-4 bg-stone-50 rounded-lg">
+                  <Users className="w-6 h-6 text-purple-500 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-stone-800">{profileFollowing.length}</div>
+                  <div className="text-sm text-stone-600">Following</div>
                 </div>
               </div>
             </CardContent>

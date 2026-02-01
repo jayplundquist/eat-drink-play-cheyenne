@@ -48,28 +48,17 @@ export default function EditVenue() {
   const initiateBoostCheckout = async (venuId) => {
     setCheckoutLoading(true);
     try {
-      const { checkout_url } = await base44.integrations.Stripe.CreateCheckoutSession({
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: `Quick Draw Boost - ${venue.name}`,
-                description: 'Boost your venue to appear 3x more often in Quick Draw for 7 days',
-              },
-              unit_amount: 500, // $5.00 in cents
-            },
-            quantity: 1,
-          },
-        ],
-        success_url: `${window.location.origin}${createPageUrl(`VenueDetails?id=${venueId}&boost=success`)}`,
-        cancel_url: window.location.href,
-        metadata: {
-          venue_id: venueId,
-          boost_duration_days: 7,
-        },
+      const response = await base44.functions.invoke('createCheckoutSession', {
+        venueId: venueId,
+        boostType: 'venue'
       });
-      window.location.href = checkout_url;
+
+      const session = response.data;
+
+      if (window.Stripe) {
+        const stripe = await window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+        await stripe.redirectToCheckout({ sessionId: session.id });
+      }
     } catch (error) {
       toast.error('Failed to initiate checkout');
       console.error(error);

@@ -10,28 +10,24 @@ import { MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import BootRating from '../components/BootRating';
 
-// Fix for default markers
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+// Golden Railroad Spike SVG
+const goldenSpikeSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 60" width="32" height="48">
+  <!-- Spike -->
+  <path d="M 20 5 L 18 50 Q 18 55 20 58 Q 22 55 22 50 L 20 5 Z" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+  <!-- Highlight -->
+  <path d="M 19 10 L 18 45" stroke="#FFF8DC" stroke-width="1" opacity="0.6"/>
+  <!-- Head -->
+  <ellipse cx="20" cy="8" rx="3" ry="2" fill="#DAA520"/>
+</svg>
+`;
 
-const venueIcon = L.icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
-
-const bootIcon = L.icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
+const spikeIcon = L.divIcon({
+  html: goldenSpikeSvg,
+  className: 'golden-spike-icon',
+  iconSize: [32, 48],
+  iconAnchor: [16, 48],
+  popupAnchor: [0, -48],
 });
 
 // Simple geocoding mock - in production, use a real geocoding service

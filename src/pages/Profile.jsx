@@ -333,7 +333,8 @@ export default function Profile() {
         />
 
         {/* Tabs Section */}
-        <Tabs ref={tabsRef} defaultValue={defaultTab} className="w-full">
+        <div ref={tabsRef}>
+          <Tabs defaultValue={defaultTab} className="w-full">
           <TabsList className="bg-stone-100 p-1 rounded-full mb-6 flex flex-wrap h-auto gap-1">
             <TabsTrigger 
               value="favorites" 

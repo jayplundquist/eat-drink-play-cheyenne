@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   MapPin, 
-  Calendar, 
   Heart, 
   Menu, 
   X, 
@@ -33,7 +32,6 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', icon: MapPin, label: 'Explore' },
-    { name: 'Events', icon: Calendar, label: 'Events' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
     ...(user?.role === 'admin' ? [{ name: 'ManageVenues', icon: Plus, label: 'Manage' }] : []),
   ];
@@ -231,9 +229,6 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center gap-6 text-sm">
               <Link to={createPageUrl('Home')} className="hover:text-amber-400 transition-colors">
                 Explore
-              </Link>
-              <Link to={createPageUrl('Events')} className="hover:text-amber-400 transition-colors">
-                Events
               </Link>
               <Link to={createPageUrl('Favorites')} className="hover:text-amber-400 transition-colors">
                 Favorites

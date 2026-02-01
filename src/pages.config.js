@@ -49,28 +49,26 @@
  */
 import AddVenue from './pages/AddVenue';
 import EditVenue from './pages/EditVenue';
-import Events from './pages/Events';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
+import ManageClaimRequests from './pages/ManageClaimRequests';
 import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import VenueDetails from './pages/VenueDetails';
-import ManageClaimRequests from './pages/ManageClaimRequests';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AddVenue": AddVenue,
     "EditVenue": EditVenue,
-    "Events": Events,
     "Favorites": Favorites,
     "Home": Home,
+    "ManageClaimRequests": ManageClaimRequests,
     "ManageVenues": ManageVenues,
     "Profile": Profile,
     "Settings": Settings,
     "VenueDetails": VenueDetails,
-    "ManageClaimRequests": ManageClaimRequests,
 }
 
 export const pagesConfig = {

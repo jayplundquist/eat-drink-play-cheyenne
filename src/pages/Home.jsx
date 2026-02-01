@@ -20,7 +20,6 @@ import { createPageUrl } from "@/utils";
 
 import HeroSection from "../components/HeroSection";
 import VenueCard from "../components/VenueCard";
-import EventCard from "../components/EventCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
 import HatTip from "../components/HatTip";
@@ -43,10 +42,7 @@ export default function Home() {
     queryFn: () => base44.entities.Venue.list('-created_date', 50),
   });
 
-  const { data: events = [], isLoading: eventsLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('date', 20),
-  });
+
 
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites'],
@@ -111,9 +107,7 @@ export default function Home() {
     return matchesSearch && matchesCategory;
   });
 
-  const upcomingEvents = events
-    .filter(e => new Date(e.date) >= new Date())
-    .slice(0, 6);
+
 
   const featuredVenues = venues
     .filter(v => v.rating_count > 0)

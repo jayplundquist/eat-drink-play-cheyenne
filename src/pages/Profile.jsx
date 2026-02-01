@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, Heart, Star, Settings, Edit2, Save, X, Camera, Loader2 } from "lucide-react";
+import { User, Heart, Star, Edit2, Save, X, Camera, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -295,14 +295,6 @@ export default function Profile() {
               👢
               <span className="hidden sm:inline ml-1">Big Boots</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="settings"
-              className="rounded-full px-3 sm:px-6 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-amber-700"
-            >
-              <Settings className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Settings</span>
-              <span className="sm:hidden">Pref</span>
-            </TabsTrigger>
           </TabsList>
 
           {/* Favorites Tab */}
@@ -402,31 +394,6 @@ export default function Profile() {
           {/* Big Boots Tab */}
           <TabsContent value="bigboots" className="mt-0">
             <BootCheckList user={user} />
-          </TabsContent>
-
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Preferences</CardTitle>
-                <CardDescription>Customize your Cheyenne Guide experience</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-stone-50 rounded-lg">
-                  <h4 className="font-medium text-stone-800 mb-2">Account Information</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-stone-600">Email:</span>
-                      <span className="font-medium text-stone-800">{user.email}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-stone-600">Account Type:</span>
-                      <span className="font-medium text-stone-800">{user.role || 'user'}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>

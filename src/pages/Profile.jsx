@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueCard from "../components/VenueCard";
 import BootRating from "../components/BootRating";
+import BadgeCollection from "../components/BadgeCollection";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -251,6 +252,12 @@ export default function Profile() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Badge Collection */}
+        <BadgeCollection 
+          reviewCount={userRatings.length}
+          avgRating={userRatings.length > 0 ? userRatings.reduce((sum, r) => sum + (r.boots || 0), 0) / userRatings.length : 0}
+        />
 
         {/* Tabs Section */}
         <Tabs defaultValue="favorites" className="w-full">

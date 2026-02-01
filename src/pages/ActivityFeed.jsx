@@ -11,6 +11,7 @@ import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import BootRating from "../components/BootRating";
 import UserBadge from "../components/UserBadge";
+import ReviewReactionButtons from "../components/ReviewReactionButtons";
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);

@@ -26,10 +26,17 @@ import HatTip from "../components/HatTip";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [activeTab, setActiveTab] = useState('all');
   const [user, setUser] = useState(null);
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
+
+  const tabCategories = {
+    all: [],
+    eat: ['restaurant'],
+    drink: ['bar', 'brewery', 'coffee_shop'],
+    play: ['activity', 'recreation', 'music_hall', 'souvenir_shopping']
+  };
 
   const queryClient = useQueryClient();
 
@@ -102,9 +109,12 @@ export default function Home() {
       (venue.categories || []).some(cat => cat.toLowerCase().includes(searchLower)) ||
       (venue.food_types || []).some(type => type.toLowerCase().includes(searchLower)) ||
       (venue.features || []).some(feat => feat.toLowerCase().includes(searchLower));
+    
     const venueCategories = venue.categories || (venue.category ? [venue.category] : []);
-    const matchesCategory = selectedCategory === 'all' || venueCategories.includes(selectedCategory);
-    return matchesSearch && matchesCategory;
+    const tabCats = tabCategories[activeTab];
+    const matchesTab = tabCats.length === 0 || venueCategories.some(cat => tabCats.includes(cat));
+    
+    return matchesSearch && matchesTab;
   });
 
 
@@ -122,7 +132,7 @@ export default function Home() {
       />
 
       {/* Spin the Spur & Quick Draw */}
-      {!searchQuery && selectedCategory === 'all' && (
+      {!searchQuery && activeTab === 'all' && (
         <SpinTheSpur 
           favorites={userFavorites}
           venues={venues}
@@ -133,7 +143,7 @@ export default function Home() {
       )}
 
       {/* Hat Tip Section */}
-      {!searchQuery && selectedCategory === 'all' && (
+      {!searchQuery && activeTab === 'all' && (
         <HatTip 
           venues={venues}
           favorites={favorites}
@@ -143,7 +153,7 @@ export default function Home() {
       )}
 
       {/* Featured Section */}
-      {featuredVenues.length > 0 && !searchQuery && selectedCategory === 'all' && (
+      {featuredVenues.length > 0 && !searchQuery && activeTab === 'all' && (
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-amber-800" />
@@ -170,11 +180,35 @@ export default function Home() {
 
       {/* Main Content */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <div className="mb-6">
-          <CategoryFilter 
-            selected={selectedCategory}
-            onSelect={setSelectedCategory}
-          />
+        <div className="mb-6 flex gap-2 flex-wrap">
+          <Button
+            variant={activeTab === 'all' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('all')}
+            className={activeTab === 'all' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+          >
+            All Venues
+          </Button>
+          <Button
+            variant={activeTab === 'eat' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('eat')}
+            className={activeTab === 'eat' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+          >
+            🍽️ Eat
+          </Button>
+          <Button
+            variant={activeTab === 'drink' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('drink')}
+            className={activeTab === 'drink' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+          >
+            🍷 Drink
+          </Button>
+          <Button
+            variant={activeTab === 'play' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('play')}
+            className={activeTab === 'play' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+          >
+            🎭 Play
+          </Button>
         </div>
 
         {venuesLoading ? (

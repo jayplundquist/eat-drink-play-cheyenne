@@ -444,7 +444,7 @@ export default function VenueDetails() {
                     <span className="text-4xl">👢</span>
                     <div>
                       <h3 className="font-bold text-amber-900">One of Cheyenne's Big Boots</h3>
-                      <p className="text-sm text-amber-700">This venue is home to one of the 29 iconic painted boots scattered throughout the city.</p>
+                      <p className="text-sm text-amber-700">This venue is home to one of Cheyenne's iconic painted boots.</p>
                     </div>
                   </div>
                 </Card>

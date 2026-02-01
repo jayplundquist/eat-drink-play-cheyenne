@@ -651,7 +651,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                     </div>
                   </div>
                   <p className="text-sm text-amber-700">
-                    Is this one of the 29 iconic painted boots in Cheyenne?
+                    Is this one of Cheyenne's iconic painted boots?
                   </p>
                   <Button
                     type="button"

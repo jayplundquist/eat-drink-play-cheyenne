@@ -29,6 +29,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [minBootRating, setMinBootRating] = useState(0);
+  const [selectedPrice, setSelectedPrice] = useState('');
   const [user, setUser] = useState(null);
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
@@ -120,7 +121,9 @@ export default function Home() {
     const venueAvgRating = venue.rating_count > 0 ? Math.round(venue.rating_sum / venue.rating_count) : 0;
     const matchesRating = minBootRating === 0 || venueAvgRating >= minBootRating;
 
-    return matchesSearch && matchesTab && matchesRating;
+    const matchesPrice = !selectedPrice || venue.price_range === selectedPrice;
+
+    return matchesSearch && matchesTab && matchesRating && matchesPrice;
   }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
 
   const itemsPerPage = 20;
@@ -289,7 +292,7 @@ export default function Home() {
             🎭 Play
           </Button>
 
-          <div className="flex gap-3 ml-auto items-center">
+          <div className="flex gap-3 ml-auto items-center flex-wrap">
             <span className="text-sm text-stone-600 font-medium">Min Rating:</span>
             <div className="flex gap-2">
               <Button
@@ -310,6 +313,29 @@ export default function Home() {
                 >
                   <CowboyBoot filled size="sm" />
                   <span className="text-xs">x{rating}</span>
+                </Button>
+              ))}
+            </div>
+
+            <span className="text-sm text-stone-600 font-medium">Price:</span>
+            <div className="flex gap-2">
+              <Button
+                variant={selectedPrice === '' ? 'default' : 'outline'}
+                onClick={() => setSelectedPrice('')}
+                className={selectedPrice === '' ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
+                size="sm"
+              >
+                All
+              </Button>
+              {['Free', '$', '$$', '$$$', '$$$$'].map(price => (
+                <Button
+                  key={price}
+                  variant={selectedPrice === price ? 'default' : 'outline'}
+                  onClick={() => setSelectedPrice(price)}
+                  className={selectedPrice === price ? 'bg-amber-600 hover:bg-amber-700 px-3' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-3'}
+                  size="sm"
+                >
+                  {price}
                 </Button>
               ))}
             </div>

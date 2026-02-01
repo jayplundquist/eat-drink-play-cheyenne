@@ -99,6 +99,10 @@ export default function VenueDetails() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [venueId]);
+
   const { data: venue, isLoading: venueLoading } = useQuery({
     queryKey: ['venue', venueId],
     queryFn: async () => {

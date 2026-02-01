@@ -430,7 +430,9 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
                      {result.name}
                    </h3>
                    {result.description && (
-                     <p className="text-stone-600 text-sm">{result.description}</p>
+                     <p className="text-stone-600 text-sm">
+                       {result.description.length > 250 ? result.description.substring(0, 250) + '...' : result.description}
+                     </p>
                    )}
                    <div className="flex justify-center">
                      <BootRating rating={Math.round(result.rating_count > 0 ? result.rating_sum / result.rating_count : 0)} showCount count={result.rating_count || 0} />

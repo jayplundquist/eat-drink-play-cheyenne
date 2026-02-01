@@ -123,6 +123,10 @@ export default function UserProfile() {
     userRating: profileUserRatings.find(r => r.venue_id === venue.id)
   }));
 
+  const avgRating = profileUserRatings.length > 0 
+    ? profileUserRatings.reduce((sum, r) => sum + r.boots, 0) / profileUserRatings.length 
+    : 0;
+
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50 py-12">

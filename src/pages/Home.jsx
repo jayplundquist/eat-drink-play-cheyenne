@@ -425,26 +425,26 @@ export default function Home() {
 
           {/* Venues Results */}
           {filteredVenues.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVenues.map((venue, i) => (
-              <motion.div
-                key={venue.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <VenueCard 
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredVenues.map((venue, i) => (
+                <motion.div
+                  key={venue.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <VenueCard 
                     venue={venue}
                     isFavorite={isFavorite(venue.id)}
                     onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
                     hideAddress
                   />
                 </motion.div>
-                ))}
-                </div>
-                )}
-                </>
-                )}
+              ))}
+            </div>
+          )}
+          </>
+          )}
 
                 {/* Pagination */}
                 {allFilteredVenues.length > itemsPerPage && (

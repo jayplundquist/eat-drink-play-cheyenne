@@ -22,21 +22,29 @@ export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmai
     mutationFn: async () => {
       setIsProcessing(true);
       try {
+        // Check if running in iframe (preview mode)
+        if (window.self !== window.top) {
+          toast.error('Checkout only works from a published app. Please visit your live site.');
+          setIsProcessing(false);
+          return;
+        }
+
         // Create Stripe checkout session using backend function
         const response = await base44.functions.invoke('createCheckoutSession', {
-          userEmail: userEmail,
-          ratingId: ratingId,
-          boostType: 'review'
+          type: 'review_boost',
+          reviewId: ratingId
         });
 
-        const session = response.data;
+        const sessionUrl = response.data.url;
 
         // Redirect to Stripe checkout
-        if (window.Stripe) {
-          const stripe = await window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
-          await stripe.redirectToCheckout({ sessionId: session.id });
+        if (sessionUrl) {
+          window.location.href = sessionUrl;
+        } else {
+          throw new Error('No checkout URL returned');
         }
       } catch (error) {
+        console.error('Boost error:', error);
         toast.error('Failed to start checkout. Please try again.');
       } finally {
         setIsProcessing(false);

@@ -16,7 +16,20 @@ const spikeIcon = L.icon({
   iconSize: [32, 48],
   iconAnchor: [16, 45],
   popupAnchor: [0, -45],
+  className: 'spike-icon',
 });
+
+// Add CSS to remove white background
+const style = document.createElement('style');
+style.textContent = `
+  .spike-icon {
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+  }
+  .spike-icon img {
+    background: transparent !important;
+  }
+`;
+document.head.appendChild(style);
 
 // Simple geocoding mock - in production, use a real geocoding service
 const CHEYENNE_CENTER = [41.1400, -104.8202];

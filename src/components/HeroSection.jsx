@@ -22,7 +22,7 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
           className="text-center"
         >
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-            Discover the{' '}
+            Discover the<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
               Magic City
             </span>

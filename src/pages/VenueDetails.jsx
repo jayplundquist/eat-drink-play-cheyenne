@@ -725,6 +725,17 @@ export default function VenueDetails() {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Claim Venue Modal */}
+          {user && (
+            <ClaimVenueModal 
+              open={claimModalOpen}
+              onOpenChange={setClaimModalOpen}
+              venueName={venue.name}
+              venueId={venueId}
+              user={user}
+            />
+          )}
           </div>
           </div>
           </div>

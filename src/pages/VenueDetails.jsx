@@ -433,6 +433,24 @@ export default function VenueDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
+            {/* Big Boot Badge */}
+            {venue.has_big_boot && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 p-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl">👢</span>
+                    <div>
+                      <h3 className="font-bold text-amber-900">One of Cheyenne's Big Boots</h3>
+                      <p className="text-sm text-amber-700">This venue is home to one of the 29 iconic painted boots scattered throughout the city.</p>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+
             {/* Description */}
             {venue.description && (
               <motion.div

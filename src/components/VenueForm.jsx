@@ -513,7 +513,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
           </div>
 
           {/* Menu Pictures - Premium Feature */}
-          {user?.is_premium && (
+          {(user?.is_premium || user?.role === 'admin') && (
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-4 space-y-3">
               <Label className="text-purple-900 font-semibold">Menu Pictures (Premium)</Label>
               <p className="text-sm text-purple-700">
@@ -566,7 +566,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
           )}
 
           {/* Quick Draw Boost - Premium Feature */}
-          {venue && user?.is_premium && (
+          {venue && (user?.is_premium || user?.role === 'admin') && (
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">

@@ -238,7 +238,14 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+
+    // Ensure website has proper format
+    let dataToSave = { ...formData };
+    if (dataToSave.website && !dataToSave.website.startsWith('http')) {
+      dataToSave.website = `https://${dataToSave.website}`;
+    }
+
+    onSave(dataToSave);
   };
 
   return (

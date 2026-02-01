@@ -891,7 +891,7 @@ export default function VenueDetails() {
             <Card className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-semibold text-lg text-blue-900 mb-1">Claim This Venue</h3>
+                  <h3 className="font-semibold text-lg text-blue-900 mb-1">Stake Your Claim</h3>
                   <p className="text-sm text-blue-700">Own this business? Request to manage this venue listing.</p>
                 </div>
                 <Button 
@@ -899,7 +899,7 @@ export default function VenueDetails() {
                    onClick={() => setClaimModalOpen(true)}
                  >
                    <Crown className="w-4 h-4 mr-2" />
-                   Stake Your Claim
+                   Submit Claim Request
                  </Button>
               </div>
             </Card>

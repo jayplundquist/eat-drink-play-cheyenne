@@ -61,7 +61,7 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
-    { name: 'ActivityFeed', icon: Plus, label: 'Activity' },
+    { name: 'ActivityFeed', icon: Plus, label: 'The Hitching Post' },
   ];
 
   const isHome = currentPageName === 'Home';

@@ -260,12 +260,12 @@ export default function UserProfile() {
                 </div>
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
                   <Users className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-stone-800">{profileFollowers.length}</div>
+                  <div className="text-2xl font-bold text-stone-800">{profileFollowers?.length ?? 0}</div>
                   <div className="text-sm text-stone-600">Followers</div>
                 </div>
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
                   <Users className="w-6 h-6 text-purple-500 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-stone-800">{profileFollowing.length}</div>
+                  <div className="text-2xl font-bold text-stone-800">{profileFollowing?.length ?? 0}</div>
                   <div className="text-sm text-stone-600">Following</div>
                 </div>
               </div>

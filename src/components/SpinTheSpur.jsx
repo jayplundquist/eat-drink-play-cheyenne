@@ -13,30 +13,6 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
   const [showResult, setShowResult] = useState(false);
   const navigate = useNavigate();
 
-  // Play gun shot sound effect
-  const playGunshot = () => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const now = audioContext.currentTime;
-    
-    // Create oscillator for gunshot
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    
-    osc.connect(gain);
-    gain.connect(audioContext.destination);
-    
-    // Initial high pitch that drops quickly
-    osc.frequency.setValueAtTime(800, now);
-    osc.frequency.exponentialRampToValueAtTime(150, now + 0.1);
-    
-    // Sharp attack, quick decay
-    gain.gain.setValueAtTime(0.3, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-    
-    osc.start(now);
-    osc.stop(now + 0.15);
-  };
-
   const handleSpinTheSpur = () => {
     if (!user) {
       onSignInRequired();

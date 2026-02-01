@@ -69,6 +69,7 @@ export default function VenueDetails() {
   const [reportReviewDialogOpen, setReportReviewDialogOpen] = useState(false);
   const [reportReviewReason, setReportReviewReason] = useState('');
   const [selectedReviewId, setSelectedReviewId] = useState(null);
+  const [claimModalOpen, setClaimModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
 

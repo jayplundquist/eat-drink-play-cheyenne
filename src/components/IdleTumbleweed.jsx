@@ -57,7 +57,7 @@ export default function IdleTumbleweed() {
         className="w-48 h-48 flex items-center justify-center"
       >
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e9c14c196b53cce1321b1/208f6af59_Gemini_Generated_Image_ev6hpyev6hpyev6h.png"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e9c14c196b53cce1321b1/2dfe3eb41_tilly.png"
           alt="Tumbleweed"
           className="w-full h-full object-contain drop-shadow-lg"
           style={{ mixBlendMode: 'darken' }}

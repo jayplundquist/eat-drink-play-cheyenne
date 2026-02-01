@@ -14,21 +14,37 @@ const CowboyBoot = ({ filled, className, size }) => {
       xmlns="http://www.w3.org/2000/svg"
       className={cn("transition-all duration-200", className)}
     >
-      {/* Boot shaft */}
-      <path d="M8 3 L8 12 L9 13 L15 13 L16 12 L16 3 Z" fill={filled ? "#8b4513" : "#d4d4d4"} />
-      
-      {/* Boot foot */}
-      <path d="M7 12 L7 16 C7 17 7.5 18 9 18 L18 18 C19 18 20 17.5 20 16 L20 14 C20 13 19 12 18 12 Z" fill={filled ? "#a0522d" : "#e5e5e5"} />
+      {/* Boot outline */}
+      <path 
+        d="M8 2 L8 12 L7 13 L7 17 C7 18.5 7.5 19.5 9 19.5 L18 19.5 C19.5 19.5 21 18.5 21 16.5 L21 14 C21 12.5 20 12 18 12 L16 12 L16 2 Z" 
+        fill={filled ? "#8b4513" : "white"}
+        stroke={filled ? "#654321" : "#9ca3af"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       
       {/* Boot heel */}
-      <rect x="7" y="17" width="3" height="4" rx="0.5" fill={filled ? "#654321" : "#b8b8b8"} />
+      <rect 
+        x="7" 
+        y="18" 
+        width="3.5" 
+        height="3" 
+        rx="0.5" 
+        fill={filled ? "#654321" : "#e5e7eb"}
+        stroke={filled ? "#654321" : "#9ca3af"}
+        strokeWidth="1.5"
+      />
       
-      {/* Boot toe detail */}
-      <ellipse cx="18" cy="15" rx="1.5" ry="1" fill={filled ? "#654321" : "#b8b8b8"} opacity="0.6" />
-      
-      {/* Stitching detail */}
-      <line x1="10" y1="5" x2="10" y2="11" stroke={filled ? "#d2691e" : "#a8a8a8"} strokeWidth="0.5" strokeDasharray="1,1" />
-      <line x1="14" y1="5" x2="14" y2="11" stroke={filled ? "#d2691e" : "#a8a8a8"} strokeWidth="0.5" strokeDasharray="1,1" />
+      {/* Spur star */}
+      <circle 
+        cx="8.5" 
+        cy="19.5" 
+        r="1.2" 
+        fill="none"
+        stroke={filled ? "#d4af37" : "#d1d5db"}
+        strokeWidth="1.5"
+      />
     </svg>
   );
 };

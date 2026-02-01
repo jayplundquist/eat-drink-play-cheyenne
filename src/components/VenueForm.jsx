@@ -79,6 +79,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
    const { data: customOptions = [] } = useQuery({
      queryKey: ['customVenueOptions'],
      queryFn: () => base44.entities.CustomVenueOption.list(),
+     refetchOnWindowFocus: true,
    });
 
    const customFoodTypes = customOptions.filter(opt => opt.type === 'food_type');

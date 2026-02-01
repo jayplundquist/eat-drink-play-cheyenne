@@ -51,6 +51,10 @@ import Home from './pages/Home';
 import VenueDetails from './pages/VenueDetails';
 import Events from './pages/Events';
 import Favorites from './pages/Favorites';
+import AddVenue from './pages/AddVenue';
+import EditVenue from './pages/EditVenue';
+import ManageVenues from './pages/ManageVenues';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -58,9 +62,13 @@ export const PAGES = {
     "VenueDetails": VenueDetails,
     "Events": Events,
     "Favorites": Favorites,
+    "AddVenue": AddVenue,
+    "EditVenue": EditVenue,
+    "ManageVenues": ManageVenues,
 }
 
 export const pagesConfig = {
     mainPage: "Home",
     Pages: PAGES,
+    Layout: __Layout,
 };

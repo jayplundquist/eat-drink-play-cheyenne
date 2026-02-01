@@ -1,0 +1,260 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { X, Plus, Save } from "lucide-react";
+
+const categories = [
+  { value: "restaurant", label: "Restaurant" },
+  { value: "bar", label: "Bar" },
+  { value: "brewery", label: "Brewery" },
+  { value: "music_hall", label: "Music Hall" },
+  { value: "activity", label: "Activity" },
+  { value: "recreation", label: "Recreation" },
+];
+
+const priceRanges = ["$", "$$", "$$$", "$$$$"];
+
+export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
+  const [formData, setFormData] = useState(venue || {
+    name: '',
+    category: 'restaurant',
+    description: '',
+    address: '',
+    phone: '',
+    website: '',
+    image_url: '',
+    price_range: '$$',
+    hours: '',
+    features: [],
+  });
+
+  const [newFeature, setNewFeature] = useState('');
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const addFeature = () => {
+    if (newFeature.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        features: [...(prev.features || []), newFeature.trim()]
+      }));
+      setNewFeature('');
+    }
+  };
+
+  const removeFeature = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      features: prev.features.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Card className="bg-white border-stone-200">
+        <CardHeader>
+          <CardTitle className="text-2xl text-stone-800">
+            {venue ? 'Edit Venue' : 'Add New Venue'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Basic Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Venue Name *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="e.g. The Albany"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category">Category *</Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => handleChange('category', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              placeholder="Tell visitors about this place..."
+              rows={4}
+            />
+          </div>
+
+          {/* Contact & Location */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                value={formData.address}
+                onChange={(e) => handleChange('address', e.target.value)}
+                placeholder="Street address, Cheyenne, WY"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+                placeholder="(307) 555-1234"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="website">Website</Label>
+            <Input
+              id="website"
+              type="url"
+              value={formData.website}
+              onChange={(e) => handleChange('website', e.target.value)}
+              placeholder="https://example.com"
+            />
+          </div>
+
+          {/* Image & Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="image_url">Image URL</Label>
+              <Input
+                id="image_url"
+                type="url"
+                value={formData.image_url}
+                onChange={(e) => handleChange('image_url', e.target.value)}
+                placeholder="https://images.unsplash.com/..."
+              />
+              <p className="text-xs text-stone-500">Tip: Use unsplash.com for free images</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="price_range">Price Range</Label>
+              <Select
+                value={formData.price_range}
+                onValueChange={(value) => handleChange('price_range', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {priceRanges.map(range => (
+                    <SelectItem key={range} value={range}>
+                      {range}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="hours">Hours</Label>
+            <Input
+              id="hours"
+              value={formData.hours}
+              onChange={(e) => handleChange('hours', e.target.value)}
+              placeholder="e.g. Mon-Sat 11am-10pm, Sun Closed"
+            />
+          </div>
+
+          {/* Features */}
+          <div className="space-y-3">
+            <Label>Features</Label>
+            <div className="flex gap-2">
+              <Input
+                value={newFeature}
+                onChange={(e) => setNewFeature(e.target.value)}
+                placeholder="Add a feature (e.g. Outdoor Seating)"
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature())}
+              />
+              <Button 
+                type="button" 
+                onClick={addFeature}
+                variant="outline"
+                className="border-amber-300 text-amber-700 hover:bg-amber-50"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            {formData.features && formData.features.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {formData.features.map((feature, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="secondary"
+                    className="bg-stone-100 text-stone-700 pr-1 pl-3 py-1"
+                  >
+                    {feature}
+                    <button
+                      type="button"
+                      onClick={() => removeFeature(index)}
+                      className="ml-2 hover:text-rose-600"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={isSaving}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!formData.name || !formData.category || isSaving}
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {venue ? 'Update Venue' : 'Create Venue'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </form>
+  );
+}

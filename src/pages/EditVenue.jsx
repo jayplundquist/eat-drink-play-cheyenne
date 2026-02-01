@@ -1,0 +1,116 @@
+import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import VenueForm from "../components/VenueForm";
+import { toast } from "sonner";
+
+export default function EditVenue() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const venueId = urlParams.get('id');
+  
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    base44.auth.me()
+      .then(setUser)
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const { data: venue, isLoading: venueLoading } = useQuery({
+    queryKey: ['venue', venueId],
+    queryFn: async () => {
+      const venues = await base44.entities.Venue.filter({ id: venueId });
+      return venues[0];
+    },
+    enabled: !!venueId && !!user,
+  });
+
+  const updateVenueMutation = useMutation({
+    mutationFn: (venueData) => {
+      // Preserve rating data
+      const { rating_sum, rating_count, ...updateData } = venueData;
+      return base44.entities.Venue.update(venueId, updateData);
+    },
+    onSuccess: () => {
+      toast.success('Venue updated successfully!');
+      window.location.href = createPageUrl(`VenueDetails?id=${venueId}`);
+    },
+  });
+
+  if (loading || venueLoading) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+          <Skeleton className="h-8 w-48 mb-6" />
+          <Skeleton className="h-96 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <h1 className="text-2xl font-bold text-stone-800 mb-4">Sign in required</h1>
+          <Button 
+            onClick={() => base44.auth.redirectToLogin()}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            Sign In
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!venue) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <h1 className="text-2xl font-bold text-stone-800 mb-4">Venue not found</h1>
+          <Link to={createPageUrl('ManageVenues')}>
+            <Button variant="outline">Back to Manage</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-stone-50">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-amber-900 text-white py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <Link to={createPageUrl(`VenueDetails?id=${venueId}`)}>
+            <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Venue
+            </Button>
+          </Link>
+          
+          <h1 className="text-3xl font-bold">Edit Venue</h1>
+          <p className="text-stone-300 mt-2">
+            Update information for {venue.name}
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <VenueForm
+          venue={venue}
+          onSave={(data) => updateVenueMutation.mutate(data)}
+          onCancel={() => window.location.href = createPageUrl(`VenueDetails?id=${venueId}`)}
+          isSaving={updateVenueMutation.isPending}
+        />
+      </div>
+    </div>
+  );
+}

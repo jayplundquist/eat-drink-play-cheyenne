@@ -64,12 +64,23 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
           }}
           style={{ perspective: 1000 }}
         >
-          <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="32" cy="48" rx="28" ry="6" fill="#78350f" />
-            <path d="M32 20C20 20 12 24 10 30C10 36 10 40 10 40C10 44 18 48 32 48C46 48 54 44 54 40C54 40 54 36 54 30C52 24 44 20 32 20Z" fill="#92400e"/>
-            <ellipse cx="32" cy="30" rx="22" ry="8" fill="#b45309"/>
-            <path d="M32 14C28 14 24 16 22 18C22 18 20 20 20 22C20 24 20 26 22 28C24 30 28 32 32 32C36 32 40 30 42 28C44 26 44 24 44 22C44 20 42 18 42 18C40 16 36 14 32 14Z" fill="#d97706"/>
-            <ellipse cx="32" cy="22" rx="10" ry="4" fill="#fbbf24"/>
+          <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Wide brim */}
+            <ellipse cx="50" cy="65" rx="45" ry="8" fill="#78350f"/>
+            <ellipse cx="50" cy="63" rx="45" ry="8" fill="#92400e"/>
+            
+            {/* Crown base */}
+            <path d="M25 60 Q25 45 30 40 L70 40 Q75 45 75 60 Z" fill="#b45309"/>
+            
+            {/* Crown top */}
+            <path d="M30 40 Q32 25 35 20 Q40 15 50 15 Q60 15 65 20 Q68 25 70 40 Z" fill="#d97706"/>
+            
+            {/* Crown indent */}
+            <path d="M35 28 Q40 23 50 23 Q60 23 65 28 L65 38 Q60 33 50 33 Q40 33 35 38 Z" fill="#92400e"/>
+            
+            {/* Hatband */}
+            <rect x="28" y="56" width="44" height="6" rx="1" fill="#422006"/>
+            <rect x="28" y="56" width="44" height="3" rx="1" fill="#78350f"/>
           </svg>
         </motion.div>
         <h2 className="text-3xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Hat Tip</h2>

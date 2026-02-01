@@ -23,7 +23,7 @@ import VenueCard from "../components/VenueCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
 import HatTip from "../components/HatTip";
-import BootRating from "../components/BootRating";
+import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -231,10 +231,11 @@ export default function Home() {
                   key={rating}
                   variant={minBootRating === rating ? 'default' : 'outline'}
                   onClick={() => setMinBootRating(rating)}
-                  className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2'}
+                  className={minBootRating === rating ? 'bg-amber-600 hover:bg-amber-700 px-2 flex items-center gap-1' : 'border-amber-300 text-amber-700 hover:bg-amber-50 px-2 flex items-center gap-1'}
                   size="sm"
                 >
-                  <BootRating rating={rating} size="sm" />
+                  <CowboyBoot filled size="sm" />
+                  <span className="text-xs">x{rating}</span>
                 </Button>
               ))}
             </div>

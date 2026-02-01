@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 
-const CowboyBoot = ({ filled, className, size }) => {
+export const CowboyBoot = ({ filled, className, size }) => {
   const sizeMap = { sm: 16, md: 20, lg: 24 };
   const pixelSize = sizeMap[size] || 20;
   

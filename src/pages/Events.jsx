@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Search, ArrowLeft } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Calendar, Search, ArrowLeft, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import EventCard from "../components/EventCard";
+import EventForm from "../components/EventForm";
 
 const eventCategories = [
   { value: "all", label: "All Events" },
@@ -25,10 +34,27 @@ export default function Events() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showPast, setShowPast] = useState(false);
+  const [user, setUser] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => setUser(null));
+  }, []);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list('date', 100),
+  });
+
+  const createEventMutation = useMutation({
+    mutationFn: (eventData) => base44.entities.Event.create(eventData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      setDialogOpen(false);
+      toast.success('Event created successfully');
+    },
   });
 
   const now = new Date();
@@ -62,9 +88,32 @@ export default function Events() {
             </Button>
           </Link>
           
-          <div className="flex items-center gap-3 mb-4">
-            <Calendar className="w-8 h-8 text-amber-400" />
-            <h1 className="text-3xl sm:text-4xl font-bold">Events in Cheyenne</h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Calendar className="w-8 h-8 text-amber-400" />
+              <h1 className="text-3xl sm:text-4xl font-bold">Events in Cheyenne</h1>
+            </div>
+            
+            {user?.role === 'admin' && (
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Event
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Add New Event</DialogTitle>
+                  </DialogHeader>
+                  <EventForm
+                    onSave={(data) => createEventMutation.mutate(data)}
+                    onCancel={() => setDialogOpen(false)}
+                    isSaving={createEventMutation.isPending}
+                  />
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
           
           <p className="text-stone-300 max-w-2xl">

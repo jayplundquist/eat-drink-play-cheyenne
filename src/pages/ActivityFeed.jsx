@@ -157,21 +157,40 @@ export default function ActivityFeed() {
       data: rating,
       timestamp: rating.updated_date,
       user_email: rating.user_email,
-      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date()
+      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
+      isOwn: rating.user_email === currentUser?.email
     })),
     ...followedUserFavorites.map(fav => ({
       type: 'favorite',
       data: fav,
       timestamp: fav.updated_date,
       user_email: fav.user_email,
-      isBoosted: false
+      isBoosted: false,
+      isOwn: false
     })),
     ...followedBootShares.map(share => ({
       type: 'boot_share',
       data: share,
       timestamp: share.shared_date,
       user_email: share.user_email,
-      isBoosted: false
+      isBoosted: false,
+      isOwn: false
+    })),
+    ...currentUserRatings.map(rating => ({
+      type: 'review',
+      data: rating,
+      timestamp: rating.updated_date,
+      user_email: rating.user_email,
+      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
+      isOwn: true
+    })),
+    ...currentUserBootShares.map(share => ({
+      type: 'boot_share',
+      data: share,
+      timestamp: share.shared_date,
+      user_email: share.user_email,
+      isBoosted: false,
+      isOwn: true
     }))
   ].sort((a, b) => {
     // Boosted items first, then by timestamp

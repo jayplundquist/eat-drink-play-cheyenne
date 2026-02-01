@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -137,17 +137,29 @@ export default function Home() {
       />
 
       {/* Spin the Spur & Quick Draw */}
-      {!searchQuery && activeTab === 'all' && (
-        <SpinTheSpur 
-          favorites={userFavorites}
-          venues={venues}
-          userRatings={userRatings}
-          user={user}
-          onSignInRequired={() => base44.auth.redirectToLogin()}
-        />
-      )}
+       {!searchQuery && activeTab === 'all' && (
+         <SpinTheSpur 
+           favorites={userFavorites}
+           venues={venues}
+           userRatings={userRatings}
+           user={user}
+           onSignInRequired={() => base44.auth.redirectToLogin()}
+         />
+       )}
 
-      {/* Hat Tip Section */}
+       {/* The Hitching Post */}
+       {!searchQuery && activeTab === 'all' && (
+         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+           <Link to={createPageUrl('ActivityFeed')}>
+             <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
+               <MessageCircle className="w-5 h-5 mr-2" />
+               The Hitching Post - Activity Feed
+             </Button>
+           </Link>
+         </section>
+       )}
+
+       {/* Hat Tip Section */}
       {!searchQuery && activeTab === 'all' && (
         <HatTip 
           venues={venues}

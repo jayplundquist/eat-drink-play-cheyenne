@@ -442,10 +442,16 @@ export default function Home() {
                     <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg border-4 border-amber-900 p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
                       <div className="text-4xl mb-3">👢</div>
                       <h4 className="text-lg font-bold text-amber-900 mb-2">{boot.name}</h4>
-                      <p className="text-sm text-amber-800 flex items-start gap-2 flex-1">
+                      <button
+                        onClick={() => {
+                          const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(boot.address)}`;
+                          window.open(url, '_blank', 'noopener,noreferrer');
+                        }}
+                        className="text-sm text-amber-800 flex items-start gap-2 flex-1 hover:text-amber-900 transition-colors"
+                      >
                         <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
-                        <span>{boot.address}</span>
-                      </p>
+                        <span className="text-left">{boot.address}</span>
+                      </button>
                     </div>
                   </motion.div>
                 ))}

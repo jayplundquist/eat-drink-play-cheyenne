@@ -57,6 +57,17 @@ export default function Events() {
     },
   });
 
+  const suggestEventMutation = useMutation({
+    mutationFn: (eventData) => base44.entities.EventSuggestion.create({
+      ...eventData,
+      suggested_by: user?.email
+    }),
+    onSuccess: () => {
+      setDialogOpen(false);
+      toast.success('Event suggestion submitted! We\'ll review it soon.');
+    },
+  });
+
   const now = new Date();
   
   const filteredEvents = events.filter(event => {
@@ -94,22 +105,30 @@ export default function Events() {
               <h1 className="text-3xl sm:text-4xl font-bold">Events in Cheyenne</h1>
             </div>
             
-            {user?.role === 'admin' && (
+            {user && (
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-amber-600 hover:bg-amber-700 text-white">
                     <Plus className="w-4 h-4 mr-2" />
-                    Add Event
+                    {user.role === 'admin' ? 'Add Event' : 'Suggest Event'}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Add New Event</DialogTitle>
+                    <DialogTitle>
+                      {user.role === 'admin' ? 'Add New Event' : 'Suggest an Event'}
+                    </DialogTitle>
                   </DialogHeader>
                   <EventForm
-                    onSave={(data) => createEventMutation.mutate(data)}
+                    onSave={(data) => {
+                      if (user.role === 'admin') {
+                        createEventMutation.mutate(data);
+                      } else {
+                        suggestEventMutation.mutate(data);
+                      }
+                    }}
                     onCancel={() => setDialogOpen(false)}
-                    isSaving={createEventMutation.isPending}
+                    isSaving={createEventMutation.isPending || suggestEventMutation.isPending}
                   />
                 </DialogContent>
               </Dialog>

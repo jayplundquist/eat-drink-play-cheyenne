@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
+import { Toaster } from "sonner";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,8 @@ import {
   Menu, 
   X, 
   User,
-  LogOut
+  LogOut,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,12 +35,14 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Events', icon: Calendar, label: 'Events' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
+    { name: 'ManageVenues', icon: Plus, label: 'Manage' },
   ];
 
   const isHome = currentPageName === 'Home';
 
   return (
     <div className="min-h-screen bg-stone-50">
+      <Toaster position="top-right" />
       <style>{`
         :root {
           --color-primary: #d97706;

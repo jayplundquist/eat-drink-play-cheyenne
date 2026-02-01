@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User
+  ArrowLeft, DollarSign, Send, User, Pencil
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -172,13 +172,22 @@ export default function VenueDetails() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 right-4 flex justify-between">
           <Link to={createPageUrl('Home')}>
             <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
           </Link>
+          
+          {user && (
+            <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
+              <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white">
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+            </Link>
+          )}
         </div>
         
         <div className="absolute bottom-6 left-6 right-6">

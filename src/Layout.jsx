@@ -121,6 +121,12 @@ export default function Layout({ children, currentPageName }) {
                         My Favorites
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('Settings')} className="cursor-pointer">
+                        <User className="w-4 h-4 mr-2" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={() => base44.auth.logout()}

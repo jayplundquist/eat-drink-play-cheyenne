@@ -1,26 +1,27 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 
-// Custom cowboy boot icon component
-const CowboyBoot = ({ filled, className }) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    className={cn("w-5 h-5 transition-all duration-200", className)}
-    fill={filled ? "currentColor" : "none"}
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    {/* Boot sole */}
-    <path d="M5 20h11c1 0 1.5-0.5 1.5-1v-1H5v2z" />
-    {/* Boot shaft and heel */}
-    <path d="M17.5 18v-4.5c0-1-0.5-1.5-1-2l-2-1.5V4.5c0-0.8-0.7-1.5-1.5-1.5s-1.5 0.7-1.5 1.5V10l-2.5 2c-0.5 0.4-1 1-1 2v4" />
-    {/* Boot decoration lines */}
-    <path d="M11 6v3" strokeWidth="1" />
-    <path d="M7 14h3" strokeWidth="1" />
-  </svg>
-);
+// You can customize the boot icon by changing this URL to your uploaded boot image
+const BOOT_ICON_URL = "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=100&q=80"; // Cowboy boot image
+
+const CowboyBoot = ({ filled, className, size }) => {
+  const sizeMap = { sm: 16, md: 20, lg: 24 };
+  const pixelSize = sizeMap[size] || 20;
+  
+  return (
+    <img 
+      src={BOOT_ICON_URL}
+      alt="boot"
+      className={cn("transition-all duration-200 object-contain", className)}
+      style={{ 
+        width: `${pixelSize}px`, 
+        height: `${pixelSize}px`,
+        filter: filled ? 'none' : 'grayscale(100%) brightness(1.8)',
+        opacity: filled ? 1 : 0.3
+      }}
+    />
+  );
+};
 
 export default function BootRating({ rating = 0, size = "md", showCount = false, count = 0, interactive = false, onRate }) {
   const [hovered, setHovered] = React.useState(0);
@@ -53,10 +54,8 @@ export default function BootRating({ rating = 0, size = "md", showCount = false,
           >
             <CowboyBoot 
               filled={boot <= displayRating}
-              className={cn(
-                sizes[size],
-                boot <= displayRating ? "text-amber-600" : "text-stone-300"
-              )}
+              size={size}
+              className=""
             />
           </button>
         ))}

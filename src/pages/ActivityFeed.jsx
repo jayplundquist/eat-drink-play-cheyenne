@@ -195,16 +195,24 @@ export default function ActivityFeed() {
             </Button>
           </Card>
         ) : activityItems.length === 0 ? (
-          <Card className="p-12 text-center">
-            <Activity className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-700 mb-2">No activity yet</h3>
-            <p className="text-stone-500">
-              Your followed users haven't written any reviews or favorited venues yet.
-            </p>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {activityItems.map((item, i) => {
+           <Card className="p-12 text-center">
+             <Activity className="w-16 h-16 text-stone-300 mx-auto mb-4" />
+             <h3 className="text-lg font-medium text-stone-700 mb-2">No activity yet</h3>
+             <p className="text-stone-500">
+               Your followed users haven't written any reviews or favorited venues yet.
+             </p>
+           </Card>
+         ) : filteredActivityItems.length === 0 ? (
+           <Card className="p-12 text-center">
+             <Users className="w-16 h-16 text-stone-300 mx-auto mb-4" />
+             <h3 className="text-lg font-medium text-stone-700 mb-2">No results found</h3>
+             <p className="text-stone-500">
+               No activity from users matching "{searchEmail}"
+             </p>
+           </Card>
+         ) : (
+           <div className="space-y-4">
+             {filteredActivityItems.map((item, i) => {
               if (item.type === 'boot_share') {
                 return (
                   <motion.div

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin, PawPrint } from "lucide-react";
 import {
   Popover,
   PopoverContent,

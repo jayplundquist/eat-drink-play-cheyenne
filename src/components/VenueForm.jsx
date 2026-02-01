@@ -49,7 +49,36 @@ const foodTypes = [
 ];
 
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
-   const [formData, setFormData] = useState(venue || {
+   // Convert old string-based hours to new object format
+   const initializeHours = () => {
+     if (venue?.hours) {
+       if (typeof venue.hours === 'string') {
+         // Old format - reset to empty
+         return {
+           monday: null,
+           tuesday: null,
+           wednesday: null,
+           thursday: null,
+           friday: null,
+           saturday: null,
+           sunday: null,
+         };
+       }
+       // Already in object format
+       return venue.hours;
+     }
+     return {
+       monday: null,
+       tuesday: null,
+       wednesday: null,
+       thursday: null,
+       friday: null,
+       saturday: null,
+       sunday: null,
+     };
+   };
+
+   const [formData, setFormData] = useState(venue ? { ...venue, hours: initializeHours() } : {
       name: '',
       categories: [],
       description: '',

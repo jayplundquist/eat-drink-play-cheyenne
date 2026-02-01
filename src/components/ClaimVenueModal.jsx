@@ -107,7 +107,7 @@ export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId
                 <Button
                   onClick={handleCheckout}
                   className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                  disabled={claimMutation.isPending}
+                  disabled={submitClaimMutation.isPending}
                 >
                   Get Premium Access
                 </Button>

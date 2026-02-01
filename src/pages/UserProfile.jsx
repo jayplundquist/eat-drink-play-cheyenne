@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, Heart, Star, Users, ArrowLeft, AlertCircle, Send } from "lucide-react";
+import { User, Heart, Star, Users, ArrowLeft, AlertCircle, Send, Map } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -123,6 +123,12 @@ export default function UserProfile() {
     userRating: profileUserRatings.find(r => r.venue_id === venue.id)
   }));
 
+  const { data: profileUserBootVisits = [] } = useQuery({
+    queryKey: ['userBootVisits', userEmail],
+    queryFn: () => userEmail ? base44.entities.BootVisit.filter({ user_email: userEmail }) : [],
+    enabled: !!userEmail,
+  });
+
   const avgRating = profileUserRatings.length > 0 
     ? profileUserRatings.reduce((sum, r) => sum + r.boots, 0) / profileUserRatings.length 
     : 0;
@@ -234,6 +240,11 @@ export default function UserProfile() {
                   <Star className="w-6 h-6 text-amber-500 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-stone-800">{profileUserRatings.length}</div>
                   <div className="text-sm text-stone-600">Reviews</div>
+                </div>
+                <div className="text-center p-4 bg-stone-50 rounded-lg">
+                  <Map className="w-6 h-6 text-teal-500 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-stone-800">{profileUserBootVisits.length}</div>
+                  <div className="text-sm text-stone-600">Boots Found</div>
                 </div>
               </div>
             </CardContent>

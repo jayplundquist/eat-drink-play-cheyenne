@@ -94,7 +94,7 @@ export default function VisitedMap() {
 
       // Add venue markers for favorites
       const visitedVenues = venues.filter(v => userFavorites.some(f => f.venue_id === v.id));
-      
+
       for (const venue of visitedVenues) {
         if (venue.address) {
           const rating = userRatings.find(r => r.venue_id === venue.id);
@@ -103,6 +103,7 @@ export default function VisitedMap() {
             newMarkers.push({
               id: `venue-${venue.id}`,
               type: 'venue',
+              venueId: venue.id,
               coords,
               name: venue.name,
               address: venue.address,

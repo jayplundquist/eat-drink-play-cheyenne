@@ -116,6 +116,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
         await base44.entities.CustomVenueOption.create({ name: label, type: 'food_type', value });
         toggleFoodType(value);
         setNewFoodType('');
+        toast.success(`Added "${label}" to food types`);
       } catch (error) {
         toast.error('Failed to save custom food type');
       }

@@ -22,7 +22,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const categories = [
   { value: "restaurant", label: "Restaurant" },

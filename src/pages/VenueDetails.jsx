@@ -292,6 +292,24 @@ export default function VenueDetails() {
               </motion.div>
             )}
 
+            {/* Food Types */}
+            {venue.food_types && venue.food_types.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 }}
+              >
+                <h2 className="text-lg font-semibold text-stone-800 mb-3">Food Types</h2>
+                <div className="flex flex-wrap gap-2">
+                  {venue.food_types.map((type, i) => (
+                    <Badge key={i} variant="secondary" className="bg-amber-100 text-amber-800">
+                      {foodTypeLabels[type]}
+                    </Badge>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {/* Features */}
             {venue.features && venue.features.length > 0 && (
               <motion.div

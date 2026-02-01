@@ -101,7 +101,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
       )}
       
       <div className="p-4 bg-gradient-to-b from-amber-50 to-orange-50 border-t-4 border-amber-900">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-2">
           <BootRating 
             rating={Math.round(avgRating)} 
             showCount 
@@ -127,6 +127,16 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             </Button>
           )}
         </div>
+        
+        {venue.food_types && venue.food_types.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {venue.food_types.map((type, idx) => (
+              <Badge key={idx} variant="outline" className="border-amber-600 text-amber-800 text-xs">
+                {foodTypeLabels[type]}
+              </Badge>
+            ))}
+          </div>
+        )}
         
         {!hideDescription && venue.description && (
           <p className="text-stone-600 text-sm mt-3 line-clamp-2">

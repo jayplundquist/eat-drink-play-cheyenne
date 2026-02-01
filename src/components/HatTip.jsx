@@ -63,24 +63,13 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
             ease: "easeInOut"
           }}
         >
-          <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* Wide brim */}
-            <ellipse cx="50" cy="65" rx="45" ry="8" fill="#78350f"/>
-            <ellipse cx="50" cy="63" rx="45" ry="8" fill="#92400e"/>
-            
-            {/* Crown base */}
-            <path d="M25 60 Q25 45 30 40 L70 40 Q75 45 75 60 Z" fill="#b45309"/>
-            
-            {/* Crown top */}
-            <path d="M30 40 Q32 25 35 20 Q40 15 50 15 Q60 15 65 20 Q68 25 70 40 Z" fill="#d97706"/>
-            
-            {/* Crown indent */}
-            <path d="M35 28 Q40 23 50 23 Q60 23 65 28 L65 38 Q60 33 50 33 Q40 33 35 38 Z" fill="#92400e"/>
-            
-            {/* Hatband */}
-            <rect x="28" y="56" width="44" height="6" rx="1" fill="#422006"/>
-            <rect x="28" y="56" width="44" height="3" rx="1" fill="#78350f"/>
-          </svg>
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e9c14c196b53cce1321b1/a19d27001_cowboy-hat.jpg"
+            alt="cowboy hat"
+            width="48"
+            height="48"
+            className="object-contain"
+          />
         </motion.div>
         <h2 className="text-3xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Hat Tip</h2>
         <span className="text-amber-700 text-sm ml-2">Trending favorites by category</span>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,13 @@ import VenueCard from "./VenueCard";
 
 export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % trendingVenues.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [trendingVenues.length]);
 
   // Count favorites per venue
   const favoriteCounts = {};

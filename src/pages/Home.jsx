@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";

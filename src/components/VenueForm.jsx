@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/command";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const categories = [
   { value: "restaurant", label: "Restaurant" },

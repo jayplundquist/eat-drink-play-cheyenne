@@ -116,15 +116,15 @@ export default function Layout({ children, currentPageName }) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Favorites')} className="cursor-pointer">
-                        <Heart className="w-4 h-4 mr-2" />
-                        My Favorites
+                      <Link to={createPageUrl('Profile')} className="cursor-pointer">
+                        <User className="w-4 h-4 mr-2" />
+                        My Profile
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Settings')} className="cursor-pointer">
-                        <User className="w-4 h-4 mr-2" />
-                        Settings
+                      <Link to={createPageUrl('Favorites')} className="cursor-pointer">
+                        <Heart className="w-4 h-4 mr-2" />
+                        My Favorites
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

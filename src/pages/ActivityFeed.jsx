@@ -234,7 +234,7 @@ export default function ActivityFeed() {
         >
           <div className="flex items-center gap-3 mb-8">
             <Activity className="w-8 h-8 text-amber-700" />
-            <h1 className="text-3xl font-bold text-stone-800">Activity Feed</h1>
+            <h1 className="text-3xl font-bold text-stone-800" style={{ fontFamily: 'Rye, serif' }}>The Hitching Post</h1>
           </div>
           
           <div className="relative">

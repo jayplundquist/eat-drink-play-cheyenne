@@ -109,13 +109,13 @@ export default function Home() {
       (venue.categories || []).some(cat => cat.toLowerCase().includes(searchLower)) ||
       (venue.food_types || []).some(type => type.toLowerCase().includes(searchLower)) ||
       (venue.features || []).some(feat => feat.toLowerCase().includes(searchLower));
-    
+
     const venueCategories = venue.categories || (venue.category ? [venue.category] : []);
     const tabCats = tabCategories[activeTab];
     const matchesTab = tabCats.length === 0 || venueCategories.some(cat => tabCats.includes(cat));
-    
+
     return matchesSearch && matchesTab;
-  });
+  }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
 
 
 

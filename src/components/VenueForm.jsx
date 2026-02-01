@@ -33,7 +33,7 @@ const categories = [
   { value: "recreation", label: "Recreation" },
 ];
 
-const priceRanges = ["$", "$$", "$$$", "$$$$"];
+const priceRanges = ["Free", "$", "$$", "$$$", "$$$$"];
 
 const foodTypes = [
   { value: "asian", label: "Asian" },

@@ -61,6 +61,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
+import VisitedMap from './pages/VisitedMap';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +80,7 @@ export const PAGES = {
     "Settings": Settings,
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
+    "VisitedMap": VisitedMap,
 }
 
 export const pagesConfig = {

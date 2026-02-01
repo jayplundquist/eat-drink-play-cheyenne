@@ -77,9 +77,13 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             )}
             
             <div className="absolute bottom-3 left-3 right-3">
-              <h3 className="text-amber-100 font-bold text-lg leading-tight mb-1" style={{ fontFamily: 'Rye, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
-                {venue.name}
-              </h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-amber-100 font-bold text-lg leading-tight" style={{ fontFamily: 'Rye, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                  {venue.name}
+                </h3>
+                {venue.has_big_boot && <span className="text-lg">👢</span>}
+                {venue.critter_friendly && <PawPrint className="w-4 h-4 text-green-300" />}
+              </div>
               {venue.address && !hideAddress && (
                   <div className="flex items-center gap-1 text-amber-200 text-sm">
                     <MapPin className="w-3.5 h-3.5" />

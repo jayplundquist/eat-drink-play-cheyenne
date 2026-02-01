@@ -302,6 +302,20 @@ export default function Home() {
           >
             🎭 Play
           </Button>
+          <Button
+            variant={activeTab === 'shop' ? 'default' : 'outline'}
+            onClick={() => { setActiveTab('shop'); setCurrentPage(1); }}
+            className={activeTab === 'shop' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+          >
+            🛍️ Shop
+          </Button>
+          <Button
+            variant={activeTab === 'chuck_wagons' ? 'default' : 'outline'}
+            onClick={() => { setActiveTab('chuck_wagons'); setCurrentPage(1); }}
+            className={activeTab === 'chuck_wagons' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
+          >
+            🚚 Chuck Wagons
+          </Button>
 
           <div className="ml-auto">
             <Button

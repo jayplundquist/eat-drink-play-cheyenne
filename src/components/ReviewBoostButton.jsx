@@ -22,20 +22,22 @@ export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmai
     mutationFn: async () => {
       setIsProcessing(true);
       try {
-        // Calculate boost expiry (7 days from now)
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 7);
-        
-        // Update the rating with boost info
-        await base44.entities.Rating.update(ratingId, {
-          boosted_until: expiryDate.toISOString(),
-          boost_payment_id: `boost_${Date.now()}`
+        // Create Stripe checkout session using backend function
+        const response = await base44.functions.invoke('createCheckoutSession', {
+          userEmail: userEmail,
+          ratingId: ratingId,
+          boostType: 'review'
         });
 
-        toast.success('Review boosted for 7 days! 🚀');
-        setOpen(false);
-        queryClient.invalidateQueries({ queryKey: ['followedUserRatings'] });
-        onBoostSuccess?.();
+        const session = response.data;
+
+        // Redirect to Stripe checkout
+        if (window.Stripe) {
+          const stripe = await window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+          await stripe.redirectToCheckout({ sessionId: session.id });
+        }
+      } catch (error) {
+        toast.error('Failed to start checkout. Please try again.');
       } finally {
         setIsProcessing(false);
       }

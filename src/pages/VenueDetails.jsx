@@ -149,6 +149,14 @@ export default function VenueDetails() {
         throw new Error('Please keep your review family-friendly');
       }
 
+      // Validate review limit only for new reviews
+      if (!userRating) {
+        const validation = await base44.functions.invoke('validateReviewLimit', { venueId });
+        if (!validation.data.canPost) {
+          throw new Error(validation.data.reason);
+        }
+      }
+
       const ratingData = {
         venue_id: venueId,
         user_email: user.email,

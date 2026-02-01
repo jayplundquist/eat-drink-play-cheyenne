@@ -18,6 +18,9 @@ import BadgeCollection from "../components/BadgeCollection";
 import BootCheckList from "../components/BootCheckList";
 
 export default function Profile() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const defaultTab = urlParams.get('defaultValue') || 'favorites';
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);

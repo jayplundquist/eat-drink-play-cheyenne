@@ -428,7 +428,14 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
                     View Details
                   </Button>
                   <Button
-                    onClick={() => setShowResult(false)}
+                    onClick={() => {
+                      setShowResult(false);
+                      if (spinType === 'spur') {
+                        handleSpinTheSpur();
+                      } else {
+                        handleQuickDraw();
+                      }
+                    }}
                     variant="outline"
                     className="flex-1"
                   >

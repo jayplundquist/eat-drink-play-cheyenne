@@ -83,6 +83,20 @@ export default function ActivityFeed() {
     enabled: followingEmails.length > 0,
   });
 
+  const { data: followedBootShares = [] } = useQuery({
+    queryKey: ['followedBootShares', followingEmails],
+    queryFn: async () => {
+      if (followingEmails.length === 0) return [];
+      const allShares = [];
+      for (const email of followingEmails) {
+        const shares = await base44.entities.BootShare.filter({ user_email: email });
+        allShares.push(...shares);
+      }
+      return allShares.sort((a, b) => new Date(b.shared_date) - new Date(a.shared_date));
+    },
+    enabled: followingEmails.length > 0,
+  });
+
   const activityItems = [
     ...followedUserRatings.map(rating => ({
       type: 'review',
@@ -96,6 +110,13 @@ export default function ActivityFeed() {
       data: fav,
       timestamp: fav.updated_date,
       user_email: fav.user_email,
+      isBoosted: false
+    })),
+    ...followedBootShares.map(share => ({
+      type: 'boot_share',
+      data: share,
+      timestamp: share.shared_date,
+      user_email: share.user_email,
       isBoosted: false
     }))
   ].sort((a, b) => {
@@ -158,6 +179,50 @@ export default function ActivityFeed() {
         ) : (
           <div className="space-y-4">
             {activityItems.map((item, i) => {
+              if (item.type === 'boot_share') {
+                return (
+                  <motion.div
+                    key={`boot-${item.data.id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <Card className="hover:shadow-lg transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
+                              <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
+                                <span className="font-semibold">{item.user_email.split('@')[0]}</span>
+                              </Link>
+                            </Button>
+                            <span className="text-stone-500">found</span>
+                          </div>
+                          <span className="text-sm text-stone-500">
+                            {new Date(item.timestamp).toLocaleDateString()}
+                          </span>
+                        </div>
+                        
+                        <div className="mb-4">
+                          <h3 className="font-semibold text-stone-800 flex items-center gap-2">
+                            👢 {item.data.boot_name}
+                          </h3>
+                          <p className="text-sm text-stone-600 mt-1">Boot hunt achievement unlocked!</p>
+                        </div>
+
+                        {item.data.photo_url && (
+                          <img 
+                            src={item.data.photo_url} 
+                            alt={item.data.boot_name}
+                            className="w-full h-64 object-cover rounded-lg"
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              }
+
               const venue = venues.find(v => v.id === item.data.venue_id);
               if (!venue) return null;
 

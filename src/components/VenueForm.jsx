@@ -86,12 +86,16 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
       staleTime: Infinity,
     });
 
-    const customFoodTypes = customOptions.filter(opt => opt.type === 'food_type');
-    const customCategories = customOptions.filter(opt => opt.type === 'category');
+    const customFoodTypes = customOptions
+      .filter(opt => opt.type === 'food_type')
+      .map(opt => ({ value: opt.value, label: opt.name }));
+    const customCategories = customOptions
+      .filter(opt => opt.type === 'category')
+      .map(opt => ({ value: opt.value, label: opt.name }));
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+    const handleChange = (field, value) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+    };
 
   const toggleFieldLock = (fieldName) => {
     setFormData(prev => ({

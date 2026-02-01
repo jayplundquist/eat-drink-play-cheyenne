@@ -99,9 +99,14 @@ export default function Home() {
   });
 
   const filteredVenues = venues.filter(venue => {
+    const searchLower = searchQuery.toLowerCase();
     const matchesSearch = !searchQuery || 
-      venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      venue.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      venue.name?.toLowerCase().includes(searchLower) ||
+      venue.description?.toLowerCase().includes(searchLower) ||
+      venue.address?.toLowerCase().includes(searchLower) ||
+      (venue.categories || []).some(cat => cat.toLowerCase().includes(searchLower)) ||
+      (venue.food_types || []).some(type => type.toLowerCase().includes(searchLower)) ||
+      (venue.features || []).some(feat => feat.toLowerCase().includes(searchLower));
     const venueCategories = venue.categories || (venue.category ? [venue.category] : []);
     const matchesCategory = selectedCategory === 'all' || venueCategories.includes(selectedCategory);
     return matchesSearch && matchesCategory;

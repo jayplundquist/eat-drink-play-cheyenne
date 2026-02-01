@@ -25,7 +25,6 @@ import { cn } from "@/lib/utils";
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));

@@ -98,6 +98,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
               venue={venue}
               isFavorite={isFavorite(venue.id)}
               onToggleFavorite={() => onToggleFavorite(venue.id)}
+              hideImage={true}
             />
           </motion.div>
         ))}

@@ -240,59 +240,130 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 overflow-hidden"
+            className="fixed inset-0 bg-gradient-to-br from-stone-900 via-amber-950 to-stone-900 flex items-center justify-center z-50"
           >
-            {/* Bullet shots */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ 
-                  x: '50vw', 
-                  y: '50vh',
-                  scale: 0,
-                  rotate: Math.random() * 360
-                }}
-                animate={{ 
-                  x: `${20 + Math.random() * 60}vw`,
-                  y: `${20 + Math.random() * 60}vh`,
-                  scale: [0, 1.5, 1],
-                  rotate: Math.random() * 360
-                }}
-                transition={{
-                  duration: 0.6,
-                  delay: i * 0.15,
-                  repeat: Infinity,
-                  repeatDelay: 0.4
-                }}
-                className="absolute"
+            <div className="relative">
+              {/* Wooden board target */}
+              <div className="relative w-96 h-96 bg-gradient-to-br from-amber-900 to-amber-950 rounded-lg border-8 border-amber-950 shadow-2xl">
+                {/* Wood grain texture */}
+                <div className="absolute inset-0 opacity-20">
+                  {[...Array(10)].map((_, i) => (
+                    <div key={i} className="h-10 border-b border-amber-800" style={{ marginTop: `${i * 38}px` }} />
+                  ))}
+                </div>
+                
+                {/* 3 Bullet holes with fast animations */}
+                {[0, 1, 2].map((i) => {
+                  const positions = [
+                    { x: 150, y: 140 },
+                    { x: 220, y: 190 },
+                    { x: 120, y: 210 }
+                  ];
+                  
+                  return (
+                    <div key={i}>
+                      {/* Muzzle flash */}
+                      <motion.div
+                        className="absolute"
+                        style={{
+                          left: `${positions[i].x}px`,
+                          top: `${positions[i].y}px`,
+                          transform: 'translate(-50%, -50%)',
+                        }}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ 
+                          scale: [0, 4, 0],
+                          opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                          duration: 0.2,
+                          delay: i * 0.3,
+                          repeat: Infinity,
+                          repeatDelay: 2.1,
+                        }}
+                      >
+                        <div className="w-20 h-20 bg-yellow-400 rounded-full blur-xl" />
+                      </motion.div>
+                      
+                      {/* Bullet hole */}
+                      <motion.div
+                        className="absolute"
+                        style={{
+                          left: `${positions[i].x}px`,
+                          top: `${positions[i].y}px`,
+                          transform: 'translate(-50%, -50%)',
+                        }}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ 
+                          scale: [0, 1.3, 1],
+                          opacity: [0, 1, 1],
+                        }}
+                        transition={{
+                          duration: 0.15,
+                          delay: i * 0.3 + 0.1,
+                          repeat: Infinity,
+                          repeatDelay: 2.1,
+                        }}
+                      >
+                        {/* Main hole */}
+                        <div className="w-10 h-10 bg-black rounded-full border-4 border-stone-900 shadow-2xl relative">
+                          {/* Radial cracks */}
+                          <div className="absolute inset-0">
+                            {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
+                              <div
+                                key={angle}
+                                className="absolute w-0.5 h-5 bg-stone-900 origin-bottom"
+                                style={{
+                                  left: '50%',
+                                  bottom: '50%',
+                                  transform: `rotate(${angle}deg) translateX(-50%)`,
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Wood splinters */}
+                        {[0, 60, 120, 180, 240, 300].map((angle) => {
+                          const rad = (angle * Math.PI) / 180;
+                          return (
+                            <motion.div
+                              key={angle}
+                              className="absolute w-1.5 h-4 bg-amber-800 rounded-sm"
+                              style={{
+                                left: `${Math.cos(rad) * 25}px`,
+                                top: `${Math.sin(rad) * 25}px`,
+                                rotate: `${angle + 90}deg`,
+                              }}
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ 
+                                scale: [0, 1, 0.8],
+                                opacity: [0, 1, 0.6],
+                              }}
+                              transition={{
+                                duration: 0.2,
+                                delay: i * 0.3 + 0.15,
+                                repeat: Infinity,
+                                repeatDelay: 2.1,
+                              }}
+                            />
+                          );
+                        })}
+                      </motion.div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-8 text-amber-300 text-3xl font-bold text-center"
+                style={{ fontFamily: 'Rye, serif' }}
               >
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                  {/* Bullet */}
-                  <ellipse cx="20" cy="20" rx="4" ry="8" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1"/>
-                  {/* Flash */}
-                  <motion.g
-                    animate={{ opacity: [1, 0.3, 1] }}
-                    transition={{ duration: 0.2, repeat: Infinity }}
-                  >
-                    <path d="M 20 12 L 22 17 L 18 17 Z" fill="#fef3c7"/>
-                    <path d="M 20 28 L 22 23 L 18 23 Z" fill="#fef3c7"/>
-                    <path d="M 12 20 L 17 22 L 17 18 Z" fill="#fef3c7"/>
-                    <path d="M 28 20 L 23 22 L 23 18 Z" fill="#fef3c7"/>
-                  </motion.g>
-                </svg>
-              </motion.div>
-            ))}
-            
-            {/* Center text */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 0.5, repeat: Infinity }}
-              className="text-center z-10"
-            >
-              <p className="text-white text-3xl font-bold mb-2">💥 BANG! 💥</p>
-              <p className="text-yellow-300 text-xl font-semibold">Drawing...</p>
-            </motion.div>
+                Quick Draw!
+              </motion.p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

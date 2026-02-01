@@ -53,7 +53,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
       <div className="flex items-center gap-3 mb-6">
         <motion.div
           animate={{
-            rotateX: [0, -180, -360],
+            rotateZ: [0, 180, 360],
             y: [0, -10, 0],
           }}
           transition={{
@@ -62,7 +62,6 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
             repeatDelay: 3,
             ease: "easeInOut"
           }}
-          style={{ perspective: 1000 }}
         >
           <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             {/* Wide brim */}

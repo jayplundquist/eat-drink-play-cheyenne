@@ -88,10 +88,31 @@ export default function BootCheckList({ user }) {
         address: boot.address,
         photoUrl: file_url 
       });
+      
+      // Ask if they want to share to activity feed
+      setTimeout(() => {
+        if (confirm('Share this boot visit to your followers?')) {
+          shareToActivityFeed(boot.name, file_url);
+        }
+      }, 500);
     } catch (error) {
       toast.error('Failed to upload photo');
     } finally {
       setUploadingBoot(null);
+    }
+  };
+
+  const shareToActivityFeed = async (bootName, photoUrl) => {
+    try {
+      await base44.entities.BootShare.create({
+        user_email: user.email,
+        boot_name: bootName,
+        photo_url: photoUrl,
+        shared_date: new Date().toISOString()
+      });
+      toast.success('Shared to activity feed! 📸');
+    } catch (error) {
+      // BootShare entity might not exist yet, silently fail
     }
   };
 

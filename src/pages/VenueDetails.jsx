@@ -7,9 +7,17 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { 
   Heart, MapPin, Phone, Globe, Clock, 
-  ArrowLeft, DollarSign, Send, User, Pencil
+  ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -17,6 +25,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import BootRating from "../components/BootRating";
+import { toast } from "sonner";
 
 const categoryLabels = {
   restaurant: "Restaurant",
@@ -35,6 +44,8 @@ export default function VenueDetails() {
   const [newRating, setNewRating] = useState(0);
   const [newComment, setNewComment] = useState('');
   const [imageError, setImageError] = useState(false);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportIssue, setReportIssue] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -120,6 +131,22 @@ export default function VenueDetails() {
       queryClient.invalidateQueries({ queryKey: ['userRating', venueId] });
       setNewRating(0);
       setNewComment('');
+    },
+  });
+
+  const submitReportMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.ProblemReport.create({
+        venue_id: venueId,
+        venue_name: venue.name,
+        issue: reportIssue,
+        reporter_email: user?.email || 'anonymous',
+      });
+    },
+    onSuccess: () => {
+      toast.success('Report submitted successfully');
+      setReportDialogOpen(false);
+      setReportIssue('');
     },
   });
 
@@ -361,7 +388,7 @@ export default function VenueDetails() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Actions */}
-            <Card className="p-4 bg-white border-stone-200">
+            <Card className="p-4 bg-white border-stone-200 space-y-2">
               <Button
                 onClick={() => user ? toggleFavoriteMutation.mutate() : base44.auth.redirectToLogin()}
                 variant={isFavorite ? "default" : "outline"}
@@ -373,6 +400,40 @@ export default function VenueDetails() {
                 <Heart className={cn("w-5 h-5 mr-2", isFavorite && "fill-current")} />
                 {isFavorite ? 'Saved to Favorites' : 'Add to Favorites'}
               </Button>
+              
+              <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full border-amber-300 text-amber-700 hover:bg-amber-50">
+                    <AlertCircle className="w-5 h-5 mr-2" />
+                    Report a Problem
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Report a Problem</DialogTitle>
+                    <DialogDescription>
+                      Let us know if there's an issue with this venue's information.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <Textarea
+                      value={reportIssue}
+                      onChange={(e) => setReportIssue(e.target.value)}
+                      placeholder="Describe the issue..."
+                      className="resize-none"
+                      rows={5}
+                    />
+                    <Button 
+                      onClick={() => submitReportMutation.mutate()}
+                      disabled={!reportIssue.trim() || submitReportMutation.isPending}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      Submit Report
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </Card>
 
             {/* Contact Info */}

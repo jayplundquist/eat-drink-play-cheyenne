@@ -53,9 +53,9 @@ import Events from './pages/Events';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import ManageVenues from './pages/ManageVenues';
+import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import VenueDetails from './pages/VenueDetails';
-import Profile from './pages/Profile';
 import __Layout from './Layout.jsx';
 
 
@@ -66,9 +66,9 @@ export const PAGES = {
     "Favorites": Favorites,
     "Home": Home,
     "ManageVenues": ManageVenues,
+    "Profile": Profile,
     "Settings": Settings,
     "VenueDetails": VenueDetails,
-    "Profile": Profile,
 }
 
 export const pagesConfig = {

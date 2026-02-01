@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Camera, Loader2, X } from "lucide-react";
+import { Camera, Loader2, X, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
 export default function BootCheckList({ user }) {

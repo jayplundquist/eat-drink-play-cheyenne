@@ -19,11 +19,12 @@ const spikeIcon = L.icon({
   className: 'spike-icon',
 });
 
-// Add CSS to remove white background and make it transparent
+// Add CSS to hide white background
 const style = document.createElement('style');
 style.textContent = `
-  .spike-icon {
-    filter: brightness(0) saturate(100%) invert(1) drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+  .spike-icon img {
+    mix-blend-mode: darken;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
   }
 `;
 document.head.appendChild(style);

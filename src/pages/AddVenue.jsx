@@ -7,16 +7,48 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueForm from "../components/VenueForm";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export default function AddVenue() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isIdle, setIsIdle] = useState(false);
+  const [tumbleweedKey, setTumbleweedKey] = useState(0);
 
   useEffect(() => {
     base44.auth.me()
       .then(setUser)
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    let idleTimer;
+    let tumbleweedTimer;
+
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimer);
+      clearInterval(tumbleweedTimer);
+      setIsIdle(false);
+
+      idleTimer = setTimeout(() => {
+        setIsIdle(true);
+        tumbleweedTimer = setInterval(() => {
+          setTumbleweedKey(k => k + 1);
+        }, 10000);
+      }, 30000);
+    };
+
+    window.addEventListener('click', resetIdleTimer);
+    window.addEventListener('keydown', resetIdleTimer);
+    resetIdleTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      clearInterval(tumbleweedTimer);
+      window.removeEventListener('click', resetIdleTimer);
+      window.removeEventListener('keydown', resetIdleTimer);
+    };
   }, []);
 
   const createVenueMutation = useMutation({

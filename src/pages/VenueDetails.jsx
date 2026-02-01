@@ -553,11 +553,10 @@ export default function VenueDetails() {
                           <Skeleton className="h-4 w-1/4 mb-2" />
                           <Skeleton className="h-4 w-full" />
                         </div>
-                        </div>
-                        </Card>
-                        );
-                        })}
-                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
               ) : ratings.length === 0 ? (
                 <Card className="p-8 text-center bg-stone-50 border-stone-200">
                   <p className="text-stone-500">No reviews yet. Be the first to review!</p>
@@ -657,10 +656,11 @@ export default function VenueDetails() {
                           </div>
                           </div>
                           </Card>
-                          ))}
+                          );
+                          })}
                           </div>
-              )}
-            </motion.div>
+                          )}
+                          </motion.div>
           </div>
 
           {/* Sidebar */}

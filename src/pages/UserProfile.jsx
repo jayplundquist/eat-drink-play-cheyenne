@@ -5,10 +5,19 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, Heart, Star, Users, ArrowLeft } from "lucide-react";
+import { User, Heart, Star, Users, ArrowLeft, AlertCircle, Send } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import VenueCard from "../components/VenueCard";
 import BootRating from "../components/BootRating";
 import UserBadge from "../components/UserBadge";
@@ -17,6 +26,8 @@ export default function UserProfile() {
   const [profileUser, setProfileUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -80,6 +91,21 @@ export default function UserProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userFollows'] });
       toast.success(userFollows.length > 0 ? 'Unfollowed' : 'Following!');
+    },
+  });
+
+  const submitReportMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.ProfileReport.create({
+        reported_email: userEmail,
+        reporter_email: currentUser?.email || 'anonymous',
+        reason: reportReason,
+      });
+    },
+    onSuccess: () => {
+      toast.success('Profile reported successfully');
+      setReportDialogOpen(false);
+      setReportReason('');
     },
   });
 
@@ -148,15 +174,49 @@ export default function UserProfile() {
                   </div>
                 </div>
                 {currentUser && !isSelfProfile && (
-                  <Button
-                    onClick={() => toggleFollowMutation.mutate()}
-                    disabled={toggleFollowMutation.isPending}
-                    className={isFollowing ? "bg-stone-600 hover:bg-stone-700" : "bg-amber-600 hover:bg-amber-700"}
-                  >
-                    <Users className="w-4 h-4 mr-2" />
-                    {isFollowing ? 'Following' : 'Follow'}
-                  </Button>
-                )}
+                   <div className="flex gap-2">
+                     <Button
+                       onClick={() => toggleFollowMutation.mutate()}
+                       disabled={toggleFollowMutation.isPending}
+                       className={isFollowing ? "bg-stone-600 hover:bg-stone-700" : "bg-amber-600 hover:bg-amber-700"}
+                     >
+                       <Users className="w-4 h-4 mr-2" />
+                       {isFollowing ? 'Following' : 'Follow'}
+                     </Button>
+                     <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+                       <DialogTrigger asChild>
+                         <Button variant="outline" size="icon" className="border-amber-300 text-amber-700 hover:bg-amber-50">
+                           <AlertCircle className="w-4 h-4" />
+                         </Button>
+                       </DialogTrigger>
+                       <DialogContent>
+                         <DialogHeader>
+                           <DialogTitle>Report Profile</DialogTitle>
+                           <DialogDescription>
+                             Let us know why you're reporting this profile.
+                           </DialogDescription>
+                         </DialogHeader>
+                         <div className="space-y-4">
+                           <Textarea
+                             value={reportReason}
+                             onChange={(e) => setReportReason(e.target.value)}
+                             placeholder="Describe the issue..."
+                             className="resize-none"
+                             rows={5}
+                           />
+                           <Button
+                             onClick={() => submitReportMutation.mutate()}
+                             disabled={!reportReason.trim() || submitReportMutation.isPending}
+                             className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                           >
+                             <Send className="w-4 h-4 mr-2" />
+                             Submit Report
+                           </Button>
+                         </div>
+                       </DialogContent>
+                     </Dialog>
+                   </div>
+                 )}
               </div>
             </CardHeader>
             <CardContent className="pt-6">

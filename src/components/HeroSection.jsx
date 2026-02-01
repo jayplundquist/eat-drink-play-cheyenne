@@ -21,14 +21,7 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <MapPin className="w-5 h-5 text-amber-400" />
-            <span className="text-amber-400 font-medium tracking-wide uppercase text-sm">
-              Cheyenne, Wyoming
-            </span>
-          </div>
-          
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
             Discover the{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
               Magic City

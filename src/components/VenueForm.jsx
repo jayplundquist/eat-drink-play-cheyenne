@@ -6,8 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { X, Plus, Save, Upload, Loader2 } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 
@@ -51,6 +62,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
 
   const [newFeature, setNewFeature] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [foodTypeOpen, setFoodTypeOpen] = useState(false);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -189,8 +201,8 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
             <Label htmlFor="website">Website</Label>
             <Input
               id="website"
-              type="url"
-              value={formData.website}
+              type="text"
+              value={formData.website || ''}
               onChange={(e) => handleChange('website', e.target.value)}
               placeholder="https://example.com"
             />
@@ -203,8 +215,8 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
               <div className="flex gap-2">
                 <Input
                   id="image_url"
-                  type="url"
-                  value={formData.image_url}
+                  type="text"
+                  value={formData.image_url || ''}
                   onChange={(e) => handleChange('image_url', e.target.value)}
                   placeholder="Or paste image URL"
                   className="flex-1"
@@ -271,25 +283,66 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
 
           {/* Food Types - Only for restaurants */}
           {formData.category === 'restaurant' && (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Label>Food Types</Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {foodTypes.map((foodType) => (
-                  <div key={foodType.value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={foodType.value}
-                      checked={(formData.food_types || []).includes(foodType.value)}
-                      onCheckedChange={() => toggleFoodType(foodType.value)}
-                    />
-                    <Label
-                      htmlFor={foodType.value}
-                      className="text-sm font-normal cursor-pointer"
-                    >
-                      {foodType.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+              <Popover open={foodTypeOpen} onOpenChange={setFoodTypeOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={foodTypeOpen}
+                    className="w-full justify-between"
+                  >
+                    {(formData.food_types || []).length > 0
+                      ? `${(formData.food_types || []).length} selected`
+                      : "Select food types..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="Search food types..." />
+                    <CommandEmpty>No food type found.</CommandEmpty>
+                    <CommandGroup>
+                      {foodTypes.map((foodType) => (
+                        <CommandItem
+                          key={foodType.value}
+                          onSelect={() => toggleFoodType(foodType.value)}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              (formData.food_types || []).includes(foodType.value)
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {foodType.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {(formData.food_types || []).length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {(formData.food_types || []).map((type) => {
+                    const foodType = foodTypes.find(ft => ft.value === type);
+                    return (
+                      <Badge key={type} variant="secondary" className="bg-amber-100 text-amber-800">
+                        {foodType?.label}
+                        <button
+                          type="button"
+                          onClick={() => toggleFoodType(type)}
+                          className="ml-2 hover:text-amber-900"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 

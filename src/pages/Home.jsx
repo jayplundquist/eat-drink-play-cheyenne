@@ -177,54 +177,54 @@ export default function Home() {
 
       {/* Main Content */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-            <div className="mb-6">
-              <CategoryFilter 
-                selected={selectedCategory}
-                onSelect={setSelectedCategory}
-              />
+        <div className="mb-6">
+          <CategoryFilter 
+            selected={selectedCategory}
+            onSelect={setSelectedCategory}
+          />
+        </div>
+
+        {venuesLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="space-y-3">
+                <Skeleton className="aspect-[4/3] rounded-lg" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))}
+          </div>
+        ) : filteredVenues.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MapPin className="w-8 h-8 text-stone-400" />
             </div>
+            <h3 className="text-lg font-medium text-stone-700 mb-2">No venues found</h3>
+            <p className="text-stone-500">Try adjusting your search or filters</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredVenues.map((venue, i) => (
+              <motion.div
+                key={venue.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <VenueCard 
+                  venue={venue}
+                  isFavorite={isFavorite(venue.id)}
+                  onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </section>
 
-            {venuesLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <Skeleton className="aspect-[4/3] rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            ) : filteredVenues.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MapPin className="w-8 h-8 text-stone-400" />
-                </div>
-                <h3 className="text-lg font-medium text-stone-700 mb-2">No venues found</h3>
-                <p className="text-stone-500">Try adjusting your search or filters</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredVenues.map((venue, i) => (
-                  <motion.div
-                    key={venue.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <VenueCard 
-                      venue={venue}
-                      isFavorite={isFavorite(venue.id)}
-                      onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </section>
-
-          {/* Suggestions Button */}
-          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 text-center">
-          <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
+      {/* Suggestions Button */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 text-center">
+        <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
           <DialogTrigger asChild>
             <Button 
               variant="outline" 
@@ -258,8 +258,8 @@ export default function Home() {
               </Button>
             </div>
           </DialogContent>
-          </Dialog>
-          </section>
-          </div>
-          );
-          }
+        </Dialog>
+      </section>
+    </div>
+  );
+}

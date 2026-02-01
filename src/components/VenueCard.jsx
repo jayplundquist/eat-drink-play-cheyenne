@@ -102,7 +102,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
                 </Badge>
               )}
             </div>
-            {venue.address && (
+            {venue.address && !hideAddress && (
               <div className="flex items-center gap-1 text-amber-800 text-sm">
                 <MapPin className="w-3.5 h-3.5" />
                 <span className="truncate">{venue.address}</span>

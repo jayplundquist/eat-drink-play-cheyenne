@@ -387,15 +387,44 @@ export default function Home() {
               </div>
             ))}
           </div>
-        ) : filteredVenues.length === 0 ? (
+        ) : filteredVenues.length === 0 && filteredBoots.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <MapPin className="w-8 h-8 text-stone-400" />
             </div>
-            <h3 className="text-lg font-medium text-stone-700 mb-2">No venues found</h3>
+            <h3 className="text-lg font-medium text-stone-700 mb-2">No results found</h3>
             <p className="text-stone-500">Try adjusting your search or filters</p>
           </div>
         ) : (
+          <>
+          {/* Boots Results */}
+          {filteredBoots.length > 0 && searchQuery && (
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-amber-900 mb-4" style={{ fontFamily: 'Rye, serif' }}>Big Boots</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredBoots.map((boot, i) => (
+                  <motion.div
+                    key={boot.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg border-4 border-amber-900 p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+                      <div className="text-4xl mb-3">👢</div>
+                      <h4 className="text-lg font-bold text-amber-900 mb-2">{boot.name}</h4>
+                      <p className="text-sm text-amber-800 flex items-start gap-2 flex-1">
+                        <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
+                        <span>{boot.address}</span>
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Venues Results */}
+          {filteredVenues.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVenues.map((venue, i) => (
               <motion.div

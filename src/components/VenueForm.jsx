@@ -76,6 +76,8 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
     const [newFoodType, setNewFoodType] = useState('');
     const [newCategory, setNewCategory] = useState('');
 
+   const queryClient = useQueryClient();
+
    const { data: customOptions = [] } = useQuery({
      queryKey: ['customVenueOptions'],
      queryFn: () => base44.entities.CustomVenueOption.list(),
@@ -159,6 +161,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
       const label = newFoodType.trim();
       try {
         await base44.entities.CustomVenueOption.create({ name: label, type: 'food_type', value });
+        queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
         toggleFoodType(value);
         setNewFoodType('');
         toast.success(`Added "${label}" to food types`);
@@ -174,9 +177,11 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
       const label = newCategory.trim();
       try {
         await base44.entities.CustomVenueOption.create({ name: label, type: 'category', value });
+        queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
         const current = formData.categories || [];
         handleChange('categories', [...current, value]);
         setNewCategory('');
+        toast.success(`Added "${label}" to categories`);
       } catch (error) {
         toast.error('Failed to save custom category');
       }

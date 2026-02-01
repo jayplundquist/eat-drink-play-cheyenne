@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +22,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useQuery } from '@tanstack/react-query';
 
 const categories = [
   { value: "restaurant", label: "Restaurant" },
@@ -62,13 +63,19 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
      quick_draw_boost: false,
    });
 
-  const [newFeature, setNewFeature] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [foodTypeOpen, setFoodTypeOpen] = useState(false);
-  const [newFoodType, setNewFoodType] = useState('');
-  const [newCategory, setNewCategory] = useState('');
-  const [customFoodTypes, setCustomFoodTypes] = useState([]);
-  const [customCategories, setCustomCategories] = useState([]);
+   const [newFeature, setNewFeature] = useState('');
+   const [uploading, setUploading] = useState(false);
+   const [foodTypeOpen, setFoodTypeOpen] = useState(false);
+   const [newFoodType, setNewFoodType] = useState('');
+   const [newCategory, setNewCategory] = useState('');
+
+   const { data: customOptions = [] } = useQuery({
+     queryKey: ['customVenueOptions'],
+     queryFn: () => base44.entities.CustomVenueOption.list(),
+   });
+
+   const customFoodTypes = customOptions.filter(opt => opt.type === 'food_type');
+   const customCategories = customOptions.filter(opt => opt.type === 'category');
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -101,24 +108,32 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
     });
   };
 
-  const addCustomFoodType = () => {
+  const addCustomFoodType = async () => {
     if (newFoodType.trim()) {
       const value = newFoodType.toLowerCase().replace(/\s+/g, '_');
       const label = newFoodType.trim();
-      setCustomFoodTypes(prev => [...prev, { value, label }]);
-      toggleFoodType(value);
-      setNewFoodType('');
+      try {
+        await base44.entities.CustomVenueOption.create({ name: label, type: 'food_type', value });
+        toggleFoodType(value);
+        setNewFoodType('');
+      } catch (error) {
+        toast.error('Failed to save custom food type');
+      }
     }
   };
 
-  const addCustomCategory = () => {
+  const addCustomCategory = async () => {
     if (newCategory.trim()) {
       const value = newCategory.toLowerCase().replace(/\s+/g, '_');
       const label = newCategory.trim();
-      setCustomCategories(prev => [...prev, { value, label }]);
-      const current = formData.categories || [];
-      handleChange('categories', [...current, value]);
-      setNewCategory('');
+      try {
+        await base44.entities.CustomVenueOption.create({ name: label, type: 'category', value });
+        const current = formData.categories || [];
+        handleChange('categories', [...current, value]);
+        setNewCategory('');
+      } catch (error) {
+        toast.error('Failed to save custom category');
+      }
     }
   };
 

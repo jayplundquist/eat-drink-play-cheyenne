@@ -13,6 +13,7 @@ import HeroSection from "../components/HeroSection";
 import VenueCard from "../components/VenueCard";
 import EventCard from "../components/EventCard";
 import CategoryFilter from "../components/CategoryFilter";
+import SpinTheSpur from "../components/SpinTheSpur";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +39,12 @@ export default function Home() {
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites', user?.email],
     queryFn: () => user ? base44.entities.Favorite.filter({ user_email: user.email }) : [],
+    enabled: !!user,
+  });
+
+  const { data: userRatings = [] } = useQuery({
+    queryKey: ['userRatings', user?.email],
+    queryFn: () => user ? base44.entities.Rating.filter({ user_email: user.email }) : [],
     enabled: !!user,
   });
 
@@ -80,6 +87,17 @@ export default function Home() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
       />
+
+      {/* Spin the Spur & Quick Draw */}
+      {!searchQuery && selectedCategory === 'all' && (
+        <SpinTheSpur 
+          favorites={favorites}
+          venues={venues}
+          userRatings={userRatings}
+          user={user}
+          onSignInRequired={() => base44.auth.redirectToLogin()}
+        />
+      )}
 
       {/* Featured Section */}
       {featuredVenues.length > 0 && !searchQuery && selectedCategory === 'all' && (

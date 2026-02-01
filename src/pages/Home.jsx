@@ -115,6 +115,13 @@ export default function Home() {
     },
   });
 
+  const filteredBoots = boots.filter(boot => {
+    const searchLower = searchQuery.toLowerCase();
+    return !searchQuery ||
+      boot.name?.toLowerCase().includes(searchLower) ||
+      boot.address?.toLowerCase().includes(searchLower);
+  }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
+
   const allFilteredVenues = venues.filter(venue => {
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = !searchQuery || 

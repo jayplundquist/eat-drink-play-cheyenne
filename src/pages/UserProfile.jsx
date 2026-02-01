@@ -121,8 +121,16 @@ export default function UserProfile() {
             <CardHeader className="bg-gradient-to-r from-amber-50 to-stone-50 border-b border-stone-200">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
-                    <User className="w-10 h-10 text-amber-700" />
+                  <div className="w-20 h-20 rounded-full flex items-center justify-center bg-amber-100 flex-shrink-0">
+                    {profileUserData?.profile_picture ? (
+                      <img
+                        src={profileUserData.profile_picture}
+                        alt={userEmail}
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User className="w-10 h-10 text-amber-700" />
+                    )}
                   </div>
                   <div>
                     <CardTitle className="text-3xl text-stone-800">

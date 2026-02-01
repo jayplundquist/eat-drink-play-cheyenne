@@ -73,6 +73,11 @@ export default function Home() {
     enabled: !!user,
   });
 
+  const { data: recentReviews = [] } = useQuery({
+    queryKey: ['recentReviews'],
+    queryFn: () => base44.entities.Rating.list('-created_date', 5),
+  });
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
       const existing = userFavorites.find(f => f.venue_id === venueId);
@@ -176,25 +181,47 @@ export default function Home() {
         />
       )}
 
-      {/* Just Blew In Section */}
-       {venues.length > 0 && !searchQuery && activeTab === 'all' && (
+      {/* Just Blew In Section - Recent Reviews */}
+       {recentReviews.length > 0 && !searchQuery && activeTab === 'all' && (
          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-5 h-5 text-amber-800" />
             <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <VenueCard 
-                venue={venues[0]}
-                isFavorite={isFavorite(venues[0].id)}
-                onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venues[0].id) : base44.auth.redirectToLogin()}
-                hideAddress
-              />
-            </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {recentReviews.map((review, i) => {
+              const venue = venues.find(v => v.id === review.venue_id);
+              return (
+                <motion.div
+                  key={review.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Link to={createPageUrl(`VenueDetails?id=${review.venue_id}`)}>
+                    <div className="bg-white rounded-lg border border-amber-200 p-4 h-full hover:shadow-md transition-shadow cursor-pointer">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold text-amber-900 truncate text-sm">{venue?.name || 'Venue'}</h3>
+                        <span className="text-lg">👢</span>
+                      </div>
+                      <div className="flex gap-1 mb-3">
+                        {[...Array(5)].map((_, idx) => (
+                          <span key={idx} className={idx < review.boots ? 'text-lg' : 'text-lg opacity-20'}>
+                            👢
+                          </span>
+                        ))}
+                      </div>
+                      {review.comment && (
+                        <p className="text-stone-600 text-xs line-clamp-2">{review.comment}</p>
+                      )}
+                      <p className="text-xs text-stone-400 mt-3">
+                        by {review.user_email?.split('@')[0]}
+                      </p>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </section>
       )}

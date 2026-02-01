@@ -7,13 +7,6 @@ import VenueCard from "./VenueCard";
 export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % trendingVenues.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [trendingVenues.length]);
-
   // Count favorites per venue
   const favoriteCounts = {};
   favorites.forEach(fav => {
@@ -53,6 +46,13 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
       return sorted[0];
     })
     .filter(v => v !== null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % trendingVenues.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [trendingVenues.length]);
 
   if (trendingVenues.length === 0) return null;
 

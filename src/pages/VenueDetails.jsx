@@ -36,6 +36,13 @@ const categoryLabels = {
   recreation: "Recreation"
 };
 
+// Fallback for old venues with single category
+const getCategories = (venue) => {
+  if (venue.categories && venue.categories.length > 0) return venue.categories;
+  if (venue.category) return [venue.category];
+  return [];
+};
+
 const foodTypeLabels = {
   asian: "Asian",
   international: "International",
@@ -228,9 +235,13 @@ export default function VenueDetails() {
         </div>
         
           <div className="absolute bottom-6 left-6 right-6">
-            <Badge className="bg-amber-600 text-white mb-3">
-              {categoryLabels[venue.category]}
-            </Badge>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {getCategories(venue).map(cat => (
+                <Badge key={cat} className="bg-amber-600 text-white">
+                  {categoryLabels[cat]}
+                </Badge>
+              ))}
+            </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 drop-shadow-lg">
               {venue.name}
             </h1>
@@ -261,9 +272,13 @@ export default function VenueDetails() {
                 </Button>
               </Link>
             )}
-            <Badge className="bg-amber-600 text-white mb-3">
-              {categoryLabels[venue.category]}
-            </Badge>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {getCategories(venue).map(cat => (
+                <Badge key={cat} className="bg-amber-600 text-white">
+                  {categoryLabels[cat]}
+                </Badge>
+              ))}
+            </div>
             <h1 className="text-3xl sm:text-4xl font-bold mb-2">
               {venue.name}
             </h1>

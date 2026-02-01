@@ -41,6 +41,7 @@ const categoryColors = {
 export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFavorite = true, hideImage = false, hideDescription = false }) {
   const [imageError, setImageError] = useState(false);
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
+  const categories = getCategories(venue);
 
   return (
     <Card className="group overflow-hidden bg-amber-50 border-4 border-amber-900 hover:border-amber-700 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/30 rounded-none">

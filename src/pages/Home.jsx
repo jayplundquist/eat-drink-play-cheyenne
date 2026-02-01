@@ -102,7 +102,8 @@ export default function Home() {
     const matchesSearch = !searchQuery || 
       venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       venue.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || venue.category === selectedCategory;
+    const venueCategories = venue.categories || (venue.category ? [venue.category] : []);
+    const matchesCategory = selectedCategory === 'all' || venueCategories.includes(selectedCategory);
     return matchesSearch && matchesCategory;
   });
 

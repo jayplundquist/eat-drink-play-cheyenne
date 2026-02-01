@@ -1,25 +1,35 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 
-// You can customize the boot icon by changing this URL to your uploaded boot image
-const BOOT_ICON_URL = "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=100&q=80"; // Cowboy boot image
-
 const CowboyBoot = ({ filled, className, size }) => {
   const sizeMap = { sm: 16, md: 20, lg: 24 };
   const pixelSize = sizeMap[size] || 20;
   
   return (
-    <img 
-      src={BOOT_ICON_URL}
-      alt="boot"
-      className={cn("transition-all duration-200 object-contain", className)}
-      style={{ 
-        width: `${pixelSize}px`, 
-        height: `${pixelSize}px`,
-        filter: filled ? 'none' : 'grayscale(100%) brightness(1.8)',
-        opacity: filled ? 1 : 0.3
-      }}
-    />
+    <svg 
+      width={pixelSize} 
+      height={pixelSize} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("transition-all duration-200", className)}
+    >
+      {/* Boot shaft */}
+      <path d="M8 3 L8 12 L9 13 L15 13 L16 12 L16 3 Z" fill={filled ? "#8b4513" : "#d4d4d4"} />
+      
+      {/* Boot foot */}
+      <path d="M7 12 L7 16 C7 17 7.5 18 9 18 L18 18 C19 18 20 17.5 20 16 L20 14 C20 13 19 12 18 12 Z" fill={filled ? "#a0522d" : "#e5e5e5"} />
+      
+      {/* Boot heel */}
+      <rect x="7" y="17" width="3" height="4" rx="0.5" fill={filled ? "#654321" : "#b8b8b8"} />
+      
+      {/* Boot toe detail */}
+      <ellipse cx="18" cy="15" rx="1.5" ry="1" fill={filled ? "#654321" : "#b8b8b8"} opacity="0.6" />
+      
+      {/* Stitching detail */}
+      <line x1="10" y1="5" x2="10" y2="11" stroke={filled ? "#d2691e" : "#a8a8a8"} strokeWidth="0.5" strokeDasharray="1,1" />
+      <line x1="14" y1="5" x2="14" y2="11" stroke={filled ? "#d2691e" : "#a8a8a8"} strokeWidth="0.5" strokeDasharray="1,1" />
+    </svg>
   );
 };
 

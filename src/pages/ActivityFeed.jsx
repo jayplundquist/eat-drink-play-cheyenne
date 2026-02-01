@@ -128,6 +128,10 @@ export default function ActivityFeed() {
     return new Date(b.timestamp) - new Date(a.timestamp);
   });
 
+  const filteredActivityItems = searchEmail
+    ? activityItems.filter(item => item.user_email.toLowerCase().includes(searchEmail.toLowerCase()))
+    : activityItems;
+
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50 py-12">

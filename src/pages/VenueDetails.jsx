@@ -541,7 +541,7 @@ export default function VenueDetails() {
                     <p className="text-stone-600">You cannot review your own venue</p>
                   </Card>
                 ) : (
-                <Card className="p-6 bg-white border-stone-200">
+                  <Card className="p-6 bg-white border-stone-200">
                   <div className="mb-4">
                      <label className="block text-sm font-medium text-stone-700 mb-2">
                        Give 'Em the Boot

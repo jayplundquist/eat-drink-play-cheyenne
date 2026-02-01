@@ -8,6 +8,7 @@ import { createPageUrl } from "@/utils";
 
 export default function SpinTheSpur({ favorites, venues, userRatings, user, onSignInRequired }) {
   const [spinning, setSpinning] = useState(false);
+  const [spinType, setSpinType] = useState(null); // 'spur' or 'quickdraw'
   const [result, setResult] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
       return;
     }
 
+    setSpinType('spur');
     setSpinning(true);
     setResult(null);
     setShowResult(false);
@@ -54,6 +56,7 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
       return;
     }
 
+    setSpinType('quickdraw');
     setSpinning(true);
     setResult(null);
     setShowResult(false);
@@ -137,7 +140,7 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
       {/* Spinning Spur Animation */}
       <AnimatePresence>
-        {spinning && (
+        {spinning && spinType === 'spur' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -180,6 +183,70 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
             >
               Spinning...
             </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Quick Draw Bullet Animation */}
+      <AnimatePresence>
+        {spinning && spinType === 'quickdraw' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 overflow-hidden"
+          >
+            {/* Bullet shots */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ 
+                  x: '50vw', 
+                  y: '50vh',
+                  scale: 0,
+                  rotate: Math.random() * 360
+                }}
+                animate={{ 
+                  x: `${20 + Math.random() * 60}vw`,
+                  y: `${20 + Math.random() * 60}vh`,
+                  scale: [0, 1.5, 1],
+                  rotate: Math.random() * 360
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: i * 0.15,
+                  repeat: Infinity,
+                  repeatDelay: 0.4
+                }}
+                className="absolute"
+              >
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  {/* Bullet */}
+                  <ellipse cx="20" cy="20" rx="4" ry="8" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1"/>
+                  {/* Flash */}
+                  <motion.g
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 0.2, repeat: Infinity }}
+                  >
+                    <path d="M 20 12 L 22 17 L 18 17 Z" fill="#fef3c7"/>
+                    <path d="M 20 28 L 22 23 L 18 23 Z" fill="#fef3c7"/>
+                    <path d="M 12 20 L 17 22 L 17 18 Z" fill="#fef3c7"/>
+                    <path d="M 28 20 L 23 22 L 23 18 Z" fill="#fef3c7"/>
+                  </motion.g>
+                </svg>
+              </motion.div>
+            ))}
+            
+            {/* Center text */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 0.5, repeat: Infinity }}
+              className="text-center z-10"
+            >
+              <p className="text-white text-3xl font-bold mb-2">💥 BANG! 💥</p>
+              <p className="text-yellow-300 text-xl font-semibold">Drawing...</p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

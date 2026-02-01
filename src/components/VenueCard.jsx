@@ -80,12 +80,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
               <h3 className="text-amber-100 font-bold text-lg leading-tight mb-1" style={{ fontFamily: 'Rye, serif', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
                 {venue.name}
               </h3>
-              {venue.address && (
-                <div className="flex items-center gap-1 text-amber-200 text-sm">
-                  <MapPin className="w-3.5 h-3.5" />
-                  <span className="truncate" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{venue.address}</span>
-                </div>
-              )}
+              {venue.address && !hideAddress && (
+                  <div className="flex items-center gap-1 text-amber-200 text-sm">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span className="truncate" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{venue.address}</span>
+                  </div>
+                )}
             </div>
           </div>
         </Link>

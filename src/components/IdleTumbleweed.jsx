@@ -57,28 +57,28 @@ export default function IdleTumbleweed() {
         className="w-48 h-48 flex items-center justify-center"
       >
         <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-lg">
-          {/* Bushy tumbleweed with strands and empty space */}
-          {/* Multiple radiating strands */}
-          {[...Array(24)].map((_, i) => {
-            const angle = (i * 15) * Math.PI / 180;
-            const x2 = 100 + Math.cos(angle) * 75;
-            const y2 = 100 + Math.sin(angle) * 75;
-            return (
-              <g key={i}>
-                {/* Main strand */}
-                <line x1="100" y1="100" x2={x2} y2={y2} stroke="#8b6914" strokeWidth="2.5" opacity="0.7"/>
-                {/* Twigs along strand */}
-                <line x1={100 + Math.cos(angle) * 40} y1={100 + Math.sin(angle) * 40} 
-                      x2={100 + Math.cos(angle + 0.4) * 55} y2={100 + Math.sin(angle + 0.4) * 55} 
-                      stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
-                <line x1={100 + Math.cos(angle) * 50} y1={100 + Math.sin(angle) * 50} 
-                      x2={100 + Math.cos(angle - 0.4) * 65} y2={100 + Math.sin(angle - 0.4) * 65} 
-                      stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
-              </g>
-            );
-          })}
-          {/* Light outer circle structure */}
-          <circle cx="100" cy="100" r="70" fill="none" stroke="#8b6914" strokeWidth="1.5" opacity="0.3" strokeDasharray="5,5"/>
+          {/* Bushy tumbleweed with random interwoven strands */}
+          {/* Random strands crisscrossing */}
+          <line x1="100" y1="30" x2="150" y2="80" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="150" y1="80" x2="170" y2="100" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="170" y1="100" x2="140" y2="160" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="140" y1="160" x2="100" y2="175" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="100" y1="175" x2="50" y2="160" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="50" y1="160" x2="30" y2="100" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="30" y1="100" x2="50" y2="80" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+          <line x1="50" y1="80" x2="100" y2="30" stroke="#8b6914" strokeWidth="2" opacity="0.7"/>
+
+          {/* Secondary interwoven strands */}
+          <line x1="120" y1="50" x2="80" y2="120" stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
+          <line x1="150" y1="130" x2="70" y2="140" stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
+          <line x1="90" y1="160" x2="140" y2="110" stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
+          <line x1="50" y1="110" x2="130" y2="70" stroke="#9b7924" strokeWidth="1.5" opacity="0.6"/>
+
+          {/* Small crossing twigs */}
+          <line x1="110" y1="70" x2="95" y2="95" stroke="#8b6914" strokeWidth="1" opacity="0.5"/>
+          <line x1="130" y1="120" x2="115" y2="135" stroke="#8b6914" strokeWidth="1" opacity="0.5"/>
+          <line x1="75" y1="135" x2="90" y2="115" stroke="#8b6914" strokeWidth="1" opacity="0.5"/>
+          <line x1="65" y1="90" x2="85" y2="75" stroke="#8b6914" strokeWidth="1" opacity="0.5"/>
         </svg>
       </motion.div>
 

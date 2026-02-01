@@ -43,7 +43,6 @@ export default function VenueDetails() {
   const [user, setUser] = useState(null);
   const [newRating, setNewRating] = useState(0);
   const [newComment, setNewComment] = useState('');
-  const [imageError, setImageError] = useState(false);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [reportIssue, setReportIssue] = useState('');
 
@@ -158,7 +157,6 @@ export default function VenueDetails() {
   }, [userRating]);
 
   const avgRating = venue?.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
-  const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=80";
 
   if (venueLoading) {
     return (
@@ -190,14 +188,14 @@ export default function VenueDetails() {
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Header Image */}
-      <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
-        <img
-          src={imageError ? defaultImage : (venue.image_url || defaultImage)}
-          alt={venue.name}
-          onError={() => setImageError(true)}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+      {venue.image_url && (
+        <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
+          <img
+            src={venue.image_url}
+            alt={venue.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         
         <div className="absolute top-4 left-4 right-4 flex justify-between">
           <Link to={createPageUrl('Home')}>
@@ -217,21 +215,55 @@ export default function VenueDetails() {
           )}
         </div>
         
-        <div className="absolute bottom-6 left-6 right-6">
-          <Badge className="bg-amber-600 text-white mb-3">
-            {categoryLabels[venue.category]}
-          </Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 drop-shadow-lg">
-            {venue.name}
-          </h1>
-          <div className="flex items-center gap-4">
-            <BootRating rating={Math.round(avgRating)} showCount count={venue.rating_count || 0} />
-            {venue.price_range && (
-              <span className="text-white/90 font-medium">{venue.price_range}</span>
-            )}
+          <div className="absolute bottom-6 left-6 right-6">
+            <Badge className="bg-amber-600 text-white mb-3">
+              {categoryLabels[venue.category]}
+            </Badge>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+              {venue.name}
+            </h1>
+            <div className="flex items-center gap-4">
+              <BootRating rating={Math.round(avgRating)} showCount count={venue.rating_count || 0} />
+              {venue.price_range && (
+                <span className="text-white/90 font-medium">{venue.price_range}</span>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      
+      {!venue.image_url && (
+        <div className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white py-16">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <Link to={createPageUrl('Home')}>
+              <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+            </Link>
+            {user && (
+              <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
+                <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white ml-2 mb-4">
+                  <Pencil className="w-4 h-4 mr-2" />
+                  Edit
+                </Button>
+              </Link>
+            )}
+            <Badge className="bg-amber-600 text-white mb-3">
+              {categoryLabels[venue.category]}
+            </Badge>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-2">
+              {venue.name}
+            </h1>
+            <div className="flex items-center gap-4">
+              <BootRating rating={Math.round(avgRating)} showCount count={venue.rating_count || 0} />
+              {venue.price_range && (
+                <span className="text-white/90 font-medium">{venue.price_range}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

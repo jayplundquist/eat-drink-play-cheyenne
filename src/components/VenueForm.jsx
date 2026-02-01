@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2 } from "lucide-react";
+import { base44 } from '@/api/base44Client';
+import { toast } from "sonner";
 
 const categories = [
   { value: "restaurant", label: "Restaurant" },
@@ -34,6 +36,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
   });
 
   const [newFeature, setNewFeature] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -54,6 +57,27 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
       ...prev,
       features: prev.features.filter((_, i) => i !== index)
     }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      handleChange('image_url', file_url);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -151,15 +175,44 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving }) {
           {/* Image & Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="image_url">Image URL</Label>
-              <Input
-                id="image_url"
-                type="url"
-                value={formData.image_url}
-                onChange={(e) => handleChange('image_url', e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-              />
-              <p className="text-xs text-stone-500">Tip: Use unsplash.com for free images</p>
+              <Label htmlFor="image_url">Venue Image</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="image_url"
+                  type="url"
+                  value={formData.image_url}
+                  onChange={(e) => handleChange('image_url', e.target.value)}
+                  placeholder="Or paste image URL"
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={uploading}
+                  className="relative border-amber-300 text-amber-700 hover:bg-amber-50"
+                  onClick={() => document.getElementById('image-upload').click()}
+                >
+                  {uploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                </Button>
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </div>
+              {formData.image_url && (
+                <img 
+                  src={formData.image_url} 
+                  alt="Preview" 
+                  className="w-full h-32 object-cover rounded-md border-2 border-stone-200"
+                />
+              )}
             </div>
 
             <div className="space-y-2">

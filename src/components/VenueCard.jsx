@@ -30,15 +30,13 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
   const [imageError, setImageError] = useState(false);
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
 
-  const defaultImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80";
-
   return (
     <Card className="group overflow-hidden bg-amber-50 border-4 border-amber-900 hover:border-amber-700 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/30 rounded-none">
-      {!hideImage ? (
+      {!hideImage && venue.image_url ? (
         <Link to={createPageUrl(`VenueDetails?id=${venue.id}`)}>
           <div className="relative aspect-[4/3] overflow-hidden">
             <img
-              src={imageError ? defaultImage : (venue.image_url || defaultImage)}
+              src={venue.image_url}
               alt={venue.name}
               onError={() => setImageError(true)}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

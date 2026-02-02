@@ -40,7 +40,7 @@ export default function Home() {
   const tabCategories = {
     all: [],
     eat: ['restaurant'],
-    drink: ['bar', 'brewery', 'coffee_shop'],
+    drink: ['bar', 'brewery', 'coffee_shop', 'winery'],
     play: ['activity', 'recreation', 'music_hall'],
     shop: ['souvenir_shopping', 'shopping'],
     chuck_wagons: ['food_trucks']

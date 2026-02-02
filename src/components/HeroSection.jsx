@@ -57,7 +57,7 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
               <Input
                 type="text"
-                placeholder="Search restaurants or activities"
+                placeholder="Search Restaurants or Activities"
                 value={searchQuery}
                 onChange={(e) => onSearchChange?.(e.target.value)}
                 className="w-full pl-12 pr-4 py-6 text-lg rounded-full bg-amber-50/95 backdrop-blur-sm border-2 border-amber-800 text-amber-950 placeholder:text-amber-700 focus:bg-amber-50 focus:border-amber-600 shadow-lg"

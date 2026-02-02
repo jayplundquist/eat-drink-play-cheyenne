@@ -42,7 +42,7 @@ export default function Home() {
     eat: ['restaurant'],
     drink: ['bar', 'brewery', 'coffee_shop', 'winery'],
     play: ['activity', 'recreation', 'music_hall'],
-    shop: ['souvenir_shopping', 'shopping'],
+    shop: ['souvenir_shopping', 'shopping', 'grocery'],
     chuck_wagons: ['food_trucks']
   };
 

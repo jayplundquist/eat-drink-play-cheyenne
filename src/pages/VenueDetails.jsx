@@ -427,7 +427,7 @@ export default function VenueDetails() {
         </div>
       )}
       
-      {!venue.image_url && (
+      {(!venue.image_url || imageLoadError) && (
         <div className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <Link to={createPageUrl('Home')}>

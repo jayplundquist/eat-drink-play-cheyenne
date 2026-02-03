@@ -174,6 +174,12 @@ export default function Layout({ children, currentPageName }) {
                         Venue Options
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageGameSettings')} className="cursor-pointer">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Game Settings
+                      </Link>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
@@ -300,6 +306,12 @@ export default function Layout({ children, currentPageName }) {
                       <Button variant="ghost" className="w-full justify-start text-stone-600">
                         <Settings className="w-5 h-5 mr-3" />
                         Venue Options
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('ManageGameSettings')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Settings className="w-5 h-5 mr-3" />
+                        Game Settings
                       </Button>
                     </Link>
                   </div>

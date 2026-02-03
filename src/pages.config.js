@@ -63,6 +63,7 @@ import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
+import ManageGameSettings from './pages/ManageGameSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
+    "ManageGameSettings": ManageGameSettings,
 }
 
 export const pagesConfig = {

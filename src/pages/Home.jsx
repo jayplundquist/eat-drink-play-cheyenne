@@ -101,6 +101,16 @@ export default function Home() {
     queryFn: () => base44.entities.Boot.list(),
   });
 
+  const { data: gameSettings = [] } = useQuery({
+    queryKey: ['gameSettings'],
+    queryFn: () => base44.entities.GameSettings.list(),
+  });
+
+  const quickDrawSetting = gameSettings.find(s => s.game_name === 'quick_draw');
+  const wetYerWhistleSetting = gameSettings.find(s => s.game_name === 'wet_yer_whistle');
+  const quickDrawCategories = quickDrawSetting?.categories || ['restaurant'];
+  const wetYerWhistleCategories = wetYerWhistleSetting?.categories || ['bar', 'brewery', 'coffee_shop', 'winery'];
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
       const existing = userFavorites.find(f => f.venue_id === venueId);
@@ -202,6 +212,7 @@ export default function Home() {
           userRatings={userRatings}
           user={user}
           onSignInRequired={() => base44.auth.redirectToLogin()}
+          quickDrawCategories={quickDrawCategories}
         />
       )}
 
@@ -211,6 +222,7 @@ export default function Home() {
           venues={venues}
           user={user}
           onSignInRequired={() => base44.auth.redirectToLogin()}
+          wetYerWhistleCategories={wetYerWhistleCategories}
         />
       )}
 

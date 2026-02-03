@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import BootRating from "./BootRating";
 
-export default function SpinTheSpur({ favorites, venues, userRatings, user, onSignInRequired }) {
+export default function SpinTheSpur({ favorites, venues, userRatings, user, onSignInRequired, quickDrawCategories = ['restaurant'] }) {
   const [spinning, setSpinning] = useState(false);
   const [spinType, setSpinType] = useState(null); // 'spur' or 'quickdraw'
   const [result, setResult] = useState(null);
@@ -49,9 +49,11 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
     }
 
     const ratedVenueIds = userRatings.map(r => r.venue_id);
-    const untriedVenues = venues.filter(v => 
-      !ratedVenueIds.includes(v.id) && (v.categories?.includes('restaurant') || v.category === 'restaurant')
-    );
+    const untriedVenues = venues.filter(v => {
+      if (ratedVenueIds.includes(v.id)) return false;
+      const venueCategories = v.categories || (v.category ? [v.category] : []);
+      return venueCategories.some(cat => quickDrawCategories.includes(cat));
+    });
 
     if (untriedVenues.length === 0) {
       return;
@@ -91,7 +93,11 @@ export default function SpinTheSpur({ favorites, venues, userRatings, user, onSi
 
   const favoriteCount = venues.filter(v => favorites.some(f => f.venue_id === v.id)).length;
   const ratedVenueIds = userRatings.map(r => r.venue_id);
-  const untriedCount = venues.filter(v => !ratedVenueIds.includes(v.id) && (v.categories?.includes('restaurant') || v.category === 'restaurant')).length;
+  const untriedCount = venues.filter(v => {
+    if (ratedVenueIds.includes(v.id)) return false;
+    const venueCategories = v.categories || (v.category ? [v.category] : []);
+    return venueCategories.some(cat => quickDrawCategories.includes(cat));
+  }).length;
 
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">

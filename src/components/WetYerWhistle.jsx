@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import BootRating from "./BootRating";
 
-export default function WetYerWhistle({ venues, user, onSignInRequired }) {
+export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWhistleCategories = ['bar', 'brewery', 'coffee_shop', 'winery'] }) {
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -19,12 +19,10 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
       return;
     }
 
-    // Filter for drink categories: bar, brewery, coffee_shop, winery
+    // Filter for drink categories
     const drinkVenues = venues.filter(v => {
       const categories = v.categories || (v.category ? [v.category] : []);
-      return categories.some(cat => 
-        ['bar', 'brewery', 'coffee_shop', 'winery'].includes(cat)
-      );
+      return categories.some(cat => wetYerWhistleCategories.includes(cat));
     });
 
     if (drinkVenues.length === 0) {
@@ -46,9 +44,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
 
   const drinkVenueCount = venues.filter(v => {
     const categories = v.categories || (v.category ? [v.category] : []);
-    return categories.some(cat => 
-      ['bar', 'brewery', 'coffee_shop', 'winery'].includes(cat)
-    );
+    return categories.some(cat => wetYerWhistleCategories.includes(cat));
   }).length;
 
   return (

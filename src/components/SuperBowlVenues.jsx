@@ -51,48 +51,47 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
           </div>
 
           <div className="relative flex items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setCurrentIndex(prev => (prev - 1 + superBowlVenues.length) % superBowlVenues.length)}
-            className="border-blue-300 text-blue-600 hover:bg-blue-50"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setCurrentIndex(prev => (prev - 1 + superBowlVenues.length) % superBowlVenues.length)}
+              className="border-blue-300 text-blue-600 hover:bg-blue-50"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
 
-          <div className="relative w-80 h-80 flex-shrink-0">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.3 }}
-                className="absolute inset-0"
-              >
-                <VenueCard
-                  venue={currentVenue}
-                  isFavorite={isFavorite(currentVenue.id)}
-                  onToggleFavorite={() => onToggleFavorite(currentVenue.id)}
-                />
-              </motion.div>
-            </AnimatePresence>
+            <div className="relative w-80 h-80 flex-shrink-0">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0"
+                >
+                  <VenueCard
+                    venue={currentVenue}
+                    isFavorite={isFavorite(currentVenue.id)}
+                    onToggleFavorite={() => onToggleFavorite(currentVenue.id)}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setCurrentIndex(prev => (prev + 1) % superBowlVenues.length)}
+              className="border-blue-300 text-blue-600 hover:bg-blue-50"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
+
+            {/* Football emoji */}
+            <span className="absolute top-4 right-4 text-4xl animate-bounce">🏈</span>
           </div>
-
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setCurrentIndex(prev => (prev + 1) % superBowlVenues.length)}
-            className="border-blue-300 text-blue-600 hover:bg-blue-50"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </Button>
-
-          {/* Football emoji */}
-          <span className="absolute top-4 right-4 text-4xl animate-bounce">🏈</span>
         </div>
-        </div>
-      </div>
     </section>
   );
 }

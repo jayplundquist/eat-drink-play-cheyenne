@@ -152,6 +152,16 @@ export default function ActivityFeed() {
     enabled: !!currentUser,
   });
 
+  const { data: allReactions = [] } = useQuery({
+    queryKey: ['allReactions'],
+    queryFn: () => base44.entities.ReviewReaction.list(),
+  });
+
+  const { data: allRatings = [] } = useQuery({
+    queryKey: ['allRatings'],
+    queryFn: () => base44.entities.Rating.list('-created_date', 100),
+  });
+
   const activityItems = [
     ...followedUserRatings.map(rating => ({
       type: 'review',

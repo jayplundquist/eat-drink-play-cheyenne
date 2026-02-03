@@ -52,10 +52,12 @@ import AddVenue from './pages/AddVenue';
 import Analytics from './pages/Analytics';
 import EditVenue from './pages/EditVenue';
 import Favorites from './pages/Favorites';
+import Home from './pages/Home';
 import ManageBadges from './pages/ManageBadges';
 import ManageBoots from './pages/ManageBoots';
 import ManageClaimRequests from './pages/ManageClaimRequests';
 import ManageGameSettings from './pages/ManageGameSettings';
+import ManageReports from './pages/ManageReports';
 import ManageVenueOptions from './pages/ManageVenueOptions';
 import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
@@ -63,8 +65,6 @@ import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
-import Home from './pages/Home';
-import ManageReports from './pages/ManageReports';
 import __Layout from './Layout.jsx';
 
 
@@ -74,10 +74,12 @@ export const PAGES = {
     "Analytics": Analytics,
     "EditVenue": EditVenue,
     "Favorites": Favorites,
+    "Home": Home,
     "ManageBadges": ManageBadges,
     "ManageBoots": ManageBoots,
     "ManageClaimRequests": ManageClaimRequests,
     "ManageGameSettings": ManageGameSettings,
+    "ManageReports": ManageReports,
     "ManageVenueOptions": ManageVenueOptions,
     "ManageVenues": ManageVenues,
     "Profile": Profile,
@@ -85,8 +87,6 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
-    "Home": Home,
-    "ManageReports": ManageReports,
 }
 
 export const pagesConfig = {

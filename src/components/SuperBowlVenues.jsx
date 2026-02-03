@@ -92,6 +92,7 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
             <span className="absolute top-4 right-4 text-4xl animate-bounce">🏈</span>
           </div>
         </div>
+      </div>
     </section>
   );
 }

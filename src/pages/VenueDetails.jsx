@@ -27,6 +27,7 @@ import { motion } from "framer-motion";
 import BootRating from "../components/BootRating";
 import ClaimVenueModal from "../components/ClaimVenueModal";
 import UserBadge from "../components/UserBadge";
+import ReviewComments from "../components/ReviewComments";
 import { toast } from "sonner";
 
 const categoryLabels = {
@@ -779,6 +780,7 @@ export default function VenueDetails() {
                               ))}
                             </div>
                           )}
+                          <ReviewComments reviewId={rating.id} currentUser={user} />
                           </div>
                           </div>
                           </Card>

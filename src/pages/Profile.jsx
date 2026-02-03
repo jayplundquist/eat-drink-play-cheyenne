@@ -76,7 +76,9 @@ export default function Profile() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
-      await base44.auth.updateMe({ display_name: data.full_name });
+      if (user?.id) {
+        await base44.entities.User.update(user.id, { display_name: data.full_name });
+      }
       const updated = await base44.auth.me();
       return updated;
     },
@@ -87,6 +89,7 @@ export default function Profile() {
       toast.success('Profile updated successfully!');
     },
     onError: (error) => {
+      console.error('Profile update error:', error);
       toast.error('Failed to update profile');
     },
   });

@@ -97,33 +97,61 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                   }}
                   style={{ transformOrigin: "150px 200px" }}
                 >
-                  {/* Glass body - trapezoid shape */}
-                  <path
-                    d="M 100 180 L 130 220 L 170 220 L 200 180 Z"
-                    fill="url(#glassGradient)"
-                    stroke="#cbd5e1"
-                    strokeWidth="3"
-                    opacity="0.8"
-                  />
-                  
-                  {/* Glass base */}
-                  <rect
-                    x="130"
-                    y="220"
-                    width="40"
-                    height="8"
-                    fill="#94a3b8"
-                    stroke="#64748b"
+                  {/* Thick rim at top */}
+                  <ellipse
+                    cx="150"
+                    cy="155"
+                    rx="45"
+                    ry="7"
+                    fill="#1e293b"
+                    stroke="#0f172a"
                     strokeWidth="2"
                   />
                   
-                  {/* Liquid inside (amber whiskey color) - animates out */}
+                  {/* Glass outer body */}
+                  <path
+                    d="M 105 155 L 125 235 L 175 235 L 195 155 Z"
+                    fill="none"
+                    stroke="#1e293b"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  
+                  {/* Rounded bottom base */}
+                  <path
+                    d="M 125 235 Q 150 245 175 235"
+                    fill="none"
+                    stroke="#1e293b"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                  />
+                  
+                  {/* Bottom ellipse */}
+                  <ellipse
+                    cx="150"
+                    cy="235"
+                    rx="25"
+                    ry="5"
+                    fill="#cbd5e1"
+                    stroke="#1e293b"
+                    strokeWidth="2"
+                  />
+                  
+                  {/* Glass inner transparency effect */}
+                  <path
+                    d="M 109 160 L 127 232 L 173 232 L 191 160"
+                    fill="url(#glassGradient)"
+                    opacity="0.15"
+                  />
+                  
+                  {/* Liquid inside (dark amber/whiskey) - animates out */}
                   <motion.path
-                    d="M 107 195 L 134 215 L 166 215 L 193 195 Z"
-                    fill="#d97706"
-                    opacity="0.9"
+                    d="M 115 195 L 130 230 L 170 230 L 185 195 Z"
+                    fill="#1e293b"
+                    opacity="1"
                     animate={{
-                      opacity: [0.9, 0.9, 0, 0],
+                      opacity: [1, 1, 0, 0],
                       scaleY: [1, 1, 0.2, 0]
                     }}
                     transition={{
@@ -131,33 +159,24 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                       times: [0, 0.4, 0.8, 1],
                       ease: "easeOut"
                     }}
-                    style={{ transformOrigin: "150px 215px" }}
+                    style={{ transformOrigin: "150px 230px" }}
                   />
                   
-                  {/* Liquid shine */}
-                  <motion.path
-                    d="M 112 197 L 137 210 L 152 210 L 127 197 Z"
+                  {/* Liquid highlight */}
+                  <motion.ellipse
+                    cx="135"
+                    cy="200"
+                    rx="12"
+                    ry="18"
                     fill="url(#liquidShine)"
-                    opacity="0.6"
+                    opacity="0.4"
                     animate={{
-                      opacity: [0.6, 0.6, 0, 0]
+                      opacity: [0.4, 0.4, 0, 0]
                     }}
                     transition={{
                       duration: 2.5,
                       times: [0, 0.4, 0.8, 1]
                     }}
-                  />
-                  
-                  {/* Glass rim highlight */}
-                  <ellipse
-                    cx="150"
-                    cy="180"
-                    rx="50"
-                    ry="8"
-                    fill="none"
-                    stroke="#f1f5f9"
-                    strokeWidth="2"
-                    opacity="0.5"
                   />
                 </motion.g>
 

@@ -95,43 +95,11 @@ export default function BootCheckList({ user }) {
   const isVisited = (bootName) => visits.some(v => v.boot_name === bootName);
   const getVisit = (bootName) => visits.find(v => v.boot_name === bootName);
 
-  // Geocode boots to get coordinates for map
+  // Use boots with coordinates from the database
   useEffect(() => {
-    const geocodeBoots = async () => {
-      setGeocodingLoading(true);
-      if (boots.length === 0) {
-        setBootsWithCoords([]);
-        setGeocodingLoading(false);
-        return;
-      }
-
-      const results = [];
-      for (const boot of boots) {
-        try {
-          const encoded = encodeURIComponent(boot.address);
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`,
-            { signal: AbortSignal.timeout(5000) }
-          );
-          const data = await response.json();
-          if (data.length > 0) {
-            results.push({
-              ...boot,
-              lat: parseFloat(data[0].lat),
-              lng: parseFloat(data[0].lon),
-            });
-          } else {
-            console.warn('No geocoding result for', boot.address);
-          }
-        } catch (err) {
-          console.error('Geocoding error for', boot.name, err);
-        }
-      }
-      setBootsWithCoords(results);
-      setGeocodingLoading(false);
-    };
-
-    geocodeBoots();
+    const withCoords = boots.filter(boot => boot.lat && boot.lng);
+    setBootsWithCoords(withCoords);
+    setGeocodingLoading(false);
   }, [boots]);
 
   const visitedCount = visits.length;

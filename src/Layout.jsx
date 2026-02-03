@@ -228,6 +228,12 @@ export default function Layout({ children, currentPageName }) {
                         My Favorites
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('Profile')} className="cursor-pointer">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Found Boots
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={() => base44.auth.logout()}

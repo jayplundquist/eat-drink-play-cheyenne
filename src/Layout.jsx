@@ -14,15 +14,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { 
-        MapPin, 
-        Heart, 
-        Menu, 
-        X, 
-        User,
-        LogOut,
-        Plus,
-        Settings
-      } from "lucide-react";
+              MapPin, 
+              Heart, 
+              Menu, 
+              X, 
+              User,
+              LogOut,
+              Plus,
+              Settings,
+              Flag
+            } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
 import { Share2 } from "lucide-react";

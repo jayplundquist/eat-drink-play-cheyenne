@@ -255,17 +255,29 @@ export default function Home() {
         </div>
       )}
 
-       {/* The Hitching Post */}
+       {/* Hat Tip Section - Trending Venues */}
        {!searchQuery && activeTab === 'all' && (
-         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-           <Link to={createPageUrl('ActivityFeed')}>
-             <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
-               <MessageCircle className="w-5 h-5 mr-2" />
-               The Hitching Post - Activity Feed
-             </Button>
-           </Link>
+         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+           <HatTip 
+             venues={venues}
+             favorites={favorites}
+             user={user}
+             onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+           />
          </section>
        )}
+
+        {/* The Hitching Post */}
+              {!searchQuery && activeTab === 'all' && (
+                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+                  <Link to={createPageUrl('ActivityFeed')}>
+                    <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      The Hitching Post - Activity Feed
+                    </Button>
+                  </Link>
+                </section>
+              )}
 
       {/* Just Blew In Section - Recent Reviews */}
        {recentReviews.length > 0 && !searchQuery && activeTab === 'all' && (

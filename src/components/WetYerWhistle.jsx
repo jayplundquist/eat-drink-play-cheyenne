@@ -48,24 +48,22 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
   }).length;
 
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-      <Card className="bg-gradient-to-br from-rose-50 to-pink-50 border-rose-200 hover:shadow-lg transition-shadow">
-        <CardContent className="space-y-3 pt-6">
-          <p className="text-sm text-stone-600">
-            Thirsty? Let us pick the perfect spot to wet yer whistle!
-          </p>
-          <Button 
-            onClick={handleWetYerWhistle}
-            disabled={spinning || drinkVenueCount === 0}
-            className="w-full bg-rose-600 hover:bg-rose-700 text-white"
-          >
-            {spinning ? "Pouring..." : "Wet Yer Whistle"}
-          </Button>
-          {drinkVenueCount === 0 && (
-            <p className="text-xs text-rose-600">No drink spots available!</p>
-          )}
-        </CardContent>
-      </Card>
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="text-center space-y-3">
+        <p className="text-sm text-stone-600">
+          Thirsty? Let us pick the perfect spot to wet yer whistle!
+        </p>
+        <Button 
+          onClick={handleWetYerWhistle}
+          disabled={spinning || drinkVenueCount === 0}
+          className="w-full bg-rose-600 hover:bg-rose-700 text-white"
+        >
+          {spinning ? "Pouring..." : "Wet Yer Whistle"}
+        </Button>
+        {drinkVenueCount === 0 && (
+          <p className="text-xs text-rose-600">No drink spots available!</p>
+        )}
+      </div>
 
       {/* Tipping Shot Glass Animation */}
       <AnimatePresence>
@@ -341,6 +339,6 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </div>
   );
 }

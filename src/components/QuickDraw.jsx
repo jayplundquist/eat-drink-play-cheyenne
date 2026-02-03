@@ -69,7 +69,7 @@ export default function QuickDraw({ venues, userRatings, user, onSignInRequired,
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="text-center space-y-3">
         <p className="text-sm text-stone-600">
-          Discover a new favorite
+          Feeling adventurous? Try a new restaurant you haven't rated yet!
         </p>
         <Button 
           onClick={handleQuickDraw}

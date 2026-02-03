@@ -10,14 +10,6 @@ import {
 } from "@/components/ui/tooltip";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-const DUSTER_BADGE = {
-  name: 'The Duster',
-  icon: '🌪️',
-  description: 'Averages 1-2 star ratings',
-  minReviews: 5,
-  special: true
-};
-
 export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0 }) {
   const { data: allBadges = [] } = useQuery({
     queryKey: ['badges'],
@@ -26,10 +18,6 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
 
   const reviewBadges = allBadges.filter(b => b.type === 'review').sort((a, b) => a.min_count - b.min_count);
   const bootBadges = allBadges.filter(b => b.type === 'boot').sort((a, b) => a.min_count - b.min_count);
-  
-  const earned = reviewBadges.filter(b => reviewCount >= b.min_count);
-  const bootEarned = bootBadges.filter(b => bootVisitCount >= b.min_count);
-  const dusterEarned = reviewCount >= 5 && avgRating >= 1 && avgRating <= 2;
 
   return (
     <Card className="mb-6 border-stone-200">

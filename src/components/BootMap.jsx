@@ -146,7 +146,11 @@ export default function BootMap({ boots = [] }) {
 
           {/* Boot markers */}
           {boots.map((boot) => (
-            <Marker key={boot.name} position={[boot.lat, boot.lng]} icon={bootIcon}>
+            <Marker 
+              key={boot.name} 
+              position={[boot.lat, boot.lng]} 
+              icon={nearestBoot?.boot.name === boot.name ? bouncingBootIcon : bootIcon}
+            >
               <Popup>
                 <div className="text-sm">
                   <div className="font-semibold">{boot.name}</div>

@@ -72,15 +72,6 @@ export default function Home() {
       base44.auth.me().then(setUser).catch(() => setUser(null));
     }, []);
 
-    useEffect(() => {
-      if (recentReviews.length > 0) {
-        const interval = setInterval(() => {
-          setReviewIndex(prev => (prev + 1) % recentReviews.length);
-        }, 5000);
-        return () => clearInterval(interval);
-      }
-    }, [recentReviews.length]);
-
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['venues'],
     queryFn: () => base44.entities.Venue.list('-created_date', 10000),
@@ -109,6 +100,15 @@ export default function Home() {
     queryKey: ['recentReviews'],
     queryFn: () => base44.entities.Rating.list('-created_date', 5),
   });
+
+  useEffect(() => {
+    if (recentReviews.length > 0) {
+      const interval = setInterval(() => {
+        setReviewIndex(prev => (prev + 1) % recentReviews.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [recentReviews.length]);
 
   const { data: boots = [] } = useQuery({
     queryKey: ['boots'],

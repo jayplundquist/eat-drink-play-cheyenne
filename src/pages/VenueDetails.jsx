@@ -77,7 +77,7 @@ const getLabelForValue = (value, customOptions, type) => {
 
 export default function VenueDetails() {
   const urlParams = new URLSearchParams(window.location.search);
-  const venueId = urlParams.get('id');
+  const venueId = urlParams.get('id') || urlParams.get('venueId');
   
   const [user, setUser] = useState(null);
   const [newRating, setNewRating] = useState(0);

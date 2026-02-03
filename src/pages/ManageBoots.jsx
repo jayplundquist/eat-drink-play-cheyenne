@@ -132,6 +132,40 @@ export default function ManageBoots() {
     }
   });
 
+  const removeDuplicatesMutation = useMutation({
+    mutationFn: async () => {
+      const addressMap = new Map();
+      const duplicateIds = [];
+
+      boots.forEach(boot => {
+        if (!boot.address) return;
+        
+        if (addressMap.has(boot.address)) {
+          duplicateIds.push(boot.id);
+        } else {
+          addressMap.set(boot.address, boot.id);
+        }
+      });
+
+      if (duplicateIds.length === 0) {
+        throw new Error('No duplicates found');
+      }
+
+      for (const id of duplicateIds) {
+        await base44.entities.Boot.delete(id);
+      }
+
+      return duplicateIds.length;
+    },
+    onSuccess: (count) => {
+      queryClient.invalidateQueries({ queryKey: ['boots'] });
+      toast.success(`Removed ${count} duplicate boot${count > 1 ? 's' : ''}`);
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to remove duplicates');
+    }
+  });
+
   if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
@@ -158,15 +192,30 @@ export default function ManageBoots() {
 
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-stone-800">Manage Big Boots</h1>
-          <Button
-            onClick={() => importBootsMutation.mutate()}
-            disabled={importBootsMutation.isPending}
-            variant="outline"
-            className="border-amber-600 text-amber-600 hover:bg-amber-50"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Import All Boots
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                if (confirm('Remove all duplicate boots based on address? This will keep only one boot per address.')) {
+                  removeDuplicatesMutation.mutate();
+                }
+              }}
+              disabled={removeDuplicatesMutation.isPending}
+              variant="outline"
+              className="border-red-600 text-red-600 hover:bg-red-50"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Remove Duplicates
+            </Button>
+            <Button
+              onClick={() => importBootsMutation.mutate()}
+              disabled={importBootsMutation.isPending}
+              variant="outline"
+              className="border-amber-600 text-amber-600 hover:bg-amber-50"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Import All Boots
+            </Button>
+          </div>
         </div>
 
         {/* Add New Boot */}

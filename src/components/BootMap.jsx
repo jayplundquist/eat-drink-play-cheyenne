@@ -42,20 +42,27 @@ export default function BootMap({ boots = [] }) {
           };
           setUserLocation(location);
           
-          // Find nearest boot
-          if (boots.length > 0) {
+          // Find nearest boot (only from boots that have coordinates)
+          const bootsWithCoords = boots.filter(boot => boot.lat && boot.lng);
+          if (bootsWithCoords.length > 0) {
             let nearest = null;
             let minDistance = Infinity;
 
-            boots.forEach(boot => {
-              // Use a simple distance calculation (Haversine formula would be more accurate)
-              const distance = Math.sqrt(
-                Math.pow(boot.lat - location.lat, 2) + 
-                Math.pow(boot.lng - location.lng, 2)
-              );
+            bootsWithCoords.forEach(boot => {
+              // Haversine formula for accurate distance calculation
+              const R = 3959; // Earth radius in miles
+              const dLat = (boot.lat - location.lat) * Math.PI / 180;
+              const dLng = (boot.lng - location.lng) * Math.PI / 180;
+              const a = 
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(location.lat * Math.PI / 180) * Math.cos(boot.lat * Math.PI / 180) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+              const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+              const distance = R * c;
+
               if (distance < minDistance) {
                 minDistance = distance;
-                nearest = { boot, distance: minDistance };
+                nearest = { boot, distance };
               }
             });
 

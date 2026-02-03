@@ -133,7 +133,7 @@ export default function ActivityFeed() {
   });
 
   const { data: followedBootShares = [] } = useQuery({
-    queryKey: ['followedBootShares', followingEmails],
+    queryKey: ['followedBootShares', followingEmails.join(',')],
     queryFn: async () => {
       if (followingEmails.length === 0) return [];
       const allShares = [];

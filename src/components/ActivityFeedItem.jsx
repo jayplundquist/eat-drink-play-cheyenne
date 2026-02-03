@@ -36,7 +36,7 @@ export default function ActivityFeedItem({
               <div className="flex items-center gap-2">
                 <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
                   <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
-                    <span className="font-semibold">{item.user_email.split('@')[0]}</span>
+                    <span className="font-semibold">{item.user_email?.split('@')[0]}</span>
                   </Link>
                 </Button>
                 <span className="text-stone-500">found</span>
@@ -97,7 +97,7 @@ export default function ActivityFeedItem({
               <div className="flex items-center gap-2">
                 <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
                   <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
-                    <span className="font-semibold">{item.user_email.split('@')[0]}</span>
+                    <span className="font-semibold">{item.user_email?.split('@')[0]}</span>
                   </Link>
                 </Button>
                 <UserBadge reviewCount={followedUserRatings.filter(r => r.user_email === item.user_email).length} size="sm" />
@@ -206,7 +206,7 @@ export default function ActivityFeedItem({
               <div className="flex items-center gap-2">
                 <Button asChild variant="link" className="text-amber-700 p-0 h-auto">
                   <Link to={`${createPageUrl('UserProfile')}?email=${item.user_email}`}>
-                    <span className="font-semibold">{item.user_email.split('@')[0]}</span>
+                    <span className="font-semibold">{item.user_email?.split('@')[0]}</span>
                   </Link>
                 </Button>
                 <span className="text-stone-500">favorited</span>

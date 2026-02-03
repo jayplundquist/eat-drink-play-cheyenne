@@ -179,14 +179,13 @@ export default function ActivityFeedItem({
                   </div>
                 )}
 
-                {currentUser && (
-                  <ReviewActions
-                    ratingId={item.data.id}
-                    reviewUserId={item.user_email}
-                    currentUserEmail={currentUser.email}
-                    isAlreadyBoosted={item.isBoosted}
-                  />
-                )}
+                <ReviewActions
+                  ratingId={item.data.id}
+                  reviewUserId={item.user_email}
+                  currentUserEmail={currentUser?.email}
+                  isAlreadyBoosted={item.isBoosted}
+                  currentUser={currentUser}
+                />
               </div>
             </div>
           </CardContent>

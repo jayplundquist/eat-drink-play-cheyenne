@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -23,6 +23,8 @@ import HeroSection from "../components/HeroSection";
 import VenueCard from "../components/VenueCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
+import QuickDraw from "../components/QuickDraw";
+import WetYerWhistle from "../components/WetYerWhistle";
 import HatTip from "../components/HatTip";
 import { CowboyBoot } from "../components/BootRating";
 
@@ -36,8 +38,14 @@ export default function Home() {
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
-  const tabCategories = {
+  const { data: customOptions = [] } = useQuery({
+    queryKey: ['customVenueOptions'],
+    queryFn: () => base44.entities.CustomVenueOption.list(),
+  });
+
+  const builtInTabCategories = {
     all: [],
     eat: ['restaurant'],
     drink: ['bar', 'brewery', 'coffee_shop', 'winery'],
@@ -46,15 +54,28 @@ export default function Home() {
     chuck_wagons: ['food_trucks']
   };
 
+  // Add custom categories to their respective tabs
+  const tabCategories = { ...builtInTabCategories };
+  customOptions.filter(opt => opt.type === 'category' && opt.tabs && opt.tabs.length > 0).forEach(opt => {
+    opt.tabs.forEach(tab => {
+      if (!tabCategories[tab]) {
+        tabCategories[tab] = [];
+      }
+      if (!tabCategories[tab].includes(opt.value)) {
+        tabCategories[tab].push(opt.value);
+      }
+    });
+  });
+
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => setUser(null));
-  }, []);
+    useEffect(() => {
+      base44.auth.me().then(setUser).catch(() => setUser(null));
+    }, []);
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['venues'],
-    queryFn: () => base44.entities.Venue.list('-created_date', 50),
+    queryFn: () => base44.entities.Venue.list('-created_date', 10000),
   });
 
 
@@ -81,10 +102,29 @@ export default function Home() {
     queryFn: () => base44.entities.Rating.list('-created_date', 5),
   });
 
+  useEffect(() => {
+    if (recentReviews.length > 0) {
+      const interval = setInterval(() => {
+        setReviewIndex(prev => (prev + 1) % recentReviews.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [recentReviews.length]);
+
   const { data: boots = [] } = useQuery({
     queryKey: ['boots'],
     queryFn: () => base44.entities.Boot.list(),
   });
+
+  const { data: gameSettings = [] } = useQuery({
+    queryKey: ['gameSettings'],
+    queryFn: () => base44.entities.GameSettings.list(),
+  });
+
+  const quickDrawSetting = gameSettings.find(s => s.game_name === 'quick_draw');
+  const wetYerWhistleSetting = gameSettings.find(s => s.game_name === 'wet_yer_whistle');
+  const quickDrawCategories = quickDrawSetting?.categories || ['restaurant'];
+  const wetYerWhistleCategories = wetYerWhistleSetting?.categories || ['bar', 'brewery', 'coffee_shop', 'winery'];
 
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
@@ -118,16 +158,19 @@ export default function Home() {
 
   const submitSuggestionMutation = useMutation({
     mutationFn: async () => {
-      await base44.integrations.Core.SendEmail({
-        to: 'admin@example.com',
-        subject: 'New Suggestion from Cheyenne Guide',
-        body: `User: ${user?.email || 'Anonymous'}\n\nSuggestion:\n${suggestion}`
+      await base44.entities.Suggestion.create({
+        user_email: user?.email || 'anonymous',
+        suggestion_text: suggestion
       });
     },
     onSuccess: () => {
       toast.success('Thank you for your suggestion!');
       setSuggestionOpen(false);
       setSuggestion('');
+    },
+    onError: (error) => {
+      toast.error('Failed to submit suggestion. Please try again.');
+      console.error('Suggestion submission error:', error);
     },
   });
 
@@ -176,38 +219,66 @@ export default function Home() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Spin the Spur & Quick Draw */}
-       {!searchQuery && activeTab === 'all' && (
-         <SpinTheSpur 
-           favorites={userFavorites}
-           venues={venues}
-           userRatings={userRatings}
-           user={user}
-           onSignInRequired={() => base44.auth.redirectToLogin()}
-         />
-       )}
+      {/* Games in Grid Under Hero */}
+      {!searchQuery && activeTab === 'all' && (
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 -mt-24 relative z-10 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <SpinTheSpur 
+                favorites={userFavorites}
+                venues={venues}
+                userRatings={userRatings}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                quickDrawCategories={quickDrawCategories}
+              />
+            </div>
 
-       {/* The Hitching Post */}
+            <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <QuickDraw 
+                venues={venues}
+                userRatings={userRatings}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                quickDrawCategories={quickDrawCategories}
+              />
+            </div>
+
+            <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <WetYerWhistle 
+                venues={venues}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                wetYerWhistleCategories={wetYerWhistleCategories}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+       {/* Hat Tip Section - Trending Venues */}
        {!searchQuery && activeTab === 'all' && (
-         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-           <Link to={createPageUrl('ActivityFeed')}>
-             <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
-               <MessageCircle className="w-5 h-5 mr-2" />
-               The Hitching Post - Activity Feed
-             </Button>
-           </Link>
+         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+           <HatTip 
+             venues={venues}
+             favorites={favorites}
+             user={user}
+             onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+           />
          </section>
        )}
 
-       {/* Hat Tip Section */}
-      {!searchQuery && activeTab === 'all' && (
-        <HatTip 
-          venues={venues}
-          favorites={favorites}
-          user={user}
-          onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
-        />
-      )}
+        {/* The Hitching Post */}
+              {!searchQuery && activeTab === 'all' && (
+                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+                  <Link to={createPageUrl('ActivityFeed')}>
+                    <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      The Hitching Post - Activity Feed
+                    </Button>
+                  </Link>
+                </section>
+              )}
 
       {/* Just Blew In Section - Recent Reviews */}
        {recentReviews.length > 0 && !searchQuery && activeTab === 'all' && (
@@ -216,37 +287,58 @@ export default function Home() {
             <Sparkles className="w-5 h-5 text-amber-800" />
             <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {recentReviews.map((review, i) => {
-              const venue = venues.find(v => v.id === review.venue_id);
-              return (
-                <motion.div
-                  key={review.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
+          <div className="flex items-center justify-center gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setReviewIndex(prev => (prev - 1 + recentReviews.length) % recentReviews.length)}
+              className="border-amber-700 text-amber-700 hover:bg-amber-50"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+
+            <motion.div
+              key={reviewIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-sm"
+            >
+              {(() => {
+                const review = recentReviews[reviewIndex];
+                const venue = venues.find(v => v.id === review.venue_id);
+                return (
                   <Link to={createPageUrl(`VenueDetails?id=${review.venue_id}`)}>
-                    <div className="bg-white rounded-lg border border-amber-200 p-4 h-full hover:shadow-md transition-shadow cursor-pointer">
-                      <h3 className="font-semibold text-amber-900 truncate text-sm mb-3">{venue?.name || 'Venue'}</h3>
+                    <div className="bg-white rounded-lg border border-amber-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
+                      <h3 className="font-semibold text-amber-900 text-lg mb-3">{venue?.name || 'Venue'}</h3>
                       <div className="flex gap-1 mb-3">
                         {[...Array(5)].map((_, idx) => (
-                          <div key={idx} className="w-5 h-5">
+                          <div key={idx} className="w-6 h-6">
                             <CowboyBoot filled={idx < review.boots} size="sm" />
                           </div>
                         ))}
                       </div>
                       {review.comment && (
-                        <p className="text-stone-600 text-xs line-clamp-2">{review.comment}</p>
+                        <p className="text-stone-600 text-sm line-clamp-3">{review.comment}</p>
                       )}
-                      <p className="text-xs text-stone-400 mt-3">
+                      <p className="text-sm text-stone-400 mt-4">
                         by {review.user_email?.split('@')[0]}
                       </p>
                     </div>
                   </Link>
-                </motion.div>
-              );
-            })}
+                );
+              })()}
+            </motion.div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setReviewIndex(prev => (prev + 1) % recentReviews.length)}
+              className="border-amber-700 text-amber-700 hover:bg-amber-50"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
           </div>
         </section>
       )}
@@ -258,6 +350,7 @@ export default function Home() {
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-8 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>
+
             <div className="relative z-10">
               <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
                 <div className="flex-1">
@@ -265,14 +358,34 @@ export default function Home() {
                     Hunt for the Big Boots
                   </h2>
                   <p className="text-amber-50 mb-4 text-lg">
-                    Cheyenne is home to 29 iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
+                    Cheyenne is home to {boots.length} iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
                   </p>
-                  <ul className="text-amber-100 space-y-2 mb-6 text-sm">
-                    <li>✓ 29 boots to discover</li>
-                    <li>✓ Upload photos as proof</li>
-                    <li>✓ Track your progress</li>
-                    <li>✓ Complete the challenge</li>
-                  </ul>
+                  <div className="flex gap-6 items-start mb-6">
+                    <ul className="text-amber-100 flex flex-wrap gap-x-4 gap-y-2 text-sm flex-1">
+                      <li>✓ {boots.length} boots to discover</li>
+                      <li>✓ Upload photos as proof</li>
+                      <li>✓ Track your progress</li>
+                      <li>✓ Complete the challenge</li>
+                    </ul>
+
+                    {/* Earn Badges Badge */}
+                    <div className="transform rotate-12 flex-shrink-0">
+                      <div className="relative">
+                        <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 text-amber-900 px-4 py-3 rounded-lg shadow-2xl border-4 border-yellow-300 animate-pulse">
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">🏆</div>
+                            <div className="font-bold text-sm" style={{ fontFamily: 'Rye, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}>
+                              EARN
+                            </div>
+                            <div className="font-bold text-base" style={{ fontFamily: 'Rye, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}>
+                              BADGES
+                            </div>
+                          </div>
+                        </div>
+                        <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg blur opacity-50 animate-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <Link to={createPageUrl('Profile?defaultValue=bigboots')} className="flex-shrink-0">
                   <Button className="bg-white text-amber-700 hover:bg-amber-50 font-semibold text-lg px-8 py-6">

@@ -54,7 +54,7 @@ export default function Home() {
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['venues'],
-    queryFn: () => base44.entities.Venue.list(),
+    queryFn: () => base44.entities.Venue.list('-created_date', 1000),
   });
 
 

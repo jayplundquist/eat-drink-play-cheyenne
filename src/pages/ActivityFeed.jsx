@@ -407,8 +407,14 @@ export default function ActivityFeed() {
                 );
               }
 
-              const venue = venues.find(v => v.id === item.data.venue_id);
-              if (!venue) return null;
+              let venue = venues.find(v => v.id === item.data.venue_id);
+
+              // If venue not in main list, try cache or fetch it
+              if (!venue && venueCache[item.data.venue_id]) {
+                venue = venueCache[item.data.venue_id];
+              } else if (!venue) {
+                return null;
+              }
 
               return (
                 <motion.div

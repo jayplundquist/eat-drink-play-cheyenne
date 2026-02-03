@@ -13,7 +13,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-const bootSVG = encodeURIComponent(`<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 0C8 0 2 8 2 14c0 10 14 26 14 26s14-16 14-26c0-6-6-14-14-14Z" fill="#e6413e" stroke="#c32c55" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="14" r="4" fill="white"/><text x="16" y="18" font-size="14" text-anchor="middle" dominant-baseline="central">👢</text></svg>`);
+const bootSVG = encodeURIComponent(`<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 0C8 0 2 8 2 14c0 10 14 26 14 26s14-16 14-26c0-6-6-14-14-14Z" fill="#e6413e" stroke="#c32c55" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="14" r="4" fill="white"/></svg>`);
 
 const bootIcon = new L.Icon({
   iconUrl: `data:image/svg+xml;charset=utf-8,${bootSVG}`,

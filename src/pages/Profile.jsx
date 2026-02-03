@@ -246,7 +246,7 @@ export default function Profile() {
                       <Button
                         onClick={() => {
                           setEditMode(false);
-                          setFormData({ full_name: user.full_name || '' });
+                          setFormData({ full_name: user.display_name || user.full_name || '' });
                         }}
                         size="sm"
                         variant="outline"

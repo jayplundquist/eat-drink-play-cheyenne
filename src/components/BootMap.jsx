@@ -165,7 +165,15 @@ export default function BootMap({ boots = [] }) {
               <Popup>
                 <div className="text-sm">
                   <div className="font-semibold">{boot.name}</div>
-                  <div className="text-xs text-stone-600 mt-1">{boot.address}</div>
+                  <button
+                    onClick={() => {
+                      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(boot.address)}`;
+                      window.open(url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="text-xs text-amber-700 hover:text-amber-900 hover:underline mt-1 transition-colors cursor-pointer"
+                  >
+                    {boot.address}
+                  </button>
                 </div>
               </Popup>
             </Marker>

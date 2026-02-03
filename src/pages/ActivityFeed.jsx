@@ -193,74 +193,72 @@ export default function ActivityFeed() {
   // Track seen IDs to prevent duplicates
   const activityItems = useMemo(() => {
     const seenIds = new Set();
-    ...followedUserRatings
-      .filter(rating => rating.user_email !== currentUser?.email)
-      .map(rating => ({
-      type: 'review',
-      data: rating,
-      timestamp: rating.updated_date,
-      user_email: rating.user_email,
-      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-      isOwn: rating.user_email === currentUser?.email,
-      isPopular: false
-    })),
-    ...followedUserFavorites.map(fav => ({
-      type: 'favorite',
-      data: fav,
-      timestamp: fav.updated_date,
-      user_email: fav.user_email,
-      isBoosted: false,
-      isOwn: false,
-      isPopular: false
-    })),
-    ...followedBootShares.map(share => ({
-      type: 'boot_share',
-      data: share,
-      timestamp: share.shared_date,
-      user_email: share.user_email,
-      isBoosted: false,
-      isOwn: false,
-      isPopular: false
-    })),
-    ...currentUserRatings.map(rating => ({
-      type: 'review',
-      data: rating,
-      timestamp: rating.updated_date,
-      user_email: rating.user_email,
-      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-      isOwn: true,
-      isPopular: false
-    })),
-    ...currentUserBootShares.map(share => ({
-      type: 'boot_share',
-      data: share,
-      timestamp: share.shared_date,
-      user_email: share.user_email,
-      isBoosted: false,
-      isOwn: true,
-      isPopular: false
-    })),
-    ...popularReviews.map(item => ({
-      ...item,
-      isPopular: true
-    }))
-  ]
-  .filter(item => {
-    const itemId = `${item.type}-${item.data.id}`;
-    if (seenIds.has(itemId)) return false;
-    seenIds.add(itemId);
-    return true;
-  })
-  .sort((a, b) => {
-    // Boosted items first, then popular, then by timestamp
-    if (a.isBoosted && !b.isBoosted) return -1;
-    if (!a.isBoosted && b.isBoosted) return 1;
-    if (a.isPopular && !b.isPopular) return -1;
-    if (!a.isPopular && b.isPopular) return 1;
-    return new Date(b.timestamp) - new Date(a.timestamp);
-  };
-  
-  return seenIds, activityItems;
+    return [
+      ...followedUserRatings
+        .filter(rating => rating.user_email !== currentUser?.email)
+        .map(rating => ({
+          type: 'review',
+          data: rating,
+          timestamp: rating.updated_date,
+          user_email: rating.user_email,
+          isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
+          isOwn: rating.user_email === currentUser?.email,
+          isPopular: false
+        })),
+      ...followedUserFavorites.map(fav => ({
+        type: 'favorite',
+        data: fav,
+        timestamp: fav.updated_date,
+        user_email: fav.user_email,
+        isBoosted: false,
+        isOwn: false,
+        isPopular: false
+      })),
+      ...followedBootShares.map(share => ({
+        type: 'boot_share',
+        data: share,
+        timestamp: share.shared_date,
+        user_email: share.user_email,
+        isBoosted: false,
+        isOwn: false,
+        isPopular: false
+      })),
+      ...currentUserRatings.map(rating => ({
+        type: 'review',
+        data: rating,
+        timestamp: rating.updated_date,
+        user_email: rating.user_email,
+        isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
+        isOwn: true,
+        isPopular: false
+      })),
+      ...currentUserBootShares.map(share => ({
+        type: 'boot_share',
+        data: share,
+        timestamp: share.shared_date,
+        user_email: share.user_email,
+        isBoosted: false,
+        isOwn: true,
+        isPopular: false
+      })),
+      ...popularReviews.map(item => ({
+        ...item,
+        isPopular: true
+      }))
+    ]
+      .filter(item => {
+        const itemId = `${item.type}-${item.data.id}`;
+        if (seenIds.has(itemId)) return false;
+        seenIds.add(itemId);
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.isBoosted && !b.isBoosted) return -1;
+        if (!a.isBoosted && b.isBoosted) return 1;
+        if (a.isPopular && !b.isPopular) return -1;
+        if (!a.isPopular && b.isPopular) return 1;
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
   }, [followedUserRatings, followedUserFavorites, followedBootShares, currentUserRatings, currentUserBootShares, allRatings, reactionCounts, currentUser?.email]);
 
   const filteredActivityItems = searchEmail

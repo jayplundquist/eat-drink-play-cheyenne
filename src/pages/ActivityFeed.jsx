@@ -168,16 +168,13 @@ export default function ActivityFeed() {
     queryFn: () => base44.entities.Rating.list('-created_date', 100),
   });
 
-  // Calculate reaction counts per review
-  const reactionCounts = useMemo(() => {
-    return allReactions.reduce((acc, reaction) => {
+  // Get popular reviews (sorted by reaction count)
+  const popularReviews = useMemo(() => {
+    const reactionCounts = allReactions.reduce((acc, reaction) => {
       acc[reaction.rating_id] = (acc[reaction.rating_id] || 0) + 1;
       return acc;
     }, {});
-  }, [allReactions]);
 
-  // Get popular reviews (sorted by reaction count)
-  const popularReviews = useMemo(() => {
     return allRatings
       .filter(rating => reactionCounts[rating.id] >= 3) // Reviews with 3+ reactions
       .filter(rating => !followedUserRatings.find(r => r.id === rating.id)) // Exclude already shown reviews
@@ -192,7 +189,7 @@ export default function ActivityFeed() {
       }))
       .sort((a, b) => b.reactionCount - a.reactionCount)
       .slice(0, 5); // Limit to top 5 popular reviews
-  }, [allRatings, reactionCounts, followedUserRatings, currentUser?.email]);
+  }, [allRatings, allReactions, followedUserRatings, currentUser?.email]);
 
   // Track seen IDs to prevent duplicates
   const activityItems = useMemo(() => {

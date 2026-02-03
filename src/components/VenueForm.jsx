@@ -50,11 +50,12 @@ const foodTypes = [
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout, onDelete }) {
    const [formData, setFormData] = useState(venue ? {
         ...venue,
-        menu_pictures: venue.menu_pictures || [],
-        locked_fields: venue.locked_fields || [],
-        critter_friendly: venue.critter_friendly || false,
-        veteran_owned: venue.veteran_owned || false,
-        permanently_closed: venue.permanently_closed || false,
+         menu_pictures: venue.menu_pictures || [],
+         locked_fields: venue.locked_fields || [],
+         critter_friendly: venue.critter_friendly || false,
+         veteran_owned: venue.veteran_owned || false,
+         broadcasts_superbowl: venue.broadcasts_superbowl || false,
+         permanently_closed: venue.permanently_closed || false,
       } : {
         name: '',
         categories: [],

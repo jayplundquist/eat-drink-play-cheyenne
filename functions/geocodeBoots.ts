@@ -13,41 +13,34 @@ Deno.serve(async (req) => {
     // Get all boots
     const boots = await base44.asServiceRole.entities.Boot.list();
     
-    // Filter boots that need geocoding (missing lat/lng)
-    const bootsToGeocode = boots.filter(boot => !boot.lat || !boot.lng);
-    
-    if (bootsToGeocode.length === 0) {
-      return Response.json({ message: 'All boots already geocoded', updated: 0 });
-    }
-
     let updated = 0;
 
-    // Geocode each boot
-    for (const boot of bootsToGeocode) {
-      const prompt = `Get the exact latitude and longitude coordinates for: "${boot.address}, Cheyenne, Wyoming, USA". Return ONLY a JSON object with "lat" and "lng" fields. Example: {"lat": 41.1400, "lng": -104.8202}`;
-      
-      const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt,
-        add_context_from_internet: true,
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            lat: { type: 'number' },
-            lng: { type: 'number' }
-          },
-          required: ['lat', 'lng']
+    // Geocode each boot using Nominatim (OpenStreetMap)
+    for (const boot of boots) {
+      try {
+        const query = `${boot.address}, Cheyenne, Wyoming, USA`;
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+          { headers: { 'User-Agent': 'BootApp' } }
+        );
+        
+        const results = await response.json();
+        
+        if (results.length > 0) {
+          const lat = parseFloat(results[0].lat);
+          const lng = parseFloat(results[0].lon);
+          
+          await base44.asServiceRole.entities.Boot.update(boot.id, {
+            lat,
+            lng
+          });
+          updated++;
+          console.log(`Geocoded ${boot.name}: ${lat}, ${lng}`);
+        } else {
+          console.error(`No geocoding result for ${boot.name}: ${boot.address}`);
         }
-      });
-
-      if (result.lat && result.lng) {
-        await base44.asServiceRole.entities.Boot.update(boot.id, {
-          lat: result.lat,
-          lng: result.lng
-        });
-        updated++;
-        console.log(`Geocoded ${boot.name}: ${result.lat}, ${result.lng}`);
-      } else {
-        console.error(`Failed to geocode ${boot.name}`);
+      } catch (err) {
+        console.error(`Geocoding error for ${boot.name}:`, err.message);
       }
     }
 

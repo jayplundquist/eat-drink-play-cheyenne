@@ -463,7 +463,7 @@ export default function ActivityFeed() {
 
                       <div className="flex gap-4">
                         <Link 
-                          to={createPageUrl('VenueDetails') + `?venueId=${venue.id}`}
+                           to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
                           className="flex-shrink-0"
                         >
                           <img

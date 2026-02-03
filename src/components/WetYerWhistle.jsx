@@ -14,11 +14,6 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
   const navigate = useNavigate();
 
   const handleWetYerWhistle = () => {
-    if (!user) {
-      onSignInRequired();
-      return;
-    }
-
     // Filter for drink categories
     const drinkVenues = venues.filter(v => {
       const categories = v.categories || (v.category ? [v.category] : []);
@@ -55,7 +50,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
         </p>
         <Button 
           onClick={handleWetYerWhistle}
-          disabled={spinning || !user || drinkVenueCount === 0}
+          disabled={spinning || drinkVenueCount === 0}
           className="w-full bg-rose-600 hover:bg-rose-700 text-white"
         >
           {spinning ? "Pouring..." : "Wet Yer Whistle"}

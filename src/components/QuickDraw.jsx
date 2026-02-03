@@ -13,12 +13,7 @@ export default function QuickDraw({ venues, userRatings, user, onSignInRequired,
   const navigate = useNavigate();
 
   const handleQuickDraw = () => {
-    if (!user) {
-      onSignInRequired();
-      return;
-    }
-
-    const ratedVenueIds = userRatings.map(r => r.venue_id);
+    const ratedVenueIds = user ? userRatings.map(r => r.venue_id) : [];
     const untriedVenues = venues.filter(v => {
       if (ratedVenueIds.includes(v.id)) return false;
       const venueCategories = v.categories || (v.category ? [v.category] : []);
@@ -73,7 +68,7 @@ export default function QuickDraw({ venues, userRatings, user, onSignInRequired,
         </p>
         <Button 
           onClick={handleQuickDraw}
-          disabled={spinning || !user || untriedCount === 0}
+          disabled={spinning || untriedCount === 0}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
         >
           {spinning ? "Drawing..." : "Quick Draw"}

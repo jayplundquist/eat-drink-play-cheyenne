@@ -87,25 +87,11 @@ export default function ActivityFeed() {
 
   const { data: venues = [] } = useQuery({
     queryKey: ['venues'],
-    queryFn: async () => {
-      // Fetch all venues without pagination limit
-      const allVenues = [];
-      let offset = 0;
-      const batchSize = 500;
-      let hasMore = true;
-      
-      while (hasMore) {
-        const batch = await base44.entities.Venue.list('-created_date', batchSize, offset);
-        if (batch.length === 0) {
-          hasMore = false;
-        } else {
-          allVenues.push(...batch);
-          offset += batchSize;
-        }
-      }
-      return allVenues;
-    },
+    queryFn: () => base44.entities.Venue.list(),
   });
+
+  // State to cache dynamically fetched venues
+  const [venueCache, setVenueCache] = useState({});
 
   const { data: userFollows = [] } = useQuery({
     queryKey: ['userFollows', currentUser?.email],

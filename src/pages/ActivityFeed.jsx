@@ -255,7 +255,7 @@ export default function ActivityFeed() {
   }, [followedUserRatings, followedUserFavorites, followedBootShares, currentUserRatings, currentUserBootShares, popularReviews, currentUser?.email]);
 
   const filteredActivityItems = searchEmail
-    ? activityItems.filter(item => item.user_email.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()))
+    ? activityItems.filter(item => item.user_email?.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()))
     : activityItems;
 
   const searchResults = searchEmail

@@ -13,20 +13,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-const bootSVG = encodeURIComponent(`<svg width="48" height="64" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg"><path d="M24 0C6.3 0 4 24 4 32c0 8.3 8.9 32 20 32c11.1 0 20-23.7 20-32C44 24 41.7 0 24 0Z" fill="#e6413e" stroke="#c32c55" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="32" r="7" fill="white" stroke="#c32c55" stroke-width="1.5"/><text x="24" y="38" font-size="24" text-anchor="middle">👢</text></svg>`);
+const bootSVG = encodeURIComponent(`<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 0C8 0 2 8 2 14c0 10 14 26 14 26s14-16 14-26c0-6-6-14-14-14Z" fill="#e6413e" stroke="#c32c55" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="14" r="4" fill="white"/><text x="16" y="18" font-size="14" text-anchor="middle" dominant-baseline="central">👢</text></svg>`);
 
 const bootIcon = new L.Icon({
   iconUrl: `data:image/svg+xml;charset=utf-8,${bootSVG}`,
-  iconSize: [48, 64],
-  popupAnchor: [0, -32],
+  iconSize: [32, 40],
+  popupAnchor: [0, -20],
 });
 
-const bouncingBootSVG = encodeURIComponent(`<svg width="48" height="64" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg"><path d="M24 0C6.3 0 4 24 4 32c0 8.3 8.9 32 20 32c11.1 0 20-23.7 20-32C44 24 41.7 0 24 0Z" fill="#dc2626" stroke="#a71b1b" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="32" r="7" fill="white" stroke="#a71b1b" stroke-width="1.5"/><text x="24" y="38" font-size="24" text-anchor="middle">👢</text></svg>`);
+const bouncingBootSVG = encodeURIComponent(`<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 0C8 0 2 8 2 14c0 10 14 26 14 26s14-16 14-26c0-6-6-14-14-14Z" fill="#dc2626" stroke="#a71b1b" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="14" r="4" fill="white"/><text x="16" y="18" font-size="14" text-anchor="middle" dominant-baseline="central">👢</text></svg>`);
 
 const bouncingBootIcon = new L.Icon({
   iconUrl: `data:image/svg+xml;charset=utf-8,${bouncingBootSVG}`,
-  iconSize: [48, 64],
-  popupAnchor: [0, -32],
+  iconSize: [32, 40],
+  popupAnchor: [0, -20],
 });
 
 export default function BootMap({ boots = [] }) {

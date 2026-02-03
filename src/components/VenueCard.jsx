@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
 import BootRating from "./BootRating";
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 const categoryLabels = {
   restaurant: "Restaurant",
@@ -52,6 +54,21 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
   const categories = getCategories(venue);
 
+  const { data: customOptions = [] } = useQuery({
+    queryKey: ['customVenueOptions'],
+    queryFn: () => base44.entities.CustomVenueOption.list(),
+  });
+
+  const getCategoryLabel = (value) => {
+    const customOption = customOptions.find(opt => opt.type === 'category' && opt.value === value);
+    return customOption ? customOption.name : (categoryLabels[value] || value);
+  };
+
+  const getFoodTypeLabel = (value) => {
+    const customOption = customOptions.find(opt => opt.type === 'food_type' && opt.value === value);
+    return customOption ? customOption.name : (foodTypeLabels[value] || value);
+  };
+
   return (
     <Card className="group overflow-hidden bg-amber-50 border-4 border-amber-900 hover:border-amber-700 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/30 rounded-none">
       {!hideImage && venue.image_url ? (
@@ -68,7 +85,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             
             {categories.length > 0 && (
               <Badge className={cn("absolute top-3 left-3 border", categoryColors[categories[0]])}>
-                {categoryLabels[categories[0]]}
+                {getCategoryLabel(categories[0])}
               </Badge>
             )}
             
@@ -120,7 +137,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
               </div>
               {categories.length > 0 && (
                 <Badge className={cn("border shrink-0", categoryColors[categories[0]])}>
-                  {categoryLabels[categories[0]]}
+                  {getCategoryLabel(categories[0])}
                 </Badge>
               )}
             </div>
@@ -166,7 +183,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
           <div className="flex flex-wrap gap-1 mb-2">
             {venue.food_types.map((type, idx) => (
               <Badge key={idx} variant="outline" className="border-amber-600 text-amber-800 text-xs">
-                {foodTypeLabels[type]}
+                {getFoodTypeLabel(type)}
               </Badge>
             ))}
           </div>

@@ -18,8 +18,6 @@ export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmai
    const [isProcessing, setIsProcessing] = useState(false);
    const queryClient = useQueryClient();
 
-   if (!ratingId || !userEmail || !currentUserEmail || userEmail !== currentUserEmail || isAlreadyBoosted) return null;
-
    const boostReviewMutation = useMutation({
      mutationFn: async () => {
        setIsProcessing(true);

@@ -53,37 +53,37 @@ export default function UserBadge({ reviewCount = 0, avgRating = 0, bootVisitCou
 
   if (earnedBadges.length === 0) return null;
 
+  const [openPopover, setOpenPopover] = useState({});
+
   return (
     <div className={`flex gap-2 flex-wrap items-center ${size === 'sm' ? '' : ''}`}>
       {earnedBadges.map((badge) => (
-        <TooltipProvider key={badge.id || badge.name}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              {size === 'sm' ? (
-                <span className="text-xs font-semibold flex items-center gap-1 cursor-help">
-                  {badge.icon_url ? (
-                    <img src={badge.icon_url} alt={badge.name} className="w-4 h-4" />
-                  ) : (
-                    <span>🎖️</span>
-                  )}
-                  <span>{badge.name}</span>
-                </span>
-              ) : (
-                <Badge className="font-semibold cursor-help bg-amber-100 text-amber-800 hover:bg-amber-200">
-                  {badge.icon_url ? (
-                    <img src={badge.icon_url} alt={badge.name} className="w-4 h-4 mr-1" />
-                  ) : (
-                    <span className="mr-1">🎖️</span>
-                  )}
-                  {badge.name}
-                </Badge>
-              )}
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{badge.description}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Popover key={badge.id || badge.name} open={openPopover[badge.id || badge.name]} onOpenChange={(open) => setOpenPopover({...openPopover, [badge.id || badge.name]: open})}>
+          <PopoverTrigger asChild>
+            {size === 'sm' ? (
+              <span className="text-xs font-semibold flex items-center gap-1 cursor-help">
+                {badge.icon_url ? (
+                  <img src={badge.icon_url} alt={badge.name} className="w-4 h-4" />
+                ) : (
+                  <span>🎖️</span>
+                )}
+                <span>{badge.name}</span>
+              </span>
+            ) : (
+              <Badge className="font-semibold cursor-help bg-amber-100 text-amber-800 hover:bg-amber-200">
+                {badge.icon_url ? (
+                  <img src={badge.icon_url} alt={badge.name} className="w-4 h-4 mr-1" />
+                ) : (
+                  <span className="mr-1">🎖️</span>
+                )}
+                {badge.name}
+              </Badge>
+            )}
+          </PopoverTrigger>
+          <PopoverContent className="w-48" side="top">
+            <p>{badge.description}</p>
+          </PopoverContent>
+        </Popover>
       ))}
     </div>
   );

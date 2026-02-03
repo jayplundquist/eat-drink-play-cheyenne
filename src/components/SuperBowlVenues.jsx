@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { motion } from "framer-motion";
 import VenueCard from "./VenueCard";
 
 export default function SuperBowlVenues({ venues, favorites, user, onToggleFavorite }) {
@@ -101,7 +102,7 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
         {/* Auto-scrolling venue carousel */}
         <div className="football-field p-6 border-t-4 border-green-900">
           <div className="field-line"></div>
-          <div className="relative z-10 flex items-center justify-between gap-4">
+          <div className="relative z-10 flex items-center justify-between gap-4 overflow-hidden">
             <Button
               variant="outline"
               size="icon"
@@ -111,15 +112,23 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
               <ChevronLeft className="w-5 h-5" />
             </Button>
 
-            {currentVenue && (
-              <div className="flex-1 min-w-0">
-                <VenueCard
-                  venue={currentVenue}
-                  isFavorite={isFavorite(currentVenue.id)}
-                  onToggleFavorite={() => user ? onToggleFavorite(currentVenue.id) : window.location.href = createPageUrl('Home')}
-                />
-              </div>
-            )}
+            <div className="flex-1 min-w-0 overflow-hidden">
+              {currentVenue && (
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <VenueCard
+                    venue={currentVenue}
+                    isFavorite={isFavorite(currentVenue.id)}
+                    onToggleFavorite={() => user ? onToggleFavorite(currentVenue.id) : window.location.href = createPageUrl('Home')}
+                  />
+                </motion.div>
+              )}
+            </div>
 
             <Button
               variant="outline"

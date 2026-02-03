@@ -157,12 +157,6 @@ export default function Layout({ children, currentPageName }) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Analytics')} className="cursor-pointer">
-                        <Settings className="w-4 h-4 mr-2" />
-                        Analytics
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <Link to={createPageUrl('ManageVenues')} className="cursor-pointer">
                         <Plus className="w-4 h-4 mr-2" />
                         Manage Venues

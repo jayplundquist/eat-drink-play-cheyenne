@@ -83,6 +83,15 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
           <path d="M0 0v120h1440V0c-20 15-40 15-60 0s-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0-40-15-60 0-40 15-60 0" fill="#d97706" opacity="0.2"/>
         </svg>
       </div>
+
+      {/* Games Grid */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 pb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <GameBox><span className="text-sm">Loading...</span></GameBox>
+          <GameBox><span className="text-sm">Loading...</span></GameBox>
+          <GameBox><span className="text-sm">Loading...</span></GameBox>
+        </div>
+      </div>
     </div>
   );
 }

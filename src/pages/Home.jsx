@@ -221,7 +221,7 @@ export default function Home() {
 
       {/* Games in Grid Under Hero */}
       {!searchQuery && activeTab === 'all' && (
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 -mt-8 relative z-10 pb-8">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 -mt-16 relative z-10 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
               <SpinTheSpur 

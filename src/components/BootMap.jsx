@@ -20,9 +20,9 @@ const bootIcon = new L.Icon({
 });
 
 const bouncingBootIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48c3R5bGU+QGtleWZyYW1lcyBib3VuY2Uge30lLDEwMCV7dHJhbnNmb3JtOnRyYW5zbGF0ZVkoMCl9NTAle3RyYW5zZm9ybTp0cmFuc2xhdGVZKC04cHgpfX0udGV4dHtmb250LXNpemU6MjRweDthbmltYXRpb246Ym91bmNlIDAuNnMgaW5maW5pdGU7fTwvc3R5bGU+PHRleHQgY2xhc3M9InRleHQiIHg9IjE2IiB5PSIyNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+CjvCrDwvdGV4dD48L3N2Zz4=',
-  iconSize: [32, 32],
-  popupAnchor: [0, -16],
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiLz48Y2lyY2xlIGN4PSIyNCIgY3k9IjI0IiByPSIxNiIgZmlsbD0iI2RhMzQzNiIgb3BhY2l0eT0iMC4zIi8+PHRleHQgeD0iMjQiIHk9IjM0IiBmb250LXNpemU9IjI4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBzdHlsZT0iYW5pbWF0aW9uOiBib3VuY2UgMC42cyBpbmZpbml0ZTsia2V5ZnJhbWVzOiBAbWVkaWEgKHByZWZlcnMtcmVkdWNlZC1tb3Rpb24pIHtuYWdpbmd7IGFuaW1hdGlvbjpub25lOyB9fSI+CjvCrDwvdGV4dD48c3R5bGU+QGtleWZyYW1lcyBib3VuY2Uge30lLDEwMCV7dHJhbnNmb3JtOnRyYW5zbGF0ZVkoMCl9NTAle3RyYW5zZm9ybTp0cmFuc2xhdGVZKC0xMnB4KX19PC9zdHlsZT48L3N2Zz4=',
+  iconSize: [48, 48],
+  popupAnchor: [0, -24],
 });
 
 export default function BootMap({ boots = [] }) {

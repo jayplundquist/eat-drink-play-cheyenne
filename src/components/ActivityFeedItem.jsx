@@ -157,15 +157,19 @@ export default function ActivityFeedItem({
                     "{item.data.comment}"
                   </p>
                 )}
-                <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser?.email} />
-                <ReviewBoostButton
-                  ratingId={item.data.id}
-                  userEmail={item.user_email}
-                  currentUserEmail={currentUser?.email}
-                  isAlreadyBoosted={item.isBoosted}
-                />
-                <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
-                 {item.data.image_urls && item.data.image_urls.length > 0 && (
+                {currentUser && currentUser.email && (
+                  <>
+                    <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
+                    <ReviewBoostButton
+                      ratingId={item.data.id}
+                      userEmail={item.user_email}
+                      currentUserEmail={currentUser.email}
+                      isAlreadyBoosted={item.isBoosted}
+                    />
+                    <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
+                  </>
+                )}
+                {item.data.image_urls && item.data.image_urls.length > 0 && (
                    <div className="grid grid-cols-2 gap-2 mt-3">
                      {item.data.image_urls.map((url, idx) => (
                        <div key={idx} className="relative group">

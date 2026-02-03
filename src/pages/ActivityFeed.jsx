@@ -359,14 +359,10 @@ export default function ActivityFeed() {
          ) : (
            <div className="space-y-4">
              {filteredActivityItems.map((item, i) => {
-              if (item.type === 'boot_share') {
-                return (
-                  <motion.div
-                    key={`boot-${item.data.id}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
+               const venue = item.type === 'boot_share' ? null : venues.find(v => v.id === item.data.venue_id) || venueCache[item.data.venue_id];
+               if (item.type !== 'boot_share' && !venue) return null;
+               return (
+                 <ActivityFeedItem
                     <Card className="hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Camera, Loader2, X, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import BootMap from "./BootMap";
 
 export default function BootCheckList({ user }) {
   const [uploadingBoot, setUploadingBoot] = useState(null);

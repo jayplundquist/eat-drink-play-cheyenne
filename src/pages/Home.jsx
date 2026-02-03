@@ -303,7 +303,7 @@ export default function Home() {
             <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>
 
             {/* Earn Badges Badge */}
-            <div className="absolute top-8 right-8 transform rotate-12 hidden lg:block">
+            <div className="absolute top-8 right-8 transform rotate-12">
               <div className="relative">
                 <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 text-amber-900 px-6 py-4 rounded-lg shadow-2xl border-4 border-yellow-300 animate-pulse">
                   <div className="text-center">

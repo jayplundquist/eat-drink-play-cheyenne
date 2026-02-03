@@ -47,20 +47,22 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
             <ChevronLeft className="w-5 h-5" />
           </Button>
 
-          <div className="w-full max-w-sm overflow-hidden">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <VenueCard
-                venue={currentVenue}
-                isFavorite={isFavorite(currentVenue.id)}
-                onToggleFavorite={() => onToggleFavorite(currentVenue.id)}
-              />
-            </motion.div>
+          <div className="w-80">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3 }}
+              >
+                <VenueCard
+                  venue={currentVenue}
+                  isFavorite={isFavorite(currentVenue.id)}
+                  onToggleFavorite={() => onToggleFavorite(currentVenue.id)}
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           <Button

@@ -54,11 +54,15 @@ export default function Home() {
 
   // Add custom categories to their respective tabs
   const tabCategories = { ...builtInTabCategories };
-  customOptions.filter(opt => opt.type === 'category' && opt.tab).forEach(opt => {
-    if (!tabCategories[opt.tab]) {
-      tabCategories[opt.tab] = [];
-    }
-    tabCategories[opt.tab].push(opt.value);
+  customOptions.filter(opt => opt.type === 'category' && opt.tabs && opt.tabs.length > 0).forEach(opt => {
+    opt.tabs.forEach(tab => {
+      if (!tabCategories[tab]) {
+        tabCategories[tab] = [];
+      }
+      if (!tabCategories[tab].includes(opt.value)) {
+        tabCategories[tab].push(opt.value);
+      }
+    });
   });
 
   const queryClient = useQueryClient();

@@ -15,11 +15,11 @@ import { toast } from "sonner";
 export default function ManageVenueOptions() {
   const [user, setUser] = useState(null);
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryTab, setNewCategoryTab] = useState('eat');
+  const [newCategoryTabs, setNewCategoryTabs] = useState([]);
   const [newFoodTypeName, setNewFoodTypeName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');
-  const [editingTab, setEditingTab] = useState('');
+  const [editingTabs, setEditingTabs] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -45,13 +45,13 @@ export default function ManageVenueOptions() {
         name: newCategoryName.trim(),
         type: 'category',
         value,
-        tab: newCategoryTab
+        tabs: newCategoryTabs
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
       setNewCategoryName('');
-      setNewCategoryTab('eat');
+      setNewCategoryTabs([]);
       toast.success('Category added successfully');
     },
     onError: (error) => {
@@ -95,17 +95,17 @@ export default function ManageVenueOptions() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, name, tab }) => {
+    mutationFn: async ({ id, name, tabs }) => {
       const value = name.toLowerCase().replace(/\s+/g, '_');
       const updateData = { name, value };
-      if (tab !== undefined) updateData.tab = tab;
+      if (tabs !== undefined) updateData.tabs = tabs;
       await base44.entities.CustomVenueOption.update(id, updateData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
       setEditingId(null);
       setEditingName('');
-      setEditingTab('');
+      setEditingTabs([]);
       toast.success('Option updated successfully');
     },
     onError: (error) => {
@@ -156,18 +156,37 @@ export default function ManageVenueOptions() {
                   placeholder="e.g. Coffee Shop, Food Truck"
                   onKeyPress={(e) => e.key === 'Enter' && addCategoryMutation.mutate()}
                 />
-                <Select value={newCategoryTab} onValueChange={setNewCategoryTab}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tab" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="eat">Eat 🍽️</SelectItem>
-                    <SelectItem value="drink">Drink 🍺</SelectItem>
-                    <SelectItem value="play">Play 🎵</SelectItem>
-                    <SelectItem value="shop">Shop 🛍️</SelectItem>
-                    <SelectItem value="chuck_wagon">Chuck Wagon 🍖</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div>
+                  <label className="text-sm text-stone-600 mb-2 block">Select Tabs (click to toggle)</label>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { value: 'eat', label: '🍽️ Eat' },
+                      { value: 'drink', label: '🍺 Drink' },
+                      { value: 'play', label: '🎵 Play' },
+                      { value: 'shop', label: '🛍️ Shop' },
+                      { value: 'chuck_wagon', label: '🍖 Chuck Wagon' }
+                    ].map(tab => (
+                      <Badge
+                        key={tab.value}
+                        onClick={() => {
+                          setNewCategoryTabs(prev =>
+                            prev.includes(tab.value)
+                              ? prev.filter(t => t !== tab.value)
+                              : [...prev, tab.value]
+                          );
+                        }}
+                        className={`cursor-pointer ${
+                          newCategoryTabs.includes(tab.value)
+                            ? 'bg-amber-600 text-white hover:bg-amber-700'
+                            : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                        }`}
+                      >
+                        {newCategoryTabs.includes(tab.value) && '✓ '}
+                        {tab.label}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
                 <Button
                   onClick={() => addCategoryMutation.mutate()}
                   disabled={addCategoryMutation.isPending || !newCategoryName.trim()}
@@ -196,28 +215,47 @@ export default function ManageVenueOptions() {
                             autoFocus
                             onKeyPress={(e) => {
                               if (e.key === 'Enter') {
-                                updateMutation.mutate({ id: cat.id, name: editingName, tab: editingTab });
+                                updateMutation.mutate({ id: cat.id, name: editingName, tabs: editingTabs });
                               }
                             }}
                           />
-                          <Select value={editingTab} onValueChange={setEditingTab}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select tab" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="eat">Eat 🍽️</SelectItem>
-                              <SelectItem value="drink">Drink 🍺</SelectItem>
-                              <SelectItem value="play">Play 🎵</SelectItem>
-                              <SelectItem value="shop">Shop 🛍️</SelectItem>
-                              <SelectItem value="chuck_wagon">Chuck Wagon 🍖</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div>
+                            <label className="text-xs text-stone-600 mb-1 block">Tabs (click to toggle)</label>
+                            <div className="flex flex-wrap gap-1">
+                              {[
+                                { value: 'eat', label: '🍽️ Eat' },
+                                { value: 'drink', label: '🍺 Drink' },
+                                { value: 'play', label: '🎵 Play' },
+                                { value: 'shop', label: '🛍️ Shop' },
+                                { value: 'chuck_wagon', label: '🍖 Chuck Wagon' }
+                              ].map(tab => (
+                                <Badge
+                                  key={tab.value}
+                                  onClick={() => {
+                                    setEditingTabs(prev =>
+                                      prev.includes(tab.value)
+                                        ? prev.filter(t => t !== tab.value)
+                                        : [...prev, tab.value]
+                                    );
+                                  }}
+                                  className={`cursor-pointer text-xs ${
+                                    editingTabs.includes(tab.value)
+                                      ? 'bg-amber-600 text-white hover:bg-amber-700'
+                                      : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                                  }`}
+                                >
+                                  {editingTabs.includes(tab.value) && '✓ '}
+                                  {tab.label}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                         <div className="flex gap-1">
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => updateMutation.mutate({ id: cat.id, name: editingName, tab: editingTab })}
+                            onClick={() => updateMutation.mutate({ id: cat.id, name: editingName, tabs: editingTabs })}
                             disabled={!editingName.trim() || updateMutation.isPending}
                             className="text-green-600 hover:text-green-700 hover:bg-green-50"
                           >
@@ -229,7 +267,7 @@ export default function ManageVenueOptions() {
                             onClick={() => {
                               setEditingId(null);
                               setEditingName('');
-                              setEditingTab('');
+                              setEditingTabs([]);
                             }}
                             className="text-stone-600 hover:text-stone-700 hover:bg-stone-50"
                           >
@@ -242,14 +280,18 @@ export default function ManageVenueOptions() {
                         <div>
                           <p className="font-medium text-stone-800">{cat.name}</p>
                           <p className="text-sm text-stone-500 font-mono">{cat.value}</p>
-                          {cat.tab && (
-                            <Badge variant="outline" className="mt-1 text-xs">
-                              {cat.tab === 'eat' && '🍽️ Eat'}
-                              {cat.tab === 'drink' && '🍺 Drink'}
-                              {cat.tab === 'play' && '🎵 Play'}
-                              {cat.tab === 'shop' && '🛍️ Shop'}
-                              {cat.tab === 'chuck_wagon' && '🍖 Chuck Wagon'}
-                            </Badge>
+                          {(cat.tabs && cat.tabs.length > 0) && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {cat.tabs.map(tab => (
+                                <Badge key={tab} variant="outline" className="text-xs">
+                                  {tab === 'eat' && '🍽️ Eat'}
+                                  {tab === 'drink' && '🍺 Drink'}
+                                  {tab === 'play' && '🎵 Play'}
+                                  {tab === 'shop' && '🛍️ Shop'}
+                                  {tab === 'chuck_wagon' && '🍖 Chuck Wagon'}
+                                </Badge>
+                              ))}
+                            </div>
                           )}
                         </div>
                         <div className="flex gap-1">
@@ -259,7 +301,7 @@ export default function ManageVenueOptions() {
                             onClick={() => {
                               setEditingId(cat.id);
                               setEditingName(cat.name);
-                              setEditingTab(cat.tab || 'eat');
+                              setEditingTabs(cat.tabs || []);
                             }}
                             className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                           >

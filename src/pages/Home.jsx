@@ -218,48 +218,51 @@ export default function Home() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Spin the Spur & Quick Draw */}
+      {/* Games Section - Evenly Spaced */}
       {!searchQuery && activeTab === 'all' && (
-        <SpinTheSpur 
-          favorites={userFavorites}
-          venues={venues}
-          userRatings={userRatings}
-          user={user}
-          onSignInRequired={() => base44.auth.redirectToLogin()}
-          quickDrawCategories={quickDrawCategories}
-        />
-      )}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Spin the Spur */}
+            <div>
+              <SpinTheSpur 
+                favorites={userFavorites}
+                venues={venues}
+                userRatings={userRatings}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                quickDrawCategories={quickDrawCategories}
+              />
+            </div>
 
-      {/* Wet Yer Whistle */}
-      {!searchQuery && activeTab === 'all' && (
-        <WetYerWhistle 
-          venues={venues}
-          user={user}
-          onSignInRequired={() => base44.auth.redirectToLogin()}
-          wetYerWhistleCategories={wetYerWhistleCategories}
-        />
-      )}
+            {/* Wet Yer Whistle */}
+            <div>
+              <WetYerWhistle 
+                venues={venues}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                wetYerWhistleCategories={wetYerWhistleCategories}
+              />
+            </div>
 
-       {/* The Hitching Post */}
-       {!searchQuery && activeTab === 'all' && (
-         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-           <Link to={createPageUrl('ActivityFeed')}>
-             <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
-               <MessageCircle className="w-5 h-5 mr-2" />
-               The Hitching Post - Activity Feed
-             </Button>
-           </Link>
-         </section>
-       )}
+            {/* Hat Tip */}
+            <div>
+              <HatTip 
+                venues={venues}
+                favorites={favorites}
+                user={user}
+                onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+              />
+            </div>
+          </div>
 
-       {/* Hat Tip Section */}
-      {!searchQuery && activeTab === 'all' && (
-        <HatTip 
-          venues={venues}
-          favorites={favorites}
-          user={user}
-          onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
-        />
+          {/* The Hitching Post */}
+          <Link to={createPageUrl('ActivityFeed')}>
+            <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
+              <MessageCircle className="w-5 h-5 mr-2" />
+              The Hitching Post - Activity Feed
+            </Button>
+          </Link>
+        </div>
       )}
 
       {/* Just Blew In Section - Recent Reviews */}

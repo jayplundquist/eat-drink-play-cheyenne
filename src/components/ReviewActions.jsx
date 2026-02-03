@@ -116,29 +116,27 @@ export default function ReviewActions({ ratingId, reviewUserId, currentUserEmail
 
   const boostReviewMutation = useMutation({
     mutationFn: async () => {
-      setIsProcessing(true);
-      try {
-        if (window.self !== window.top) {
-          toast.error('Checkout only works from a published app.');
-          setIsProcessing(false);
-          return;
-        }
-
-        const response = await base44.functions.invoke('createCheckoutSession', {
-          type: 'review_boost',
-          reviewId: ratingId
-        });
-
-        if (response.data.url) {
-          window.location.href = response.data.url;
-        } else {
-          throw new Error('No checkout URL returned');
-        }
-      } catch (error) {
-        console.error('Boost error:', error);
-        toast.error('Failed to start checkout.');
-        setIsProcessing(false);
+      if (window.self !== window.top) {
+        throw new Error('Checkout only works from a published app.');
       }
+
+      const response = await base44.functions.invoke('createCheckoutSession', {
+        type: 'review_boost',
+        reviewId: ratingId
+      });
+
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    },
+    onSuccess: () => {
+      setIsProcessing(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to start checkout.');
+      setIsProcessing(false);
     },
   });
 

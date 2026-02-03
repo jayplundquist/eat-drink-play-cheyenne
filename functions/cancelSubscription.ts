@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     }
 
     // Update user to remove premium status
-    await base44.asServiceRole.auth.updateUser(user.id, {
+    await base44.auth.updateMe({
       is_premium: false
     });
 

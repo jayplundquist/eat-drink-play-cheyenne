@@ -1,0 +1,155 @@
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import { Card } from "@/components/ui/card";
+import { Loader2, MapPin } from "lucide-react";
+
+// Fix leaflet default marker icons
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+});
+
+const bootIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSI0IiB5PSIyNiIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+CjvCrDwvdGV4dD48L3N2Zz4=',
+  iconSize: [32, 32],
+  popupAnchor: [0, -16],
+});
+
+export default function BootMap({ boots = [] }) {
+  const [userLocation, setUserLocation] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [nearestBoot, setNearestBoot] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Get user's geolocation
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setUserLocation(location);
+          
+          // Find nearest boot
+          if (boots.length > 0) {
+            let nearest = null;
+            let minDistance = Infinity;
+
+            boots.forEach(boot => {
+              // Use a simple distance calculation (Haversine formula would be more accurate)
+              const distance = Math.sqrt(
+                Math.pow(boot.lat - location.lat, 2) + 
+                Math.pow(boot.lng - location.lng, 2)
+              );
+              if (distance < minDistance) {
+                minDistance = distance;
+                nearest = { boot, distance: minDistance };
+              }
+            });
+
+            setNearestBoot(nearest);
+          }
+          setLoading(false);
+        },
+        (err) => {
+          console.error('Geolocation error:', err);
+          setError('Unable to access your location. Please enable location services.');
+          setLoading(false);
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by your browser');
+      setLoading(false);
+    }
+  }, [boots]);
+
+  if (loading) {
+    return (
+      <Card className="p-8 flex items-center justify-center h-96">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-amber-600 mx-auto mb-2" />
+          <p className="text-stone-600">Finding your location...</p>
+        </div>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="p-8 text-center h-96 flex items-center justify-center bg-stone-50">
+        <div>
+          <MapPin className="w-8 h-8 text-stone-400 mx-auto mb-2" />
+          <p className="text-stone-600">{error}</p>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!userLocation) {
+    return (
+      <Card className="p-8 text-center h-96 flex items-center justify-center bg-stone-50">
+        <p className="text-stone-600">Unable to determine your location</p>
+      </Card>
+    );
+  }
+
+  // Map needs to center on user or nearest boot
+  const center = userLocation;
+
+  return (
+    <div className="space-y-4">
+      {nearestBoot && (
+        <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-300 p-4">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">👢</span>
+            <div>
+              <h4 className="font-semibold text-amber-900">{nearestBoot.boot.name}</h4>
+              <p className="text-sm text-amber-700 mt-1">{nearestBoot.boot.address}</p>
+              <p className="text-xs text-amber-600 mt-2">
+                Nearest boot to your location
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      <Card className="overflow-hidden h-96">
+        <MapContainer
+          center={[center.lat, center.lng]}
+          zoom={14}
+          scrollWheelZoom={false}
+          style={{ height: '100%', width: '100%' }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          {/* User location marker */}
+          <Marker position={[userLocation.lat, userLocation.lng]}>
+            <Popup>
+              <div className="text-sm font-semibold">Your Location</div>
+            </Popup>
+          </Marker>
+
+          {/* Boot markers */}
+          {boots.map((boot) => (
+            <Marker key={boot.name} position={[boot.lat, boot.lng]} icon={bootIcon}>
+              <Popup>
+                <div className="text-sm">
+                  <div className="font-semibold">{boot.name}</div>
+                  <div className="text-xs text-stone-600 mt-1">{boot.address}</div>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </Card>
+    </div>
+  );
+}

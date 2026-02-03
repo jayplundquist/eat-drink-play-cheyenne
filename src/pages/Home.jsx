@@ -218,6 +218,16 @@ export default function Home() {
         onSearchChange={setSearchQuery}
       />
 
+      {/* Wet Yer Whistle */}
+      {!searchQuery && activeTab === 'all' && (
+        <WetYerWhistle 
+          venues={venues}
+          user={user}
+          onSignInRequired={() => base44.auth.redirectToLogin()}
+          wetYerWhistleCategories={wetYerWhistleCategories}
+        />
+      )}
+
       {/* Spin the Spur & Quick Draw */}
       {!searchQuery && activeTab === 'all' && (
         <SpinTheSpur 
@@ -227,16 +237,6 @@ export default function Home() {
           user={user}
           onSignInRequired={() => base44.auth.redirectToLogin()}
           quickDrawCategories={quickDrawCategories}
-        />
-      )}
-
-      {/* Wet Yer Whistle */}
-      {!searchQuery && activeTab === 'all' && (
-        <WetYerWhistle 
-          venues={venues}
-          user={user}
-          onSignInRequired={() => base44.auth.redirectToLogin()}
-          wetYerWhistleCategories={wetYerWhistleCategories}
         />
       )}
 

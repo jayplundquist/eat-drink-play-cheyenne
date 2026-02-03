@@ -72,8 +72,9 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
         locked_fields: [],
         critter_friendly: false,
         veteran_owned: false,
+        broadcasts_superbowl: false,
         permanently_closed: false,
-      });
+        });
 
    const [newFeature, setNewFeature] = useState('');
      const [uploading, setUploading] = useState(false);

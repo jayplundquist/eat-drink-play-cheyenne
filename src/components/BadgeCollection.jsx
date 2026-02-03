@@ -10,28 +10,16 @@ import {
 } from "@/components/ui/tooltip";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0, userEmail = null }) {
-  const [commentCount, setCommentCount] = useState(0);
-
+export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0, userRatings = [] }) {
   const { data: allBadges = [] } = useQuery({
     queryKey: ['badges'],
     queryFn: () => base44.entities.Badge.list(),
   });
 
-  const { data: userComments = [] } = useQuery({
-    queryKey: ['userComments', userEmail],
-    queryFn: () => userEmail ? base44.entities.ReviewComment.filter({ user_email: userEmail }) : [],
-    enabled: !!userEmail,
-  });
-
-  useEffect(() => {
-    setCommentCount(userComments.length);
-  }, [userComments]);
-
   const reviewBadges = allBadges.filter(b => b.type === 'review').sort((a, b) => a.min_count - b.min_count);
   const bootBadges = allBadges.filter(b => b.type === 'boot').sort((a, b) => a.min_count - b.min_count);
   
-  const strongSilentTypeEarned = reviewCount >= 10 && commentCount === 0;
+  const strongSilentTypeEarned = reviewCount >= 10 && userRatings.every(r => !r.comment);
 
   return (
     <Card className="mb-6 border-stone-200">

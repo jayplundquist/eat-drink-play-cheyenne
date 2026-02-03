@@ -24,6 +24,19 @@ export default function ReviewComments({ reviewId, currentUser }) {
     enabled: showComments && comments.length > 0,
   });
 
+  const { data: allCommentReactions = [] } = useQuery({
+    queryKey: ['allCommentReactions', reviewId],
+    queryFn: async () => {
+      if (comments.length === 0) return [];
+      const commentIds = comments.map(c => c.id);
+      const reactions = await Promise.all(
+        commentIds.map(id => base44.entities.CommentReaction.filter({ comment_id: id }))
+      );
+      return reactions.flat();
+    },
+    enabled: showComments && comments.length > 0,
+  });
+
   const createCommentMutation = useMutation({
     mutationFn: (data) => base44.entities.ReviewComment.create(data),
     onSuccess: () => {

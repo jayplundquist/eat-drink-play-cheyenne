@@ -201,7 +201,12 @@ export default function Home() {
     const matchesPrice = !selectedPrice || venue.price_range === selectedPrice;
 
     return matchesSearch && matchesTab && matchesRating && matchesPrice;
-  }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
+  }).sort((a, b) => {
+    if (a.permanently_closed !== b.permanently_closed) {
+      return (a.permanently_closed ? 1 : 0) - (b.permanently_closed ? 1 : 0);
+    }
+    return (a.name || '').localeCompare((b.name || ''));
+  });
 
   const itemsPerPage = 20;
   const startIndex = (currentPage - 1) * itemsPerPage;

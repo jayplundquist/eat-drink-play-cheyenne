@@ -11,6 +11,7 @@ import BootMap from "./BootMap";
 
 export default function BootCheckList({ user }) {
   const [uploadingBoot, setUploadingBoot] = useState(null);
+  const [bootsWithCoords, setBootsWithCoords] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: boots = [] } = useQuery({

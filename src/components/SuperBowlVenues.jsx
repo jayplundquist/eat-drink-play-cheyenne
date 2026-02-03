@@ -30,45 +30,44 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
 
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-      {/* Super Bowl venues carousel on top */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-6">
-          <h2 className="text-3xl font-bold text-blue-900" style={{ fontFamily: 'Rye, serif' }}>Super Bowl Watch Parties</h2>
-          <span className="text-blue-700 text-sm ml-2">Catch the big game here 🏈</span>
+      <div className="relative bg-gradient-to-b from-green-700 to-green-800 rounded-xl p-8 md:p-12 overflow-hidden">
+        {/* Yard markers background */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-0 bottom-0 border-l border-green-600/40"
+              style={{ left: `${i * 8.33}%` }}
+            />
+          ))}
         </div>
 
-        <div className="relative bg-gradient-to-b from-green-600 to-green-700 rounded-lg p-8 mb-8">
-          {/* Yard markers */}
-          <div className="absolute inset-0 overflow-hidden rounded-lg">
-            {[...Array(11)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute top-0 bottom-0 border-l border-white/30"
-                style={{ left: `${(i + 1) * 9.09}%` }}
-              />
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-          </div>
+        {/* Content */}
+        <div className="relative z-10">
+          <div className="grid md:grid-cols-2 gap-8 items-start">
+            {/* Left side - Title and description */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-5xl">🏈</span>
+                <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'Rye, serif' }}>
+                  SUPER BOWL<br />WATCH<br />PARTIES
+                </h2>
+              </div>
+              <p className="text-white text-lg md:text-xl font-serif leading-relaxed">
+                Cheyenne's best spots to catch the big game. Come celebrate with fellow fans!
+              </p>
+            </div>
 
-          <div className="relative flex items-center justify-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setCurrentIndex(prev => (prev - 1 + superBowlVenues.length) % superBowlVenues.length)}
-              className="border-blue-300 text-blue-600 hover:bg-blue-50"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-
-            <div className="relative w-80 h-80 flex-shrink-0">
+            {/* Right side - Venue card carousel */}
+            <div className="flex flex-col items-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute inset-0"
+                  className="w-full"
                 >
                   <VenueCard
                     venue={currentVenue}
@@ -77,19 +76,34 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
                   />
                 </motion.div>
               </AnimatePresence>
+
+              {/* Navigation buttons */}
+              {superBowlVenues.length > 1 && (
+                <div className="flex gap-3 mt-6">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentIndex(prev => (prev - 1 + superBowlVenues.length) % superBowlVenues.length)}
+                    className="border-white text-white hover:bg-white/10"
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Previous
+                  </Button>
+                  <span className="text-white text-sm font-medium flex items-center px-3">
+                    {currentIndex + 1} / {superBowlVenues.length}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentIndex(prev => (prev + 1) % superBowlVenues.length)}
+                    className="border-white text-white hover:bg-white/10"
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
+              )}
             </div>
-
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setCurrentIndex(prev => (prev + 1) % superBowlVenues.length)}
-              className="border-blue-300 text-blue-600 hover:bg-blue-50"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
-
-            {/* Football emoji */}
-            <span className="absolute top-4 right-4 text-4xl animate-bounce">🏈</span>
           </div>
         </div>
       </div>

@@ -218,36 +218,40 @@ export default function Home() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Spin the Spur & Quick Draw */}
+      {/* Games in Grid Under Hero */}
       {!searchQuery && activeTab === 'all' && (
-        <SpinTheSpur 
-          favorites={userFavorites}
-          venues={venues}
-          userRatings={userRatings}
-          user={user}
-          onSignInRequired={() => base44.auth.redirectToLogin()}
-          quickDrawCategories={quickDrawCategories}
-        />
-      )}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-12 relative z-10 pb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <SpinTheSpur 
+                favorites={userFavorites}
+                venues={venues}
+                userRatings={userRatings}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                quickDrawCategories={quickDrawCategories}
+              />
+            </div>
 
-      {/* Wet Yer Whistle */}
-      {!searchQuery && activeTab === 'all' && (
-        <WetYerWhistle 
-          venues={venues}
-          user={user}
-          onSignInRequired={() => base44.auth.redirectToLogin()}
-          wetYerWhistleCategories={wetYerWhistleCategories}
-        />
-      )}
+            <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <WetYerWhistle 
+                venues={venues}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                wetYerWhistleCategories={wetYerWhistleCategories}
+              />
+            </div>
 
-      {/* Hat Tip Section */}
-      {!searchQuery && activeTab === 'all' && (
-        <HatTip 
-          venues={venues}
-          favorites={favorites}
-          user={user}
-          onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
-        />
+            <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <HatTip 
+                venues={venues}
+                favorites={favorites}
+                user={user}
+                onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+              />
+            </div>
+          </div>
+        </div>
       )}
 
        {/* The Hitching Post */}

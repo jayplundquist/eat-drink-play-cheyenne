@@ -82,6 +82,13 @@ export default function Analytics() {
       color: 'from-rose-500 to-rose-600',
       loading: favoritesLoading,
     },
+    {
+      title: 'Total Site Visits',
+      value: siteVisits.length,
+      icon: Eye,
+      color: 'from-indigo-500 to-indigo-600',
+      loading: siteVisitsLoading,
+    },
   ];
 
   if (loading) {

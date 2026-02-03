@@ -308,10 +308,10 @@ export default function Home() {
                     Hunt for the Big Boots
                   </h2>
                   <p className="text-amber-50 mb-4 text-lg">
-                    Cheyenne is home to 29 iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
+                    Cheyenne is home to {boots.length} iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
                   </p>
                   <ul className="text-amber-100 space-y-2 mb-6 text-sm">
-                    <li>✓ 29 boots to discover</li>
+                    <li>✓ {boots.length} boots to discover</li>
                     <li>✓ Upload photos as proof</li>
                     <li>✓ Track your progress</li>
                     <li>✓ Complete the challenge</li>

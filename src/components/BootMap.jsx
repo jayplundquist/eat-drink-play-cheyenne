@@ -13,14 +13,18 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
+const bootSVG = encodeURIComponent(`<svg width="48" height="64" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg"><path d="M24 0C6.3 0 4 24 4 32c0 8.3 8.9 32 20 32c11.1 0 20-23.7 20-32C44 24 41.7 0 24 0Z" fill="#e6413e" stroke="#c32c55" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="32" r="7" fill="white" stroke="#c32c55" stroke-width="1.5"/><text x="24" y="38" font-size="24" text-anchor="middle">👢</text></svg>`);
+
 const bootIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA0OCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjQgMEM2LjMgMCA0IDI0IDQgMzJjMCA4LjMgOC45IDMyIDIwIDMyYzExLjEgMCAyMC0yMy43IDIwLTMyQzQ0IDI0IDQxLjcgMCAyNCAwWiIgZmlsbD0iI2U2NDEzZSIgc3Ryb2tlPSIjYzMyYzU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48Y2lyY2xlIGN4PSIyNCIgY3k9IjMyIiByPSI3IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjYzMyYzU1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjI0IiB5PSIzOCIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+CjvCrDwvdGV4dD48L3N2Zz4=',
+  iconUrl: `data:image/svg+xml;charset=utf-8,${bootSVG}`,
   iconSize: [48, 64],
   popupAnchor: [0, -32],
 });
 
+const bouncingBootSVG = encodeURIComponent(`<svg width="48" height="64" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg"><path d="M24 0C6.3 0 4 24 4 32c0 8.3 8.9 32 20 32c11.1 0 20-23.7 20-32C44 24 41.7 0 24 0Z" fill="#dc2626" stroke="#a71b1b" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="32" r="7" fill="white" stroke="#a71b1b" stroke-width="1.5"/><text x="24" y="38" font-size="24" text-anchor="middle">👢</text></svg>`);
+
 const bouncingBootIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA0OCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48c3R5bGU+QGtleWZyYW1lcyBib3VuY2Uge30lLDEwMCV7dHJhbnNmb3JtOnRyYW5zbGF0ZVkoMCl9NTAle3RyYW5zZm9ybTp0cmFuc2xhdGVZKC04cHgpfX0ucGluIHsgYW5pbWF0aW9uOiBib3VuY2UgMC42cyBpbmZpbml0ZTsgfTwvc3R5bGU+PGcgY2xhc3M9InBpbiI+PHBhdGggZD0iTTI0IDBDNi4zIDAgNCAyNCA0IDMyYzAgOC4zIDguOSAzMiAyMCAzMmMxMS4xIDAgMjAtMjMuNyAyMC0zMkM0NCAyNCA0MS43IDAgMjQgMFoiIGZpbGw9IiNkYzI2MjYiIHN0cm9rZT0iI2E3MWIxYiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PGNpcmNsZSBjeD0iMjQiIGN5PSIzMiIgcj0iNyIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2E3MWIxYiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48dGV4dCB4PSIyNCIgeT0iMzgiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPgq7wqw8L3RleHQ+PC9nPjwvc3ZnPg==',
+  iconUrl: `data:image/svg+xml;charset=utf-8,${bouncingBootSVG}`,
   iconSize: [48, 64],
   popupAnchor: [0, -32],
 });

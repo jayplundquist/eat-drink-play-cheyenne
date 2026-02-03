@@ -331,7 +331,7 @@ export default function Profile() {
            reviewCount={userRatings.length}
            avgRating={userRatings.length > 0 ? userRatings.reduce((sum, r) => sum + (r.boots || 0), 0) / userRatings.length : 0}
            bootVisitCount={userBootVisits.length}
-           userEmail={user?.email}
+           userRatings={userRatings}
          />
 
         {/* Tabs Section */}

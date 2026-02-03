@@ -159,7 +159,7 @@ export default function BootMap({ boots = [] }) {
           {boots.filter(boot => boot.lat && boot.lng).map((boot) => (
             <Marker 
               key={boot.name} 
-              position={[boot.lat, boot.lng]} 
+              position={[parseFloat(boot.lat), parseFloat(boot.lng)]} 
               icon={nearestBoot?.boot.name === boot.name ? bouncingBootIcon : bootIcon}
             >
               <Popup>

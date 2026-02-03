@@ -1,379 +1,295 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Users, ArrowLeft, Activity, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { toast } from "sonner";
-import ActivityFeedItem from "../components/ActivityFeedItem";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Search } from "lucide-react";
+import ActivityFeedItem from '../components/ActivityFeedItem';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { toast } from 'sonner';
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [searchEmail, setSearchEmail] = useState('');
-  const [allUsers, setAllUsers] = useState([]);
+  const [showResults, setShowResults] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me()
-      .then(user => {
-        setCurrentUser(user);
-        base44.entities.User.list()
-          .then(users => setAllUsers(users))
-          .catch(() => {});
-        setLoading(false);
-      })
+      .then(setCurrentUser)
       .catch(() => {
         base44.auth.redirectToLogin();
-        return;
       });
   }, []);
 
-  const deletePhotoMutation = useMutation({
-    mutationFn: async (ratingId, photoUrl) => {
-      const rating = await base44.entities.Rating.filter({ id: ratingId });
-      if (rating.length > 0) {
-        const updatedImages = (rating[0].image_urls || []).filter(url => url !== photoUrl);
-        await base44.entities.Rating.update(ratingId, {
-          image_urls: updatedImages,
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['followedUserRatings'] });
-      queryClient.invalidateQueries({ queryKey: ['currentUserRatings'] });
-      toast.success('Photo removed');
-    },
-  });
-
-  const deleteReviewMutation = useMutation({
-    mutationFn: async (ratingId) => {
-      const rating = await base44.entities.Rating.filter({ id: ratingId });
-      if (rating.length > 0) {
-        const venueId = rating[0].venue_id;
-        await base44.entities.Rating.delete(ratingId);
-        const venue = await base44.entities.Venue.filter({ id: venueId });
-        if (venue.length > 0) {
-          await base44.entities.Venue.update(venueId, {
-            rating_sum: Math.max(0, (venue[0].rating_sum || 0) - rating[0].boots),
-            rating_count: Math.max(0, (venue[0].rating_count || 0) - 1),
-          });
-        }
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUserRatings'] });
-      queryClient.invalidateQueries({ queryKey: ['venues'] });
-      toast.success('Review deleted');
-    },
-  });
-
-  const deleteBootShareMutation = useMutation({
-    mutationFn: async (bootShareId) => {
-      await base44.entities.BootShare.delete(bootShareId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUserBootShares'] });
-      toast.success('Boot share deleted');
-    },
-  });
-
-  const { data: venues = [] } = useQuery({
-    queryKey: ['venues'],
+  // Fetch all data upfront
+  const { data: allVenues = [] } = useQuery({
+    queryKey: ['allVenues'],
     queryFn: () => base44.entities.Venue.list(),
   });
 
-  const [venueCache, setVenueCache] = useState({});
-
-  const { data: userFollows = [] } = useQuery({
-    queryKey: ['userFollows', currentUser?.email],
-    queryFn: () => currentUser ? base44.entities.Follow.filter({ user_email: currentUser.email }) : [],
-    enabled: !!currentUser,
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => base44.entities.User.list(),
   });
 
-  const followingEmails = useMemo(() => userFollows.map(f => f.following_email), [userFollows]);
-
-  const { data: followedUserRatings = [] } = useQuery({
-    queryKey: ['followedUserRatings', followingEmails.join(',')],
-    queryFn: async () => {
-      if (followingEmails.length === 0) return [];
-      const allRatings = [];
-      for (const email of followingEmails) {
-        const ratings = await base44.entities.Rating.filter({ user_email: email });
-        allRatings.push(...ratings);
-      }
-      return allRatings.sort((a, b) => new Date(b.updated_date) - new Date(a.updated_date));
-    },
-    enabled: followingEmails.length > 0,
-  });
-
-  const { data: followedUserFavorites = [] } = useQuery({
-    queryKey: ['followedUserFavorites', followingEmails.join(',')],
-    queryFn: async () => {
-      if (followingEmails.length === 0) return [];
-      const allFavorites = [];
-      for (const email of followingEmails) {
-        const favorites = await base44.entities.Favorite.filter({ user_email: email });
-        allFavorites.push(...favorites);
-      }
-      return allFavorites.sort((a, b) => new Date(b.updated_date) - new Date(a.updated_date));
-    },
-    enabled: followingEmails.length > 0,
-  });
-
-  const { data: followedBootShares = [] } = useQuery({
-    queryKey: ['followedBootShares', followingEmails.join(',')],
-    queryFn: async () => {
-      if (followingEmails.length === 0) return [];
-      const allShares = [];
-      for (const email of followingEmails) {
-        const shares = await base44.entities.BootShare.filter({ user_email: email });
-        allShares.push(...shares);
-      }
-      return allShares.sort((a, b) => new Date(b.shared_date) - new Date(a.shared_date));
-    },
-    enabled: followingEmails.length > 0,
-  });
-
-  const { data: currentUserRatings = [] } = useQuery({
-    queryKey: ['currentUserRatings', currentUser?.email],
-    queryFn: () => currentUser ? base44.entities.Rating.filter({ user_email: currentUser.email }, '-created_date') : [],
-    enabled: !!currentUser,
-  });
-
-  const { data: currentUserBootShares = [] } = useQuery({
-    queryKey: ['currentUserBootShares', currentUser?.email],
-    queryFn: () => currentUser ? base44.entities.BootShare.filter({ user_email: currentUser.email }, '-shared_date') : [],
-    enabled: !!currentUser,
-  });
-
-  const { data: allReactions = [] } = useQuery({
-    queryKey: ['allReactions'],
-    queryFn: () => base44.entities.ReviewReaction.list(),
+  const { data: follows = [] } = useQuery({
+    queryKey: ['follows'],
+    queryFn: () => base44.entities.Follow.filter({ user_email: currentUser?.email }),
+    enabled: !!currentUser?.email,
   });
 
   const { data: allRatings = [] } = useQuery({
     queryKey: ['allRatings'],
-    queryFn: () => base44.entities.Rating.list('-created_date', 100),
+    queryFn: () => base44.entities.Rating.list(),
   });
 
-  const popularReviews = useMemo(() => {
-    const reactionCounts = allReactions.reduce((acc, reaction) => {
-      acc[reaction.rating_id] = (acc[reaction.rating_id] || 0) + 1;
-      return acc;
-    }, {});
+  const { data: allFavorites = [] } = useQuery({
+    queryKey: ['allFavorites'],
+    queryFn: () => base44.entities.Favorite.list(),
+  });
 
-    return allRatings
-      .filter(rating => reactionCounts[rating.id] >= 3)
-      .filter(rating => !followedUserRatings.find(r => r.id === rating.id))
-      .map(rating => ({
-        type: 'review',
-        data: rating,
-        timestamp: rating.updated_date,
-        user_email: rating.user_email,
-        isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-        isOwn: rating.user_email === currentUser?.email,
-        reactionCount: reactionCounts[rating.id]
-      }))
-      .sort((a, b) => b.reactionCount - a.reactionCount)
-      .slice(0, 5);
-  }, [allRatings, allReactions, followedUserRatings, currentUser?.email]);
+  const { data: allBootShares = [] } = useQuery({
+    queryKey: ['allBootShares'],
+    queryFn: () => base44.entities.BootShare.list(),
+  });
 
+  const { data: allReviewReactions = [] } = useQuery({
+    queryKey: ['allReviewReactions'],
+    queryFn: () => base44.entities.ReviewReaction.list(),
+  });
+
+  // Mutations
+  const deleteBootShareMutation = useMutation({
+    mutationFn: (id) => base44.entities.BootShare.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allBootShares'] });
+      toast.success('Boot share deleted');
+    },
+  });
+
+  const deleteReviewMutation = useMutation({
+    mutationFn: async (id) => {
+      const rating = allRatings.find(r => r.id === id);
+      if (!rating) return;
+
+      await base44.entities.Rating.delete(id);
+
+      const venue = allVenues.find(v => v.id === rating.venue_id);
+      if (venue) {
+        const newCount = Math.max(0, (venue.rating_count || 0) - 1);
+        const newSum = Math.max(0, (venue.rating_sum || 0) - (rating.boots || 0));
+        await base44.entities.Venue.update(venue.id, {
+          rating_count: newCount,
+          rating_sum: newSum,
+          total_ratings: Math.max(0, (venue.total_ratings || 0) - (rating.boots || 0))
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allRatings'] });
+      queryClient.invalidateQueries({ queryKey: ['allVenues'] });
+      toast.success('Review deleted');
+    },
+  });
+
+  const deletePhotoMutation = useMutation({
+    mutationFn: async ({ reviewId, photoUrl }) => {
+      const rating = allRatings.find(r => r.id === reviewId);
+      if (!rating) return;
+
+      const updatedUrls = (rating.image_urls || []).filter(url => url !== photoUrl);
+      await base44.entities.Rating.update(reviewId, { image_urls: updatedUrls });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allRatings'] });
+      toast.success('Photo deleted');
+    },
+  });
+
+  // Build activity items
   const activityItems = useMemo(() => {
-    const seenIds = new Set();
-    return [
-      ...followedUserRatings
-        .filter(rating => rating.user_email !== currentUser?.email)
-        .map(rating => ({
-          type: 'review',
-          data: rating,
-          timestamp: rating.updated_date,
-          user_email: rating.user_email,
-          isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-          isOwn: rating.user_email === currentUser?.email,
-          isPopular: false
-        })),
-      ...followedUserFavorites.map(fav => ({
-        type: 'favorite',
-        data: fav,
-        timestamp: fav.updated_date,
-        user_email: fav.user_email,
-        isBoosted: false,
-        isOwn: false,
-        isPopular: false
-      })),
-      ...followedBootShares.map(share => ({
-        type: 'boot_share',
-        data: share,
-        timestamp: share.shared_date,
-        user_email: share.user_email,
-        isBoosted: false,
-        isOwn: false,
-        isPopular: false
-      })),
-      ...currentUserRatings.map(rating => ({
-        type: 'review',
-        data: rating,
-        timestamp: rating.updated_date,
-        user_email: rating.user_email,
-        isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-        isOwn: true,
-        isPopular: false
-      })),
-      ...currentUserBootShares.map(share => ({
-        type: 'boot_share',
-        data: share,
-        timestamp: share.shared_date,
-        user_email: share.user_email,
-        isBoosted: false,
-        isOwn: true,
-        isPopular: false
-      })),
-      ...popularReviews.map(item => ({
-        ...item,
-        isPopular: true
-      }))
-    ]
-      .filter(item => {
-        const itemId = `${item.type}-${item.data.id}`;
-        if (seenIds.has(itemId)) return false;
-        seenIds.add(itemId);
-        return true;
-      })
-      .sort((a, b) => {
-        if (a.isBoosted && !b.isBoosted) return -1;
-        if (!a.isBoosted && b.isBoosted) return 1;
-        if (a.isPopular && !b.isPopular) return -1;
-        if (!a.isPopular && b.isPopular) return 1;
-        return new Date(b.timestamp) - new Date(a.timestamp);
-      });
-  }, [followedUserRatings, followedUserFavorites, followedBootShares, currentUserRatings, currentUserBootShares, popularReviews, currentUser?.email]);
+    if (!currentUser?.email) return [];
 
-  const filteredActivityItems = searchEmail
-    ? activityItems.filter(item => item.user_email?.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()))
-    : activityItems;
+    const followedEmails = follows.map(f => f.following_email);
+    const items = [];
 
-  const searchResults = searchEmail
-    ? allUsers.filter(user => user.email?.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()) && user.email !== currentUser?.email)
-    : [];
+    // Add reviews from followed users
+    allRatings.forEach(rating => {
+      if (followedEmails.includes(rating.user_email)) {
+        const venue = allVenues.find(v => v.id === rating.venue_id);
+        if (venue) {
+          const boostExpired = rating.boosted_until ? new Date(rating.boosted_until) < new Date() : true;
+          const isBoosted = rating.boosted_until && !boostExpired;
+          const reactionCount = allReviewReactions.filter(r => r.rating_id === rating.id).length;
 
-  if (loading) {
+          items.push({
+            type: 'review',
+            id: rating.id,
+            timestamp: rating.created_date,
+            data: rating,
+            user_email: rating.user_email,
+            isOwn: rating.user_email === currentUser.email,
+            isBoosted,
+            isPopular: reactionCount >= 3 && !isBoosted,
+            sortScore: isBoosted ? 2 : (reactionCount >= 3 ? 1 : 0),
+          });
+        }
+      }
+    });
+
+    // Add favorites from followed users
+    allFavorites.forEach(fav => {
+      if (followedEmails.includes(fav.user_email)) {
+        const venue = allVenues.find(v => v.id === fav.venue_id);
+        if (venue) {
+          items.push({
+            type: 'favorite',
+            id: fav.id,
+            timestamp: fav.created_date,
+            data: fav,
+            user_email: fav.user_email,
+            sortScore: 0,
+          });
+        }
+      }
+    });
+
+    // Add boot shares from followed users
+    allBootShares.forEach(share => {
+      if (followedEmails.includes(share.user_email)) {
+        items.push({
+          type: 'boot_share',
+          id: share.id,
+          timestamp: share.shared_date,
+          data: share,
+          user_email: share.user_email,
+          isOwn: share.user_email === currentUser.email,
+          sortScore: 1,
+        });
+      }
+    });
+
+    // Sort by boosted/popular first, then by date
+    return items.sort((a, b) => {
+      if (a.sortScore !== b.sortScore) return b.sortScore - a.sortScore;
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
+  }, [currentUser, follows, allRatings, allFavorites, allBootShares, allVenues, allReviewReactions]);
+
+  // Search results
+  const searchResults = useMemo(() => {
+    if (!searchEmail.trim()) return [];
+    return allUsers.filter(u =>
+      u.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
+      u.email !== currentUser?.email
+    ).slice(0, 5);
+  }, [searchEmail, allUsers, currentUser]);
+
+  const followedUserRatings = useMemo(() => {
+    if (!follows) return [];
+    const followedEmails = follows.map(f => f.following_email);
+    return allRatings.filter(r => followedEmails.includes(r.user_email));
+  }, [follows, allRatings]);
+
+  if (!currentUser) {
     return (
-      <div className="min-h-screen bg-stone-50 py-12">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <Skeleton className="h-96 w-full" />
-        </div>
+      <div className="max-w-4xl mx-auto p-6 space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="h-32 w-full rounded-lg" />
+          </div>
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 py-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <Button asChild variant="ghost" className="mb-6 text-amber-700">
-          <Link to={createPageUrl('Home')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Home
-          </Link>
-        </Button>
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-amber-900 mb-6" style={{ fontFamily: 'Rye, serif' }}>
+          The Hitching Post
+        </h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center gap-3 mb-8">
-            <Activity className="w-8 h-8 text-amber-700" />
-            <h1 className="text-3xl font-bold text-stone-800" style={{ fontFamily: 'Rye, serif' }}>The Hitching Post</h1>
+        <div className="relative mb-6">
+          <div className="flex gap-2">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-400 w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Search users to follow..."
+                value={searchEmail}
+                onChange={(e) => {
+                  setSearchEmail(e.target.value);
+                  setShowResults(true);
+                }}
+                onBlur={() => setTimeout(() => setShowResults(false), 200)}
+                className="pl-10"
+              />
+            </div>
           </div>
-          
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Search for users..."
-              value={searchEmail}
-              onChange={(e) => setSearchEmail(e.target.value)}
-              className="pr-10"
-            />
-            {searchEmail && (
-              <button
-                onClick={() => setSearchEmail('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-            {searchEmail && searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-lg shadow-lg z-10">
-                {searchResults.map(user => (
-                  <Link
-                    key={user.email}
-                    to={`${createPageUrl('UserProfile')}?email=${user.email}`}
-                    onClick={() => setSearchEmail('')}
-                    className="block px-4 py-3 hover:bg-stone-50 border-b last:border-b-0"
-                  >
-                    <p className="font-semibold text-stone-800">{user.email?.split('@')[0]}</p>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </motion.div>
 
-        {userFollows.length === 0 ? (
-          <Card className="p-12 text-center">
-            <Users className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-700 mb-2">No one to follow yet</h3>
-            <p className="text-stone-500 mb-6">
-              Start following users by viewing their profiles from venue reviews!
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-lg shadow-lg z-10">
+              {searchResults.map(user => (
+                <Link
+                  key={user.id}
+                  to={`${createPageUrl('UserProfile')}?email=${user.email}`}
+                  onClick={() => {
+                    setSearchEmail('');
+                    setShowResults(false);
+                  }}
+                  className="block p-3 hover:bg-stone-100 border-b border-stone-200 last:border-0"
+                >
+                  <div className="font-semibold text-stone-800">{user.full_name}</div>
+                  <div className="text-sm text-stone-500">{user.email}</div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {follows && follows.length === 0 && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
+            <p className="text-stone-600 mb-4">
+              Follow other users to see their activity here!
             </p>
-            <Button asChild className="bg-amber-600 hover:bg-amber-700">
-              <Link to={createPageUrl('Home')}>Explore Venues</Link>
+            <Button asChild className="bg-amber-700 hover:bg-amber-800">
+              <Link to={createPageUrl('Home')}>Explore Users</Link>
             </Button>
-          </Card>
-        ) : activityItems.length === 0 ? (
-          <Card className="p-12 text-center">
-            <Activity className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-700 mb-2">No activity yet</h3>
-            <p className="text-stone-500">
-              Your followed users haven't written any reviews or favorited venues yet.
-            </p>
-          </Card>
-        ) : filteredActivityItems.length === 0 ? (
-          <Card className="p-12 text-center">
-            <Users className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-700 mb-2">No results found</h3>
-            <p className="text-stone-500">
-              No activity from users with username "{searchEmail}"
-            </p>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {filteredActivityItems.map((item, i) => {
-              const venue = item.type === 'boot_share' ? null : venues.find(v => v.id === item.data.venue_id) || venueCache[item.data.venue_id];
-              if (item.type !== 'boot_share' && !venue) return null;
-              return (
-                <ActivityFeedItem
-                  key={`${item.type}-${item.data.id}`}
-                  item={item}
-                  i={i}
-                  venue={venue}
-                  currentUser={currentUser}
-                  followedUserRatings={followedUserRatings}
-                  deleteBootShareMutation={deleteBootShareMutation}
-                  deleteReviewMutation={deleteReviewMutation}
-                  deletePhotoMutation={deletePhotoMutation}
-                />
-              );
-            })}
           </div>
         )}
       </div>
+
+      {activityItems.length === 0 && follows && follows.length > 0 ? (
+        <div className="text-center py-12 text-stone-600">
+          <p>No activity yet. Follow more users to see their activity!</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {activityItems.map((item, i) => {
+            const venue = item.type === 'review' || item.type === 'favorite'
+              ? allVenues.find(v => v.id === item.data.venue_id)
+              : null;
+
+            return (
+              <ActivityFeedItem
+                key={item.id}
+                item={item}
+                i={i}
+                venue={venue}
+                currentUser={currentUser}
+                followedUserRatings={followedUserRatings}
+                deleteBootShareMutation={deleteBootShareMutation}
+                deleteReviewMutation={deleteReviewMutation}
+                deletePhotoMutation={deletePhotoMutation}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

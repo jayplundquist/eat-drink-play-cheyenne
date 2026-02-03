@@ -2,14 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Trash2 } from "lucide-react";
+import { Trash2, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import BootRating from "./BootRating";
 import UserBadge from "./UserBadge";
-import ReviewReactionButtons from "./ReviewReactionButtons";
-import ReviewBoostButton from "./ReviewBoostButton";
-import ReviewComments from "./ReviewComments";
+import ReviewActions from "./ReviewActions";
 
 export default function ActivityFeedItem({
   item,
@@ -157,40 +155,38 @@ export default function ActivityFeedItem({
                     "{item.data.comment}"
                   </p>
                 )}
-                {currentUser && currentUser.email && (
-                  <>
-                    <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
-                    <ReviewBoostButton
-                      ratingId={item.data.id}
-                      userEmail={item.user_email}
-                      currentUserEmail={currentUser.email}
-                      isAlreadyBoosted={item.isBoosted}
-                    />
-                    <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
-                  </>
-                )}
+
                 {item.data.image_urls && item.data.image_urls.length > 0 && (
-                   <div className="grid grid-cols-2 gap-2 mt-3">
-                     {item.data.image_urls.map((url, idx) => (
-                       <div key={idx} className="relative group">
-                         <img src={url} alt={`Review photo ${idx}`} className="w-full h-24 object-cover rounded-md" />
-                         {currentUser && currentUser.role === 'admin' && (
-                           <button
-                             type="button"
-                             onClick={() => {
-                               if (confirm('Delete this photo?')) {
-                                 deletePhotoMutation.mutate(item.data.id, url);
-                               }
-                             }}
-                             className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                           >
-                             ×
-                           </button>
-                         )}
-                       </div>
-                     ))}
-                   </div>
-                 )}
+                  <div className="grid grid-cols-2 gap-2 mt-3">
+                    {item.data.image_urls.map((url, idx) => (
+                      <div key={idx} className="relative group">
+                        <img src={url} alt={`Review photo ${idx}`} className="w-full h-24 object-cover rounded-md" />
+                        {currentUser?.role === 'admin' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (confirm('Delete this photo?')) {
+                                deletePhotoMutation.mutate({ reviewId: item.data.id, photoUrl: url });
+                              }
+                            }}
+                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {currentUser && (
+                  <ReviewActions
+                    ratingId={item.data.id}
+                    reviewUserId={item.user_email}
+                    currentUserEmail={currentUser.email}
+                    isAlreadyBoosted={item.isBoosted}
+                  />
+                )}
               </div>
             </div>
           </CardContent>

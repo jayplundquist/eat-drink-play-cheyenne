@@ -131,7 +131,6 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
             </Button>
           </div>
         </div>
-        </div>
       </div>
     </section>
   );

@@ -363,7 +363,18 @@ export default function ActivityFeed() {
                if (item.type !== 'boot_share' && !venue) return null;
                return (
                  <ActivityFeedItem
-                    <Card className="hover:shadow-lg transition-shadow">
+                   key={`${item.type}-${item.data.id}`}
+                   item={item}
+                   i={i}
+                   venue={venue}
+                   currentUser={currentUser}
+                   followedUserRatings={followedUserRatings}
+                   deleteBootShareMutation={deleteBootShareMutation}
+                   deleteReviewMutation={deleteReviewMutation}
+                   deletePhotoMutation={deletePhotoMutation}
+                 />
+               );
+             })}
                       <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-2">

@@ -71,6 +71,9 @@ export default function Home() {
 
     useEffect(() => {
       base44.auth.me().then(setUser).catch(() => setUser(null));
+
+      // Log site visit
+      base44.functions.invoke('logSiteVisit').catch(() => {});
     }, []);
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({

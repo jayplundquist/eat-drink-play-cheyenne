@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/popover";
 
 export default function UserBadge({ reviewCount = 0, avgRating = 0, bootVisitCount = 0, userRatings = [], size = 'default' }) {
+  const [openPopover, setOpenPopover] = useState({});
+
   const { data: allBadges = [] } = useQuery({
     queryKey: ['badges'],
     queryFn: () => base44.entities.Badge.list(),
@@ -52,8 +54,6 @@ export default function UserBadge({ reviewCount = 0, avgRating = 0, bootVisitCou
   }, [allBadges, reviewCount, bootVisitCount, userRatings]);
 
   if (earnedBadges.length === 0) return null;
-
-  const [openPopover, setOpenPopover] = useState({});
 
   return (
     <div className={`flex gap-2 flex-wrap items-center ${size === 'sm' ? '' : ''}`}>

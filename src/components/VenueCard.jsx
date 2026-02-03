@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MapPin, ExternalLink, Trophy, PawPrint } from "lucide-react";
+import { Heart, MapPin, ExternalLink, Trophy, PawPrint, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
@@ -85,6 +85,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
                 </h3>
                 {venue.has_big_boot && <span className="text-lg">👢</span>}
                 {venue.critter_friendly && <PawPrint className="w-4 h-4 text-green-300" />}
+                {venue.veteran_owned && (
+                  <div className="relative w-4 h-4">
+                    <div className="absolute inset-0 border-2 border-blue-300 rounded-full" />
+                    <Star className="w-4 h-4 text-blue-300 fill-blue-300" />
+                  </div>
+                )}
               </div>
               {venue.address && !hideAddress && (
                   <div className="flex items-center gap-1 text-amber-200 text-sm">
@@ -105,6 +111,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
                 </h3>
                 {venue.has_big_boot && <span className="text-lg">👢</span>}
                 {venue.critter_friendly && <PawPrint className="w-4 h-4 text-green-600" />}
+                {venue.veteran_owned && (
+                  <div className="relative w-4 h-4">
+                    <div className="absolute inset-0 border-2 border-blue-600 rounded-full" />
+                    <Star className="w-4 h-4 text-blue-600 fill-blue-600" />
+                  </div>
+                )}
               </div>
               {categories.length > 0 && (
                 <Badge className={cn("border shrink-0", categoryColors[categories[0]])}>

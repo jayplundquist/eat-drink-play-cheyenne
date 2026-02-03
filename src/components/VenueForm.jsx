@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin, PawPrint } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin, PawPrint, Star } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -53,6 +53,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
         menu_pictures: venue.menu_pictures || [],
         locked_fields: venue.locked_fields || [],
         critter_friendly: venue.critter_friendly || false,
+        veteran_owned: venue.veteran_owned || false,
       } : {
         name: '',
         categories: [],
@@ -69,6 +70,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
         quick_draw_boost: false,
         locked_fields: [],
         critter_friendly: false,
+        veteran_owned: false,
       });
 
    const [newFeature, setNewFeature] = useState('');
@@ -639,6 +641,36 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                   >
                     <PawPrint className="w-4 h-4 mr-2" />
                     {formData.critter_friendly ? 'Critter Friendly ✓' : 'Mark as Critter Friendly'}
+                  </Button>
+                </div>
+              )}
+
+          {/* Veteran Owned - Premium Feature */}
+              {venue && (user?.is_premium || user?.role === 'admin') && (
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="relative w-5 h-5">
+                        <div className="absolute inset-0 border-2 border-blue-600 rounded-full" />
+                        <Star className="w-5 h-5 text-blue-600 fill-blue-600" />
+                      </div>
+                      <Label className="text-blue-900 font-semibold">Veteran Owned</Label>
+                    </div>
+                  </div>
+                  <p className="text-sm text-blue-700">
+                    Is this business veteran-owned? Show support for those who served!
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => handleChange('veteran_owned', !formData.veteran_owned)}
+                    variant={formData.veteran_owned ? "default" : "outline"}
+                    className={formData.veteran_owned ? "w-full bg-blue-600 hover:bg-blue-700 text-white" : "w-full border-blue-300 text-blue-700 hover:bg-blue-50"}
+                  >
+                    <div className="relative w-4 h-4 mr-2">
+                      <div className="absolute inset-0 border-2 border-current rounded-full" />
+                      <Star className="w-4 h-4 fill-current" />
+                    </div>
+                    {formData.veteran_owned ? 'Veteran Owned ✓' : 'Mark as Veteran Owned'}
                   </Button>
                 </div>
               )}

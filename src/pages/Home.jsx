@@ -26,6 +26,7 @@ import SpinTheSpur from "../components/SpinTheSpur";
 import QuickDraw from "../components/QuickDraw";
 import WetYerWhistle from "../components/WetYerWhistle";
 import HatTip from "../components/HatTip";
+import SuperBowlVenues from "../components/SuperBowlVenues";
 import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {
@@ -258,6 +259,16 @@ export default function Home() {
           </div>
         </div>
       )}
+
+       {/* Super Bowl Watch Parties */}
+       {!searchQuery && activeTab === 'all' && (
+         <SuperBowlVenues 
+           venues={venues}
+           favorites={favorites}
+           user={user}
+           onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+         />
+       )}
 
        {/* Hat Tip Section - Trending Venues */}
        {!searchQuery && activeTab === 'all' && (

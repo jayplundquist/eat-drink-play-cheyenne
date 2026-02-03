@@ -169,26 +169,30 @@ export default function ActivityFeed() {
   });
 
   // Calculate reaction counts per review
-  const reactionCounts = allReactions.reduce((acc, reaction) => {
-    acc[reaction.rating_id] = (acc[reaction.rating_id] || 0) + 1;
-    return acc;
-  }, {});
+  const reactionCounts = useMemo(() => {
+    return allReactions.reduce((acc, reaction) => {
+      acc[reaction.rating_id] = (acc[reaction.rating_id] || 0) + 1;
+      return acc;
+    }, {});
+  }, [allReactions]);
 
   // Get popular reviews (sorted by reaction count)
-  const popularReviews = allRatings
-    .filter(rating => reactionCounts[rating.id] >= 3) // Reviews with 3+ reactions
-    .filter(rating => !followedUserRatings.find(r => r.id === rating.id)) // Exclude already shown reviews
-    .map(rating => ({
-      type: 'review',
-      data: rating,
-      timestamp: rating.updated_date,
-      user_email: rating.user_email,
-      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-      isOwn: rating.user_email === currentUser?.email,
-      reactionCount: reactionCounts[rating.id]
-    }))
-    .sort((a, b) => b.reactionCount - a.reactionCount)
-    .slice(0, 5); // Limit to top 5 popular reviews
+  const popularReviews = useMemo(() => {
+    return allRatings
+      .filter(rating => reactionCounts[rating.id] >= 3) // Reviews with 3+ reactions
+      .filter(rating => !followedUserRatings.find(r => r.id === rating.id)) // Exclude already shown reviews
+      .map(rating => ({
+        type: 'review',
+        data: rating,
+        timestamp: rating.updated_date,
+        user_email: rating.user_email,
+        isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
+        isOwn: rating.user_email === currentUser?.email,
+        reactionCount: reactionCounts[rating.id]
+      }))
+      .sort((a, b) => b.reactionCount - a.reactionCount)
+      .slice(0, 5); // Limit to top 5 popular reviews
+  }, [allRatings, reactionCounts, followedUserRatings, currentUser?.email]);
 
   // Track seen IDs to prevent duplicates
   const activityItems = useMemo(() => {

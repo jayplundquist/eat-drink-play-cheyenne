@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Plus, ArrowLeft, Pencil, Check, X } from "lucide-react";
 import { Link } from 'react-router-dom';
@@ -14,9 +15,11 @@ import { toast } from "sonner";
 export default function ManageVenueOptions() {
   const [user, setUser] = useState(null);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryTab, setNewCategoryTab] = useState('eat');
   const [newFoodTypeName, setNewFoodTypeName] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');
+  const [editingTab, setEditingTab] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -41,12 +44,14 @@ export default function ManageVenueOptions() {
       await base44.entities.CustomVenueOption.create({
         name: newCategoryName.trim(),
         type: 'category',
-        value
+        value,
+        tab: newCategoryTab
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
       setNewCategoryName('');
+      setNewCategoryTab('eat');
       toast.success('Category added successfully');
     },
     onError: (error) => {
@@ -90,14 +95,17 @@ export default function ManageVenueOptions() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, name }) => {
+    mutationFn: async ({ id, name, tab }) => {
       const value = name.toLowerCase().replace(/\s+/g, '_');
-      await base44.entities.CustomVenueOption.update(id, { name, value });
+      const updateData = { name, value };
+      if (tab !== undefined) updateData.tab = tab;
+      await base44.entities.CustomVenueOption.update(id, updateData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
       setEditingId(null);
       setEditingName('');
+      setEditingTab('');
       toast.success('Option updated successfully');
     },
     onError: (error) => {
@@ -141,17 +149,29 @@ export default function ManageVenueOptions() {
           <TabsContent value="categories" className="space-y-6">
             <Card className="p-6 bg-white border-stone-200">
               <h2 className="text-xl font-semibold text-stone-800 mb-4">Add New Category</h2>
-              <div className="flex gap-2 mb-6">
+              <div className="space-y-3 mb-6">
                 <Input
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="e.g. Coffee Shop, Food Truck"
                   onKeyPress={(e) => e.key === 'Enter' && addCategoryMutation.mutate()}
                 />
+                <Select value={newCategoryTab} onValueChange={setNewCategoryTab}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tab" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="eat">Eat 🍽️</SelectItem>
+                    <SelectItem value="drink">Drink 🍺</SelectItem>
+                    <SelectItem value="play">Play 🎵</SelectItem>
+                    <SelectItem value="shop">Shop 🛍️</SelectItem>
+                    <SelectItem value="chuck_wagon">Chuck Wagon 🍖</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Button
                   onClick={() => addCategoryMutation.mutate()}
                   disabled={addCategoryMutation.isPending || !newCategoryName.trim()}
-                  className="bg-amber-600 hover:bg-amber-700 text-white whitespace-nowrap"
+                  className="bg-amber-600 hover:bg-amber-700 text-white w-full"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Category
@@ -169,22 +189,35 @@ export default function ManageVenueOptions() {
                   <Card key={cat.id} className="p-4 bg-white border-stone-200 flex items-center justify-between">
                     {editingId === cat.id ? (
                       <>
-                        <Input
-                          value={editingName}
-                          onChange={(e) => setEditingName(e.target.value)}
-                          className="flex-1 mr-2"
-                          autoFocus
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                              updateMutation.mutate({ id: cat.id, name: editingName });
-                            }
-                          }}
-                        />
+                        <div className="flex-1 mr-2 space-y-2">
+                          <Input
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            autoFocus
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                updateMutation.mutate({ id: cat.id, name: editingName, tab: editingTab });
+                              }
+                            }}
+                          />
+                          <Select value={editingTab} onValueChange={setEditingTab}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select tab" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="eat">Eat 🍽️</SelectItem>
+                              <SelectItem value="drink">Drink 🍺</SelectItem>
+                              <SelectItem value="play">Play 🎵</SelectItem>
+                              <SelectItem value="shop">Shop 🛍️</SelectItem>
+                              <SelectItem value="chuck_wagon">Chuck Wagon 🍖</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <div className="flex gap-1">
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => updateMutation.mutate({ id: cat.id, name: editingName })}
+                            onClick={() => updateMutation.mutate({ id: cat.id, name: editingName, tab: editingTab })}
                             disabled={!editingName.trim() || updateMutation.isPending}
                             className="text-green-600 hover:text-green-700 hover:bg-green-50"
                           >
@@ -196,6 +229,7 @@ export default function ManageVenueOptions() {
                             onClick={() => {
                               setEditingId(null);
                               setEditingName('');
+                              setEditingTab('');
                             }}
                             className="text-stone-600 hover:text-stone-700 hover:bg-stone-50"
                           >
@@ -208,6 +242,15 @@ export default function ManageVenueOptions() {
                         <div>
                           <p className="font-medium text-stone-800">{cat.name}</p>
                           <p className="text-sm text-stone-500 font-mono">{cat.value}</p>
+                          {cat.tab && (
+                            <Badge variant="outline" className="mt-1 text-xs">
+                              {cat.tab === 'eat' && '🍽️ Eat'}
+                              {cat.tab === 'drink' && '🍺 Drink'}
+                              {cat.tab === 'play' && '🎵 Play'}
+                              {cat.tab === 'shop' && '🛍️ Shop'}
+                              {cat.tab === 'chuck_wagon' && '🍖 Chuck Wagon'}
+                            </Badge>
+                          )}
                         </div>
                         <div className="flex gap-1">
                           <Button
@@ -216,6 +259,7 @@ export default function ManageVenueOptions() {
                             onClick={() => {
                               setEditingId(cat.id);
                               setEditingName(cat.name);
+                              setEditingTab(cat.tab || 'eat');
                             }}
                             className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                           >

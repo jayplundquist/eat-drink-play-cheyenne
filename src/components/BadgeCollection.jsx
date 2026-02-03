@@ -86,41 +86,43 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
             </div>
 
             {/* The Strong Silent Type Badge */}
-            <motion.div
-             initial={{ opacity: 0, scale: 0.8 }}
-             animate={{ opacity: 1, scale: 1 }}
-            >
-             <TooltipProvider>
-               <Tooltip>
-                 <TooltipTrigger asChild>
-                   <div 
-                     className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
-                       strongSilentTypeEarned
-                         ? 'bg-slate-50 border-slate-400'
-                         : 'bg-stone-100 border-stone-300'
-                     }`}
-                   >
-                     <div className={`text-4xl mb-2 ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
-                       🤐
-                     </div>
-                     <div className={`text-xs font-semibold ${
-                       strongSilentTypeEarned ? 'text-slate-900' : 'text-stone-600'
-                     }`}>
-                       The Strong Silent Type
-                     </div>
-                     <div className={`text-xs mt-1 ${
-                       strongSilentTypeEarned ? 'text-slate-700' : 'text-stone-500'
-                     }`}>
-                       10+ reviews
-                     </div>
-                   </div>
-                 </TooltipTrigger>
-                 <TooltipContent>
-                   <p>10+ reviews submitted without adding comments</p>
-                 </TooltipContent>
-               </Tooltip>
-             </TooltipProvider>
-            </motion.div>
+             {strongSilentTypeBadge && (
+             <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+             >
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
+                        strongSilentTypeEarned
+                          ? 'bg-slate-50 border-slate-400'
+                          : 'bg-stone-100 border-stone-300'
+                      }`}
+                    >
+                      <div className={`text-4xl mb-2 ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
+                        🤐
+                      </div>
+                      <div className={`text-xs font-semibold ${
+                        strongSilentTypeEarned ? 'text-slate-900' : 'text-stone-600'
+                      }`}>
+                        {strongSilentTypeBadge.name}
+                      </div>
+                      <div className={`text-xs mt-1 ${
+                        strongSilentTypeEarned ? 'text-slate-700' : 'text-stone-500'
+                      }`}>
+                        {strongSilentTypeBadge.min_count}+ reviews
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{strongSilentTypeBadge.description}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+             </motion.div>
+             )}
 
             {/* The Duster Badge */}
            <motion.div

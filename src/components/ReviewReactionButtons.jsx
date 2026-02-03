@@ -6,6 +6,8 @@ import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ReviewReactionButtons({ ratingId, userEmail }) {
+   if (!ratingId || !userEmail) return null;
+
    const queryClient = useQueryClient();
 
    const { data: reactions = [] } = useQuery({

@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import moment from 'moment';
 
 export default function ReviewComments({ reviewId, currentUser }) {
+   if (!reviewId) return null;
+
    const [showComments, setShowComments] = useState(false);
    const [commentText, setCommentText] = useState('');
    const queryClient = useQueryClient();

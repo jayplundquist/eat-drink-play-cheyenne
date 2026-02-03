@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmail, isAlreadyBoosted, onBoostSuccess }) {
-   // Check conditions first, before any hooks
-   const shouldShow = userEmail === currentUserEmail && !isAlreadyBoosted;
+   if (!ratingId || !userEmail || !currentUserEmail) return null;
+   if (userEmail !== currentUserEmail || isAlreadyBoosted) return null;
 
    const [open, setOpen] = useState(false);
    const [isProcessing, setIsProcessing] = useState(false);

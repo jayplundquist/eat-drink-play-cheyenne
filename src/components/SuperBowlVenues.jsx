@@ -42,34 +42,32 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
             variant="outline"
             size="icon"
             onClick={() => setCurrentIndex(prev => (prev - 1 + superBowlVenues.length) % superBowlVenues.length)}
-            className="border-blue-300 text-blue-600 hover:bg-blue-50 flex-shrink-0"
+            className="border-blue-300 text-blue-600 hover:bg-blue-50"
           >
             <ChevronLeft className="w-5 h-5" />
           </Button>
 
-          <div className="w-full max-w-sm flex-grow">
-            {currentVenue && (
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <VenueCard
-                  venue={currentVenue}
-                  isFavorite={isFavorite(currentVenue.id)}
-                  onToggleFavorite={() => onToggleFavorite(currentVenue.id)}
-                />
-              </motion.div>
-            )}
+          <div className="w-full max-w-sm overflow-hidden">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <VenueCard
+                venue={currentVenue}
+                isFavorite={isFavorite(currentVenue.id)}
+                onToggleFavorite={() => onToggleFavorite(currentVenue.id)}
+              />
+            </motion.div>
           </div>
 
           <Button
             variant="outline"
             size="icon"
             onClick={() => setCurrentIndex(prev => (prev + 1) % superBowlVenues.length)}
-            className="border-blue-300 text-blue-600 hover:bg-blue-50 flex-shrink-0"
+            className="border-blue-300 text-blue-600 hover:bg-blue-50"
           >
             <ChevronRight className="w-5 h-5" />
           </Button>

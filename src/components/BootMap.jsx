@@ -21,7 +21,7 @@ const bootIcon = new L.Icon({
   popupAnchor: [0, -20],
 });
 
-const bouncingBootSVG = encodeURIComponent(`<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 0C8 0 2 8 2 14c0 10 14 26 14 26s14-16 14-26c0-6-6-14-14-14Z" fill="#dc2626" stroke="#a71b1b" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="14" r="4" fill="white"/><text x="16" y="18" font-size="14" text-anchor="middle" dominant-baseline="central">👢</text></svg>`);
+const bouncingBootSVG = encodeURIComponent(`<svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg"><path d="M16 0C8 0 2 8 2 14c0 10 14 26 14 26s14-16 14-26c0-6-6-14-14-14Z" fill="#dc2626" stroke="#a71b1b" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="14" r="4" fill="white"/></svg>`);
 
 const bouncingBootIcon = new L.Icon({
   iconUrl: `data:image/svg+xml;charset=utf-8,${bouncingBootSVG}`,

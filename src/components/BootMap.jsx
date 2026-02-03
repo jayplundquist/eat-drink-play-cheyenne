@@ -14,9 +14,9 @@ L.Icon.Default.mergeOptions({
 });
 
 const bootIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSI0IiB5PSIyNiIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+CjvCrDwvdGV4dD48L3N2Zz4=',
-  iconSize: [32, 32],
-  popupAnchor: [0, -16],
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA0OCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjQgMEM2LjMgMCA0IDI0IDQgMzJjMCA4LjMgOC45IDMyIDIwIDMyYzExLjEgMCAyMC0yMy43IDIwLTMyQzQ0IDI0IDQxLjcgMCAyNCAwWiIgZmlsbD0iI2U2NDEzZSIgc3Ryb2tlPSIjYzMyYzU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48Y2lyY2xlIGN4PSIyNCIgY3k9IjMyIiByPSI3IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjYzMyYzU1IiBzdHJva2Utd2lkdGg9IjEuNSIvPjx0ZXh0IHg9IjI0IiB5PSIzOCIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+CjvCrDwvdGV4dD48L3N2Zz4=',
+  iconSize: [48, 64],
+  popupAnchor: [0, -32],
 });
 
 const bouncingBootIcon = new L.Icon({

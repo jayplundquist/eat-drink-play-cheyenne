@@ -49,6 +49,7 @@
  */
 import ActivityFeed from './pages/ActivityFeed';
 import AddVenue from './pages/AddVenue';
+import Analytics from './pages/Analytics';
 import EditVenue from './pages/EditVenue';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
@@ -62,13 +63,13 @@ import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
-import Analytics from './pages/Analytics';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "ActivityFeed": ActivityFeed,
     "AddVenue": AddVenue,
+    "Analytics": Analytics,
     "EditVenue": EditVenue,
     "Favorites": Favorites,
     "Home": Home,
@@ -82,7 +83,6 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
-    "Analytics": Analytics,
 }
 
 export const pagesConfig = {

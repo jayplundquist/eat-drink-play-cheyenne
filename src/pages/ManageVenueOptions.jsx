@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Plus, ArrowLeft } from "lucide-react";
+import { Trash2, Plus, ArrowLeft, Pencil, Check, X } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { toast } from "sonner";
@@ -15,6 +15,8 @@ export default function ManageVenueOptions() {
   const [user, setUser] = useState(null);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newFoodTypeName, setNewFoodTypeName] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [editingName, setEditingName] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -87,6 +89,22 @@ export default function ManageVenueOptions() {
     }
   });
 
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, name }) => {
+      const value = name.toLowerCase().replace(/\s+/g, '_');
+      await base44.entities.CustomVenueOption.update(id, { name, value });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customVenueOptions'] });
+      setEditingId(null);
+      setEditingName('');
+      toast.success('Option updated successfully');
+    },
+    onError: (error) => {
+      toast.error('Failed to update option');
+    }
+  });
+
   if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
@@ -149,23 +167,76 @@ export default function ManageVenueOptions() {
               ) : (
                 categories.map(cat => (
                   <Card key={cat.id} className="p-4 bg-white border-stone-200 flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-stone-800">{cat.name}</p>
-                      <p className="text-sm text-stone-500 font-mono">{cat.value}</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        if (confirm(`Delete "${cat.name}"?`)) {
-                          deleteMutation.mutate(cat.id);
-                        }
-                      }}
-                      disabled={deleteMutation.isPending}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {editingId === cat.id ? (
+                      <>
+                        <Input
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          className="flex-1 mr-2"
+                          autoFocus
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              updateMutation.mutate({ id: cat.id, name: editingName });
+                            }
+                          }}
+                        />
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => updateMutation.mutate({ id: cat.id, name: editingName })}
+                            disabled={!editingName.trim() || updateMutation.isPending}
+                            className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingId(null);
+                              setEditingName('');
+                            }}
+                            className="text-stone-600 hover:text-stone-700 hover:bg-stone-50"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <p className="font-medium text-stone-800">{cat.name}</p>
+                          <p className="text-sm text-stone-500 font-mono">{cat.value}</p>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingId(cat.id);
+                              setEditingName(cat.name);
+                            }}
+                            className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              if (confirm(`Delete "${cat.name}"?`)) {
+                                deleteMutation.mutate(cat.id);
+                              }
+                            }}
+                            disabled={deleteMutation.isPending}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </Card>
                 ))
               )}
@@ -202,23 +273,76 @@ export default function ManageVenueOptions() {
               ) : (
                 foodTypes.map(food => (
                   <Card key={food.id} className="p-4 bg-white border-stone-200 flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-stone-800">{food.name}</p>
-                      <p className="text-sm text-stone-500 font-mono">{food.value}</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        if (confirm(`Delete "${food.name}"?`)) {
-                          deleteMutation.mutate(food.id);
-                        }
-                      }}
-                      disabled={deleteMutation.isPending}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {editingId === food.id ? (
+                      <>
+                        <Input
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          className="flex-1 mr-2"
+                          autoFocus
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              updateMutation.mutate({ id: food.id, name: editingName });
+                            }
+                          }}
+                        />
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => updateMutation.mutate({ id: food.id, name: editingName })}
+                            disabled={!editingName.trim() || updateMutation.isPending}
+                            className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingId(null);
+                              setEditingName('');
+                            }}
+                            className="text-stone-600 hover:text-stone-700 hover:bg-stone-50"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <p className="font-medium text-stone-800">{food.name}</p>
+                          <p className="text-sm text-stone-500 font-mono">{food.value}</p>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingId(food.id);
+                              setEditingName(food.name);
+                            }}
+                            className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              if (confirm(`Delete "${food.name}"?`)) {
+                                deleteMutation.mutate(food.id);
+                              }
+                            }}
+                            disabled={deleteMutation.isPending}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </Card>
                 ))
               )}

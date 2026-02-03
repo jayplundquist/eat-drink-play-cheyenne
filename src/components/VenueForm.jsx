@@ -47,13 +47,14 @@ const foodTypes = [
   { value: "pizza", label: "Pizza" },
 ];
 
-export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout }) {
+export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout, onDelete }) {
    const [formData, setFormData] = useState(venue ? {
         ...venue,
         menu_pictures: venue.menu_pictures || [],
         locked_fields: venue.locked_fields || [],
         critter_friendly: venue.critter_friendly || false,
         veteran_owned: venue.veteran_owned || false,
+        permanently_closed: venue.permanently_closed || false,
       } : {
         name: '',
         categories: [],
@@ -71,6 +72,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
         locked_fields: [],
         critter_friendly: false,
         veteran_owned: false,
+        permanently_closed: false,
       });
 
    const [newFeature, setNewFeature] = useState('');
@@ -116,6 +118,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
 
   const isFieldEditable = (fieldName) => {
     if (user?.role === 'admin') return true;
+    if (formData.permanently_closed) return false;
     return !isFieldLocked(fieldName);
   };
 
@@ -717,8 +720,49 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             </div>
           )}
 
+          {/* Permanently Closed - Admin Only */}
+          {venue && user?.role === 'admin' && (
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🚫</span>
+                  <Label className="text-red-900 font-semibold">Permanently Closed</Label>
+                </div>
+              </div>
+              <p className="text-sm text-red-700">
+                Mark this venue as permanently closed. This keeps all reviews and ratings but locks all settings for everyone except admins and shows a "Closed" sign on the venue card.
+              </p>
+              <Button
+                type="button"
+                onClick={() => handleChange('permanently_closed', !formData.permanently_closed)}
+                variant={formData.permanently_closed ? "default" : "outline"}
+                className={formData.permanently_closed ? "w-full bg-red-600 hover:bg-red-700 text-white" : "w-full border-red-300 text-red-700 hover:bg-red-50"}
+              >
+                <span className="mr-2">🚫</span>
+                {formData.permanently_closed ? 'Marked as Permanently Closed' : 'Mark as Permanently Closed'}
+              </Button>
+            </div>
+          )}
+
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-between gap-3 pt-4">
+            {venue && user?.role === 'admin' && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (confirm(`Are you sure you want to DELETE "${venue.name}"? This action cannot be undone and will remove all associated reviews and ratings.`)) {
+                    onDelete?.();
+                  }
+                }}
+                disabled={isSaving}
+                className="border-red-300 text-red-700 hover:bg-red-50"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Delete Venue
+              </Button>
+            )}
+            <div className="flex gap-3 ml-auto">
             <Button
               type="button"
               variant="outline"
@@ -727,14 +771,15 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={!formData.name || !(formData.categories || []).length || isSaving}
-              className="bg-amber-600 hover:bg-amber-700 text-white"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {venue ? 'Update Venue' : 'Create Venue'}
-            </Button>
+              <Button
+                type="submit"
+                disabled={!formData.name || !(formData.categories || []).length || isSaving}
+                className="bg-amber-600 hover:bg-amber-700 text-white"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {venue ? 'Update Venue' : 'Create Venue'}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

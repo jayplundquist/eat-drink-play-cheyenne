@@ -51,6 +51,16 @@ export default function EditVenue() {
     },
   });
 
+  const deleteVenueMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.Venue.delete(venueId);
+    },
+    onSuccess: () => {
+      toast.success('Venue deleted successfully');
+      window.location.href = createPageUrl('ManageVenues');
+    },
+  });
+
   const initiateBoostCheckout = async (venuId) => {
     setCheckoutLoading(true);
     try {
@@ -151,6 +161,7 @@ export default function EditVenue() {
            isSaving={updateVenueMutation.isPending}
            user={user}
            onInitiateBoostCheckout={initiateBoostCheckout}
+           onDelete={() => deleteVenueMutation.mutate()}
          />
        </div>
        {checkoutLoading && (

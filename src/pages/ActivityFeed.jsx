@@ -33,8 +33,8 @@ export default function ActivityFeed() {
         setLoading(false);
       })
       .catch(() => {
-        setLoading(false);
         base44.auth.redirectToLogin();
+        return;
       });
   }, []);
 

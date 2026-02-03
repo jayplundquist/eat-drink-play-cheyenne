@@ -160,14 +160,12 @@ export default function ActivityFeedItem({
                 {currentUser && currentUser.email && (
                   <>
                     <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
-                    {item.user_email === currentUser.email && !item.isBoosted && (
-                      <ReviewBoostButton
-                        ratingId={item.data.id}
-                        userEmail={item.user_email}
-                        currentUserEmail={currentUser.email}
-                        isAlreadyBoosted={item.isBoosted}
-                      />
-                    )}
+                    <ReviewBoostButton
+                      ratingId={item.data.id}
+                      userEmail={item.user_email}
+                      currentUserEmail={currentUser.email}
+                      isAlreadyBoosted={item.isBoosted}
+                    />
                     <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
                   </>
                 )}

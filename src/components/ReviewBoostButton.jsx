@@ -14,10 +14,6 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmail, isAlreadyBoosted, onBoostSuccess }) {
-   if (!ratingId || !userEmail || !currentUserEmail) {
-     return null;
-   }
-
    const [open, setOpen] = useState(false);
    const [isProcessing, setIsProcessing] = useState(false);
    const queryClient = useQueryClient();
@@ -57,10 +53,14 @@ export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmai
    });
 
    const handleBoost = async () => {
-     boostReviewMutation.mutate();
-   };
+      boostReviewMutation.mutate();
+    };
 
-  return (
+    if (userEmail !== currentUserEmail || isAlreadyBoosted) {
+      return null;
+    }
+
+   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button

@@ -216,33 +216,7 @@ export default function ManageBoots() {
           </Button>
         </Link>
 
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-stone-800">Manage Big Boots</h1>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => {
-                if (confirm('Remove all duplicate boots based on address? This will keep only one boot per address.')) {
-                  removeDuplicatesMutation.mutate();
-                }
-              }}
-              disabled={removeDuplicatesMutation.isPending}
-              variant="outline"
-              className="border-red-600 text-red-600 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Remove Duplicates
-            </Button>
-            <Button
-              onClick={() => importBootsMutation.mutate()}
-              disabled={importBootsMutation.isPending}
-              variant="outline"
-              className="border-amber-600 text-amber-600 hover:bg-amber-50"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Import All Boots
-            </Button>
-          </div>
-        </div>
+        <h1 className="text-3xl font-bold text-stone-800 mb-8">Manage Big Boots</h1>
 
         {/* Add New Boot */}
         <Card className="p-6 bg-white border-stone-200 mb-6">

@@ -99,8 +99,9 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
         </Link>
 
         {/* Auto-scrolling venue carousel */}
-        <div className="bg-white p-6 border-t-4 border-green-600">
-          <div className="flex items-center justify-between gap-4">
+        <div className="football-field p-6 border-t-4 border-green-900">
+          <div className="field-line"></div>
+          <div className="relative z-10 flex items-center justify-between gap-4">
             <Button
               variant="outline"
               size="icon"
@@ -129,6 +130,7 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
+        </div>
         </div>
       </div>
     </section>

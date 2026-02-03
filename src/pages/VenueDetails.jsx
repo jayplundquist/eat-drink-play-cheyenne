@@ -28,6 +28,7 @@ import BootRating from "../components/BootRating";
 import ClaimVenueModal from "../components/ClaimVenueModal";
 import UserBadge from "../components/UserBadge";
 import ReviewComments from "../components/ReviewComments";
+import ReviewReactionButtons from "../components/ReviewReactionButtons";
 import { toast } from "sonner";
 
 const categoryLabels = {
@@ -780,6 +781,7 @@ export default function VenueDetails() {
                               ))}
                             </div>
                           )}
+                          {user && <ReviewReactionButtons ratingId={rating.id} userEmail={user.email} />}
                           <ReviewComments reviewId={rating.id} currentUser={user} />
                           </div>
                           </div>

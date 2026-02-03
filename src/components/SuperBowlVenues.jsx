@@ -37,7 +37,20 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
           <span className="text-blue-700 text-sm ml-2">Catch the big game here 🏈</span>
         </div>
 
-        <div className="flex items-center justify-center gap-4">
+        <div className="relative bg-gradient-to-b from-green-600 to-green-700 rounded-lg p-8 mb-8">
+          {/* Yard markers */}
+          <div className="absolute inset-0 overflow-hidden rounded-lg">
+            {[...Array(11)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute top-0 bottom-0 border-l border-white/30"
+                style={{ left: `${(i + 1) * 9.09}%` }}
+              />
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          </div>
+
+          <div className="relative flex items-center justify-center gap-4">
           <Button
             variant="outline"
             size="icon"

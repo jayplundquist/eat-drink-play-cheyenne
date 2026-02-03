@@ -14,52 +14,54 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ReviewBoostButton({ ratingId, userEmail, currentUserEmail, isAlreadyBoosted, onBoostSuccess }) {
-  const [open, setOpen] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const queryClient = useQueryClient();
+   // Check conditions first, before any hooks
+   const shouldShow = userEmail === currentUserEmail && !isAlreadyBoosted;
 
-  const boostReviewMutation = useMutation({
-    mutationFn: async () => {
-      setIsProcessing(true);
-      try {
-        // Check if running in iframe (preview mode)
-        if (window.self !== window.top) {
-          toast.error('Checkout only works from a published app. Please visit your live site.');
-          setIsProcessing(false);
-          return;
-        }
+   const [open, setOpen] = useState(false);
+   const [isProcessing, setIsProcessing] = useState(false);
+   const queryClient = useQueryClient();
 
-        // Create Stripe checkout session using backend function
-        const response = await base44.functions.invoke('createCheckoutSession', {
-          type: 'review_boost',
-          reviewId: ratingId
-        });
+   const boostReviewMutation = useMutation({
+     mutationFn: async () => {
+       setIsProcessing(true);
+       try {
+         // Check if running in iframe (preview mode)
+         if (window.self !== window.top) {
+           toast.error('Checkout only works from a published app. Please visit your live site.');
+           setIsProcessing(false);
+           return;
+         }
 
-        const sessionUrl = response.data.url;
+         // Create Stripe checkout session using backend function
+         const response = await base44.functions.invoke('createCheckoutSession', {
+           type: 'review_boost',
+           reviewId: ratingId
+         });
 
-        // Redirect to Stripe checkout
-        if (sessionUrl) {
-          window.location.href = sessionUrl;
-        } else {
-          throw new Error('No checkout URL returned');
-        }
-      } catch (error) {
-        console.error('Boost error:', error);
-        toast.error('Failed to start checkout. Please try again.');
-      } finally {
-        setIsProcessing(false);
-      }
-    },
-  });
+         const sessionUrl = response.data.url;
 
-  const handleBoost = async () => {
-    boostReviewMutation.mutate();
-  };
+         // Redirect to Stripe checkout
+         if (sessionUrl) {
+           window.location.href = sessionUrl;
+         } else {
+           throw new Error('No checkout URL returned');
+         }
+       } catch (error) {
+         console.error('Boost error:', error);
+         toast.error('Failed to start checkout. Please try again.');
+       } finally {
+         setIsProcessing(false);
+       }
+     },
+   });
 
-  // Don't show boost button if not the review author or already boosted
-  if (userEmail !== currentUserEmail || isAlreadyBoosted) {
-    return null;
-  }
+   const handleBoost = async () => {
+     boostReviewMutation.mutate();
+   };
+
+   if (!shouldShow) {
+     return null;
+   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

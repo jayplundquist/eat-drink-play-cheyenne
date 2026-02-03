@@ -119,7 +119,7 @@ export default function Home() {
   const submitSuggestionMutation = useMutation({
     mutationFn: async () => {
       await base44.integrations.Core.SendEmail({
-        to: 'admin@example.com',
+        to: 'support@eatdrinkplaycheyenne.com',
         subject: 'New Suggestion from Cheyenne Guide',
         body: `User: ${user?.email || 'Anonymous'}\n\nSuggestion:\n${suggestion}`
       });
@@ -128,6 +128,10 @@ export default function Home() {
       toast.success('Thank you for your suggestion!');
       setSuggestionOpen(false);
       setSuggestion('');
+    },
+    onError: (error) => {
+      toast.error('Failed to submit suggestion. Please try again.');
+      console.error('Suggestion submission error:', error);
     },
   });
 

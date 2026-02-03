@@ -84,6 +84,11 @@ export default function Layout({ children, currentPageName }) {
           --leather: #a0522d;
         }
 
+        html, body {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
         h1, h2, h3 {
           font-family: 'Rye', serif;
           letter-spacing: 0.02em;

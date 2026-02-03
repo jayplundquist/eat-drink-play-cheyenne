@@ -23,8 +23,9 @@ import HeroSection from "../components/HeroSection";
 import VenueCard from "../components/VenueCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
-import HatTip from "../components/HatTip";
+import QuickDraw from "../components/QuickDraw";
 import WetYerWhistle from "../components/WetYerWhistle";
+import HatTip from "../components/HatTip";
 import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {

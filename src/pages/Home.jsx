@@ -37,7 +37,12 @@ export default function Home() {
   const [suggestion, setSuggestion] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const tabCategories = {
+  const { data: customOptions = [] } = useQuery({
+    queryKey: ['customVenueOptions'],
+    queryFn: () => base44.entities.CustomVenueOption.list(),
+  });
+
+  const builtInTabCategories = {
     all: [],
     eat: ['restaurant'],
     drink: ['bar', 'brewery', 'coffee_shop', 'winery'],
@@ -45,6 +50,15 @@ export default function Home() {
     shop: ['souvenir_shopping', 'shopping', 'grocery'],
     chuck_wagons: ['food_trucks']
   };
+
+  // Add custom categories to their respective tabs
+  const tabCategories = { ...builtInTabCategories };
+  customOptions.filter(opt => opt.type === 'category' && opt.tab).forEach(opt => {
+    if (!tabCategories[opt.tab]) {
+      tabCategories[opt.tab] = [];
+    }
+    tabCategories[opt.tab].push(opt.value);
+  });
 
   const queryClient = useQueryClient();
 

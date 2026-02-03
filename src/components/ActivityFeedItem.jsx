@@ -157,19 +157,17 @@ export default function ActivityFeedItem({
                     "{item.data.comment}"
                   </p>
                 )}
-                <div className="flex items-center justify-between">
-                  {currentUser?.email && (
+                {currentUser?.email && (
+                  <div className="flex items-center justify-between mt-2">
                     <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
-                  )}
-                  {item.user_email && (
                     <ReviewBoostButton
                       ratingId={item.data.id}
                       userEmail={item.user_email}
                       currentUserEmail={currentUser?.email}
                       isAlreadyBoosted={item.isBoosted}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
                 {item.data.image_urls && item.data.image_urls.length > 0 && (
                   <div className="grid grid-cols-2 gap-2 mt-3">
                     {item.data.image_urls.map((url, idx) => (

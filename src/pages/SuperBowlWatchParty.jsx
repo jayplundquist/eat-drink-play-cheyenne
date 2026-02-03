@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft } from "lucide-react";
@@ -30,9 +30,9 @@ export default function SuperBowlWatchParty() {
 
   const isFavorite = (venueId) => favorites.some(f => f.venue_id === venueId);
 
-  const queryClient = React.useQueryClient?.();
+  const queryClient = useQueryClient();
   
-  const toggleFavoriteMutation = React.useMutation({
+  const toggleFavoriteMutation = useMutation({
     mutationFn: async (venueId) => {
       const existing = favorites.find(f => f.venue_id === venueId);
       if (existing) {
@@ -42,7 +42,7 @@ export default function SuperBowlWatchParty() {
       }
     },
     onSuccess: () => {
-      queryClient?.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
     },
   });
 

@@ -53,6 +53,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
   const [imageError, setImageError] = useState(false);
   const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
   const categories = getCategories(venue);
+  const isClosed = venue.permanently_closed;
 
   const { data: customOptions = [] } = useQuery({
     queryKey: ['customVenueOptions'],
@@ -82,6 +83,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             />
             <div className="absolute inset-0 bg-gradient-to-t from-amber-950/80 via-transparent to-transparent" />
             <div className="absolute inset-0 border-4 border-amber-900/50" />
+            
+            {isClosed && (
+              <div className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1.5 rounded-md font-bold shadow-lg transform rotate-12">
+                CLOSED
+              </div>
+            )}
             
             {categories.length > 0 && (
               <Badge className={cn("absolute top-3 left-3 border", categoryColors[categories[0]])}>
@@ -120,7 +127,12 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
         </Link>
       ) : (
         <Link to={createPageUrl(`VenueDetails?id=${venue.id}`)}>
-          <div className="p-4 bg-gradient-to-b from-amber-100 to-orange-100 border-b-4 border-amber-900">
+          <div className="p-4 bg-gradient-to-b from-amber-100 to-orange-100 border-b-4 border-amber-900 relative">
+            {isClosed && (
+              <div className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1.5 rounded-md font-bold shadow-lg transform rotate-12 z-10">
+                CLOSED
+              </div>
+            )}
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-2">
                 <h3 className="text-amber-900 font-bold text-lg leading-tight" style={{ fontFamily: 'Rye, serif' }}>

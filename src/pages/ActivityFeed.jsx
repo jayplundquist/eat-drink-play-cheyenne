@@ -119,7 +119,7 @@ export default function ActivityFeed() {
   });
 
   const { data: followedUserFavorites = [] } = useQuery({
-    queryKey: ['followedUserFavorites', followingEmails],
+    queryKey: ['followedUserFavorites', followingEmails.join(',')],
     queryFn: async () => {
       if (followingEmails.length === 0) return [];
       const allFavorites = [];

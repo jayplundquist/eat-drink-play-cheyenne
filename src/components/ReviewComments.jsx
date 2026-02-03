@@ -15,28 +15,27 @@ export default function ReviewComments({ reviewId, currentUser }) {
    const { data: comments = [], isLoading } = useQuery({
      queryKey: ['reviewComments', reviewId],
      queryFn: () => base44.entities.ReviewComment.filter({ review_id: reviewId }, '-created_date'),
-     enabled: showComments && !!reviewId,
+     enabled: !!reviewId,
    });
 
-  const { data: allUsers = [] } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => base44.entities.User.list(),
-    enabled: showComments && comments.length > 0,
-  });
+   const { data: allUsers = [] } = useQuery({
+     queryKey: ['users'],
+     queryFn: () => base44.entities.User.list(),
+     enabled: !!reviewId,
+   });
 
-  const { data: allCommentReactions = [] } = useQuery({
-    queryKey: ['allCommentReactions', reviewId, comments.map(c => c.id).join(',')],
-    queryFn: async () => {
-      if (comments.length === 0) return [];
-      // Fetch all comment reactions at once and filter in memory
-      const allReactions = await base44.entities.CommentReaction.list();
-      const commentIds = comments.map(c => c.id);
-      return allReactions.filter(r => commentIds.includes(r.comment_id));
-    },
-    enabled: showComments && comments.length > 0,
-  });
+   const { data: allCommentReactions = [] } = useQuery({
+     queryKey: ['allCommentReactions', reviewId, comments.map(c => c.id).join(',')],
+     queryFn: async () => {
+       if (comments.length === 0) return [];
+       const allReactions = await base44.entities.CommentReaction.list();
+       const commentIds = comments.map(c => c.id);
+       return allReactions.filter(r => commentIds.includes(r.comment_id));
+     },
+     enabled: !!reviewId,
+   });
 
-  const createCommentMutation = useMutation({
+   const createCommentMutation = useMutation({
     mutationFn: (data) => base44.entities.ReviewComment.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviewComments', reviewId] });

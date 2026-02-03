@@ -27,8 +27,7 @@ import { motion } from "framer-motion";
 import BootRating from "../components/BootRating";
 import ClaimVenueModal from "../components/ClaimVenueModal";
 import UserBadge from "../components/UserBadge";
-import ReviewComments from "../components/ReviewComments";
-import ReviewReactionButtons from "../components/ReviewReactionButtons";
+import ReviewActions from "../components/ReviewActions";
 import { toast } from "sonner";
 
 const categoryLabels = {
@@ -806,8 +805,14 @@ export default function VenueDetails() {
                               ))}
                             </div>
                           )}
-                          {user && <ReviewReactionButtons ratingId={rating.id} userEmail={user.email} />}
-                          <ReviewComments reviewId={rating.id} currentUser={user} />
+                          {user && (
+                            <ReviewActions
+                              ratingId={rating.id}
+                              reviewUserId={rating.user_email}
+                              currentUserEmail={user.email}
+                              isAlreadyBoosted={!!rating.boosted_until && new Date(rating.boosted_until) > new Date()}
+                            />
+                          )}
                           </div>
                           </div>
                           </Card>

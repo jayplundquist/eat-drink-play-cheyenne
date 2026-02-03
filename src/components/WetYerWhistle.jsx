@@ -99,7 +99,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                 >
                   {/* Glass body - trapezoid shape */}
                   <path
-                    d="M 120 180 L 110 220 L 190 220 L 180 180 Z"
+                    d="M 100 180 L 130 220 L 170 220 L 200 180 Z"
                     fill="url(#glassGradient)"
                     stroke="#cbd5e1"
                     strokeWidth="3"
@@ -108,9 +108,9 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                   
                   {/* Glass base */}
                   <rect
-                    x="110"
+                    x="130"
                     y="220"
-                    width="80"
+                    width="40"
                     height="8"
                     fill="#94a3b8"
                     stroke="#64748b"
@@ -119,7 +119,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                   
                   {/* Liquid inside (amber whiskey color) - animates out */}
                   <motion.path
-                    d="M 122 195 L 116 215 L 184 215 L 178 195 Z"
+                    d="M 107 195 L 134 215 L 166 215 L 193 195 Z"
                     fill="#d97706"
                     opacity="0.9"
                     animate={{
@@ -136,7 +136,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                   
                   {/* Liquid shine */}
                   <motion.path
-                    d="M 125 197 L 120 210 L 135 210 L 130 197 Z"
+                    d="M 112 197 L 137 210 L 152 210 L 127 197 Z"
                     fill="url(#liquidShine)"
                     opacity="0.6"
                     animate={{
@@ -152,8 +152,8 @@ export default function WetYerWhistle({ venues, user, onSignInRequired }) {
                   <ellipse
                     cx="150"
                     cy="180"
-                    rx="30"
-                    ry="6"
+                    rx="50"
+                    ry="8"
                     fill="none"
                     stroke="#f1f5f9"
                     strokeWidth="2"

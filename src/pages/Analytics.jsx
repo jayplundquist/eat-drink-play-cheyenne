@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, MapPin, Star, MessageSquare, Eye } from "lucide-react";
+import { Users, MapPin, Star, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -39,10 +39,7 @@ export default function Analytics() {
     queryFn: () => base44.entities.Favorite.list(),
   });
 
-  const { data: siteVisits = [], isLoading: siteVisitsLoading } = useQuery({
-    queryKey: ['allSiteVisits'],
-    queryFn: () => base44.entities.SiteVisit.list(),
-  });
+
 
   const reviewsWithComments = ratings.filter(r => r.comment && r.comment.trim());
 
@@ -78,16 +75,9 @@ export default function Analytics() {
     {
       title: 'Total Favorites',
       value: favorites.length,
-      icon: Eye,
+      icon: MessageSquare,
       color: 'from-rose-500 to-rose-600',
       loading: favoritesLoading,
-    },
-    {
-      title: 'Total Site Visits',
-      value: siteVisits.length,
-      icon: Eye,
-      color: 'from-indigo-500 to-indigo-600',
-      loading: siteVisitsLoading,
     },
   ];
 

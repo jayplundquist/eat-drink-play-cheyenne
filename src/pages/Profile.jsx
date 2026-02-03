@@ -222,7 +222,7 @@ export default function Profile() {
                      ) : (
                        <>
                          <CardTitle className="text-2xl sm:text-3xl text-stone-800 truncate">
-                           {user.full_name || 'Anonymous User'}
+                           {user.display_name || user.full_name || 'Anonymous User'}
                          </CardTitle>
                          <CardDescription className="text-sm sm:text-base truncate">
                            {user.email}

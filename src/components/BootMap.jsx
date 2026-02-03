@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { Card } from "@/components/ui/card";
 import { Loader2, MapPin } from "lucide-react";
+import { motion } from 'framer-motion';
 
 // Fix leaflet default marker icons
 delete L.Icon.Default.prototype._getIconUrl;

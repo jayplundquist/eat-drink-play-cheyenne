@@ -229,7 +229,7 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Profile')} className="cursor-pointer">
+                      <Link to={createPageUrl('Profile') + '?section=boots'} className="cursor-pointer">
                         <MapPin className="w-4 h-4 mr-2" />
                         Found Boots
                       </Link>

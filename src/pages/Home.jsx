@@ -26,6 +26,7 @@ import SpinTheSpur from "../components/SpinTheSpur";
 import QuickDraw from "../components/QuickDraw";
 import WetYerWhistle from "../components/WetYerWhistle";
 import HatTip from "../components/HatTip";
+import { MessageCircle } from "lucide-react";
 import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {
@@ -237,6 +238,7 @@ export default function Home() {
             <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
               <QuickDraw 
                 venues={venues}
+                userRatings={userRatings}
                 user={user}
                 onSignInRequired={() => base44.auth.redirectToLogin()}
                 quickDrawCategories={quickDrawCategories}

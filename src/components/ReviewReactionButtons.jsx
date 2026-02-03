@@ -6,12 +6,14 @@ import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ReviewReactionButtons({ ratingId, userEmail }) {
-  const queryClient = useQueryClient();
+   if (!ratingId || !userEmail) return null;
 
-  const { data: reactions = [] } = useQuery({
-    queryKey: ['reviewReactions', ratingId],
-    queryFn: () => base44.entities.ReviewReaction.filter({ rating_id: ratingId }),
-  });
+   const queryClient = useQueryClient();
+
+   const { data: reactions = [] } = useQuery({
+     queryKey: ['reviewReactions', ratingId],
+     queryFn: () => base44.entities.ReviewReaction.filter({ rating_id: ratingId }),
+   });
 
   const toggleReactionMutation = useMutation({
     mutationFn: async (reactionType) => {

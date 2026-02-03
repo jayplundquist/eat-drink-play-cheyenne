@@ -47,7 +47,7 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
             <ChevronLeft className="w-5 h-5" />
           </Button>
 
-          <div className="w-80 overflow-hidden flex-shrink-0">
+          <div className="relative w-80 h-80 flex-shrink-0">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
@@ -55,7 +55,7 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -100 }}
                 transition={{ duration: 0.3 }}
-                className="w-80"
+                className="absolute inset-0"
               >
                 <VenueCard
                   venue={currentVenue}

@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2, MessageCircle } from "lucide-react";
+import { Trash2, MessageCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
 import moment from 'moment';
 
@@ -38,6 +38,30 @@ export default function ReviewComments({ reviewId, currentUser }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviewComments', reviewId] });
       toast.success('Comment deleted');
+    },
+  });
+
+  const toggleCommentReactionMutation = useMutation({
+    mutationFn: async ({ commentId, reactionType }) => {
+      const allReactions = await base44.entities.CommentReaction.filter({ comment_id: commentId });
+      const existing = allReactions.find(r => r.user_email === currentUser.email && r.reaction_type === reactionType);
+      
+      if (existing) {
+        await base44.entities.CommentReaction.delete(existing.id);
+      } else {
+        const userReaction = allReactions.find(r => r.user_email === currentUser.email);
+        if (userReaction) {
+          await base44.entities.CommentReaction.delete(userReaction.id);
+        }
+        await base44.entities.CommentReaction.create({
+          comment_id: commentId,
+          user_email: currentUser.email,
+          reaction_type: reactionType
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviewComments', reviewId] });
     },
   });
 
@@ -79,33 +103,66 @@ export default function ReviewComments({ reviewId, currentUser }) {
             <p className="text-xs text-stone-500">Loading comments...</p>
           ) : (
             <div className="space-y-2">
-              {comments.map((comment) => (
-                <div key={comment.id} className="bg-stone-50 rounded-lg p-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-semibold text-stone-800">
-                          {getUserName(comment.user_email)}
-                        </span>
-                        <span className="text-xs text-stone-500">
-                          {moment(comment.created_date).fromNow()}
-                        </span>
+              {comments.map((comment) => {
+                const commentReactionsQuery = useQuery({
+                  queryKey: ['commentReactions', comment.id],
+                  queryFn: () => base44.entities.CommentReaction.filter({ comment_id: comment.id }),
+                });
+                const commentReactions = commentReactionsQuery.data || [];
+                const thumbsUpCount = commentReactions.filter(r => r.reaction_type === 'thumbs_up').length;
+                const thumbsDownCount = commentReactions.filter(r => r.reaction_type === 'thumbs_down').length;
+                const userReaction = commentReactions.find(r => r.user_email === currentUser?.email);
+
+                return (
+                  <div key={comment.id} className="bg-stone-50 rounded-lg p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-semibold text-stone-800">
+                            {getUserName(comment.user_email)}
+                          </span>
+                          <span className="text-xs text-stone-500">
+                            {moment(comment.created_date).fromNow()}
+                          </span>
+                        </div>
+                        <p className="text-sm text-stone-700 mb-2">{comment.comment_text}</p>
+                        {currentUser && (
+                          <div className="flex gap-2">
+                            <Button
+                              variant={userReaction?.reaction_type === 'thumbs_up' ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => toggleCommentReactionMutation.mutate({ commentId: comment.id, reactionType: 'thumbs_up' })}
+                              className={`h-6 px-2 ${userReaction?.reaction_type === 'thumbs_up' ? 'bg-amber-600 hover:bg-amber-700' : 'border-stone-300'}`}
+                            >
+                              <ThumbsUp className="w-3 h-3 mr-1" />
+                              <span className="text-xs">{thumbsUpCount || 0}</span>
+                            </Button>
+                            <Button
+                              variant={userReaction?.reaction_type === 'thumbs_down' ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => toggleCommentReactionMutation.mutate({ commentId: comment.id, reactionType: 'thumbs_down' })}
+                              className={`h-6 px-2 ${userReaction?.reaction_type === 'thumbs_down' ? 'bg-amber-600 hover:bg-amber-700' : 'border-stone-300'}`}
+                            >
+                              <ThumbsDown className="w-3 h-3 mr-1" />
+                              <span className="text-xs">{thumbsDownCount || 0}</span>
+                            </Button>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-sm text-stone-700">{comment.comment_text}</p>
+                      {currentUser?.email === comment.user_email && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => deleteCommentMutation.mutate(comment.id)}
+                          className="h-6 w-6 text-rose-500 hover:text-rose-700"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      )}
                     </div>
-                    {currentUser?.email === comment.user_email && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteCommentMutation.mutate(comment.id)}
-                        className="h-6 w-6 text-rose-500 hover:text-rose-700"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 

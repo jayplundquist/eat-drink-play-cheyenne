@@ -187,9 +187,12 @@ export default function ActivityFeed() {
     .sort((a, b) => b.reactionCount - a.reactionCount)
     .slice(0, 5); // Limit to top 5 popular reviews
 
+  // Track seen IDs to prevent duplicates
+  const seenIds = new Set();
+
   const activityItems = [
     ...followedUserRatings
-      .filter(rating => rating.user_email !== currentUser?.email) // Don't duplicate current user's reviews
+      .filter(rating => rating.user_email !== currentUser?.email)
       .map(rating => ({
       type: 'review',
       data: rating,
@@ -239,7 +242,14 @@ export default function ActivityFeed() {
       ...item,
       isPopular: true
     }))
-  ].sort((a, b) => {
+  ]
+  .filter(item => {
+    const itemId = `${item.type}-${item.data.id}`;
+    if (seenIds.has(itemId)) return false;
+    seenIds.add(itemId);
+    return true;
+  })
+  .sort((a, b) => {
     // Boosted items first, then popular, then by timestamp
     if (a.isBoosted && !b.isBoosted) return -1;
     if (!a.isBoosted && b.isBoosted) return 1;

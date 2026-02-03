@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -10,14 +10,28 @@ import {
 } from "@/components/ui/tooltip";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0 }) {
+export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0, userEmail = null }) {
+  const [commentCount, setCommentCount] = useState(0);
+
   const { data: allBadges = [] } = useQuery({
     queryKey: ['badges'],
     queryFn: () => base44.entities.Badge.list(),
   });
 
+  const { data: userComments = [] } = useQuery({
+    queryKey: ['userComments', userEmail],
+    queryFn: () => userEmail ? base44.entities.ReviewComment.filter({ user_email: userEmail }) : [],
+    enabled: !!userEmail,
+  });
+
+  useEffect(() => {
+    setCommentCount(userComments.length);
+  }, [userComments]);
+
   const reviewBadges = allBadges.filter(b => b.type === 'review').sort((a, b) => a.min_count - b.min_count);
   const bootBadges = allBadges.filter(b => b.type === 'boot').sort((a, b) => a.min_count - b.min_count);
+  
+  const strongSilentTypeEarned = reviewCount >= 10 && commentCount === 0;
 
   return (
     <Card className="mb-6 border-stone-200">

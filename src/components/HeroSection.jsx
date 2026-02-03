@@ -4,6 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 
+function GameBox({ children }) {
+  return (
+    <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+      {children}
+    </div>
+  );
+}
+
 export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
   return (
     <div className="relative overflow-hidden text-white">

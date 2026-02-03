@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
         Heart, MapPin, Phone, Globe, Clock, 
-        ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users, Image, Loader2, PawPrint
+        ArrowLeft, DollarSign, Send, User, Pencil, AlertCircle, Flag, Trash2, Crown, Users, Image, Loader2, PawPrint, Tv
       } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -486,22 +486,40 @@ export default function VenueDetails() {
             )}
 
             {/* Critter Friendly Badge */}
-            {venue.critter_friendly && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 p-4">
-                  <div className="flex items-center gap-3">
-                    <PawPrint className="w-8 h-8 text-green-600" />
-                    <div>
-                      <h3 className="font-bold text-green-900">Critter Friendly</h3>
-                      <p className="text-sm text-green-700">Bring your furry friends! This venue welcomes pets.</p>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            )}
+             {venue.critter_friendly && (
+               <motion.div
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+               >
+                 <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 p-4">
+                   <div className="flex items-center gap-3">
+                     <PawPrint className="w-8 h-8 text-green-600" />
+                     <div>
+                       <h3 className="font-bold text-green-900">Critter Friendly</h3>
+                       <p className="text-sm text-green-700">Bring your furry friends! This venue welcomes pets.</p>
+                     </div>
+                   </div>
+                 </Card>
+               </motion.div>
+             )}
+
+             {/* Super Bowl Badge */}
+             {venue.broadcasts_superbowl && (
+               <motion.div
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+               >
+                 <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 p-4">
+                   <div className="flex items-center gap-3">
+                     <span className="text-3xl">🏈</span>
+                     <div>
+                       <h3 className="font-bold text-blue-900">Super Bowl Watch Party</h3>
+                       <p className="text-sm text-blue-700">Catch the big game here with great food and company!</p>
+                     </div>
+                   </div>
+                 </Card>
+               </motion.div>
+             )}
 
             {/* Description */}
             {venue.description && (

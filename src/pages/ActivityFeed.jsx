@@ -24,15 +24,21 @@ export default function ActivityFeed() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    base44.auth.me()
-      .then(setCurrentUser)
-      .catch(() => base44.auth.redirectToLogin());
+    const initPage = async () => {
+      try {
+        const user = await base44.auth.me();
+        setCurrentUser(user);
+        
+        const users = await base44.entities.User.list().catch(() => []);
+        setAllUsers(users);
+      } catch (error) {
+        base44.auth.redirectToLogin();
+        return;
+      }
+      setLoading(false);
+    };
     
-    base44.entities.User.list()
-      .then(users => setAllUsers(users))
-      .catch(() => {});
-    
-    setLoading(false);
+    initPage();
   }, []);
 
   const deletePhotoMutation = useMutation({

@@ -73,7 +73,7 @@ export default function QuickDraw({ venues, userRatings, user, onSignInRequired,
         </p>
         <Button 
           onClick={handleQuickDraw}
-          disabled={spinning || untriedCount === 0}
+          disabled={spinning || !user || untriedCount === 0}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
         >
           {spinning ? "Drawing..." : "Quick Draw"}

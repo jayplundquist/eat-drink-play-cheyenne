@@ -55,7 +55,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
         </p>
         <Button 
           onClick={handleWetYerWhistle}
-          disabled={spinning || drinkVenueCount === 0}
+          disabled={spinning || !user || drinkVenueCount === 0}
           className="w-full bg-rose-600 hover:bg-rose-700 text-white"
         >
           {spinning ? "Pouring..." : "Wet Yer Whistle"}

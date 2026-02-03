@@ -158,13 +158,17 @@ export default function ActivityFeedItem({
                   </p>
                 )}
                 <div className="flex items-center justify-between">
-                  <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser?.email} />
-                  <ReviewBoostButton
-                    ratingId={item.data.id}
-                    userEmail={item.user_email}
-                    currentUserEmail={currentUser?.email}
-                    isAlreadyBoosted={item.isBoosted}
-                  />
+                  {currentUser?.email && (
+                    <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
+                  )}
+                  {item.user_email && (
+                    <ReviewBoostButton
+                      ratingId={item.data.id}
+                      userEmail={item.user_email}
+                      currentUserEmail={currentUser?.email}
+                      isAlreadyBoosted={item.isBoosted}
+                    />
+                  )}
                 </div>
                 {item.data.image_urls && item.data.image_urls.length > 0 && (
                   <div className="grid grid-cols-2 gap-2 mt-3">
@@ -188,7 +192,7 @@ export default function ActivityFeedItem({
                     ))}
                   </div>
                 )}
-                <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
+                {currentUser && <ReviewComments reviewId={item.data.id} currentUser={currentUser} />}
               </div>
             </div>
           </CardContent>

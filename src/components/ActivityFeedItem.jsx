@@ -159,12 +159,14 @@ export default function ActivityFeedItem({
                 )}
                 <div className="flex items-center justify-between mt-2">
                    {currentUser && <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />}
-                   <ReviewBoostButton
-                     ratingId={item.data.id}
-                     userEmail={item.user_email}
-                     currentUserEmail={currentUser?.email}
-                     isAlreadyBoosted={item.isBoosted}
-                   />
+                   {currentUser && item.user_email === currentUser.email && !item.isBoosted && (
+                     <ReviewBoostButton
+                       ratingId={item.data.id}
+                       userEmail={item.user_email}
+                       currentUserEmail={currentUser.email}
+                       isAlreadyBoosted={item.isBoosted}
+                     />
+                   )}
                 </div>
                 {currentUser && <ReviewComments reviewId={item.data.id} currentUser={currentUser} />}
                  {item.data.image_urls && item.data.image_urls.length > 0 && (

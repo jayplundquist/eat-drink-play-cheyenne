@@ -14,6 +14,7 @@ import BootRating from "../components/BootRating";
 import UserBadge from "../components/UserBadge";
 import ReviewReactionButtons from "../components/ReviewReactionButtons";
 import ReviewBoostButton from "../components/ReviewBoostButton";
+import ReviewComments from "../components/ReviewComments";
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -480,6 +481,7 @@ export default function ActivityFeed() {
                                   ))}
                                 </div>
                               )}
+                              <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
                             </>
                           )}
 

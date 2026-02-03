@@ -53,7 +53,7 @@ export default function UserBadge({ reviewCount = 0, avgRating = 0, bootVisitCou
     return earned;
   }, [allBadges, reviewCount, bootVisitCount, userRatings]);
 
-  if (earnedBadges.length === 0) return null;
+  if (earnedBadges.length === 0) return <></>;
 
   return (
     <div className={`flex gap-2 flex-wrap items-center ${size === 'sm' ? '' : ''}`}>

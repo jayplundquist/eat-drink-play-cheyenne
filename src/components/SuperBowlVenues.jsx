@@ -87,37 +87,9 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
           >
             <ChevronRight className="w-5 h-5" />
           </Button>
-        </div>
-      </div>
-
-      {/* Football field styling */}
-      <div className="football-field p-8 border-t-4 border-b-4 border-green-900 rounded-lg">
-        <div className="field-line"></div>
-        <div className="relative z-10 text-center text-white">
-          <h3 className="text-2xl font-bold" style={{ fontFamily: 'Rye, serif' }}>Game Day at Cheyenne</h3>
-          <p className="mt-2">Join the celebration at these Super Bowl watch parties</p>
-        </div>
-      </div>
-
-      <style>{`
-        .football-field {
-          background: linear-gradient(135deg, #15803d 0%, #166534 100%);
-          position: relative;
-          box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
-        }
-
-        .field-line {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: 
-            repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(255, 255, 255, 0.1) 35px, rgba(255, 255, 255, 0.1) 40px),
-            repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255, 255, 255, 0.05) 15px, rgba(255, 255, 255, 0.05) 16px);
-          pointer-events: none;
-        }
-      `}</style>
+          </div>
+          </div>
+          </div>
     </section>
   );
 }

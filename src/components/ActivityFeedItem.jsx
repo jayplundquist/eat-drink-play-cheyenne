@@ -157,40 +157,42 @@ export default function ActivityFeedItem({
                     "{item.data.comment}"
                   </p>
                 )}
-                {currentUser?.email && (
-                  <div className="flex items-center justify-between mt-2">
-                    <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
-                    <ReviewBoostButton
-                      ratingId={item.data.id}
-                      userEmail={item.user_email}
-                      currentUserEmail={currentUser?.email}
-                      isAlreadyBoosted={item.isBoosted}
-                    />
-                  </div>
-                )}
-                {item.data.image_urls && item.data.image_urls.length > 0 && (
-                  <div className="grid grid-cols-2 gap-2 mt-3">
-                    {item.data.image_urls.map((url, idx) => (
-                      <div key={idx} className="relative group">
-                        <img src={url} alt={`Review photo ${idx}`} className="w-full h-24 object-cover rounded-md" />
-                        {currentUser && currentUser.role === 'admin' && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (confirm('Delete this photo?')) {
-                                deletePhotoMutation.mutate(item.data.id, url);
-                              }
-                            }}
-                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            ×
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {currentUser && <ReviewComments reviewId={item.data.id} currentUser={currentUser} />}
+                {currentUser && (
+                   <>
+                     <div className="flex items-center justify-between mt-2">
+                       <ReviewReactionButtons ratingId={item.data.id} userEmail={currentUser.email} />
+                       <ReviewBoostButton
+                         ratingId={item.data.id}
+                         userEmail={item.user_email}
+                         currentUserEmail={currentUser.email}
+                         isAlreadyBoosted={item.isBoosted}
+                       />
+                     </div>
+                     <ReviewComments reviewId={item.data.id} currentUser={currentUser} />
+                   </>
+                 )}
+                 {item.data.image_urls && item.data.image_urls.length > 0 && (
+                   <div className="grid grid-cols-2 gap-2 mt-3">
+                     {item.data.image_urls.map((url, idx) => (
+                       <div key={idx} className="relative group">
+                         <img src={url} alt={`Review photo ${idx}`} className="w-full h-24 object-cover rounded-md" />
+                         {currentUser && currentUser.role === 'admin' && (
+                           <button
+                             type="button"
+                             onClick={() => {
+                               if (confirm('Delete this photo?')) {
+                                 deletePhotoMutation.mutate(item.data.id, url);
+                               }
+                             }}
+                             className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                           >
+                             ×
+                           </button>
+                         )}
+                       </div>
+                     ))}
+                   </div>
+                 )}
               </div>
             </div>
           </CardContent>

@@ -25,14 +25,14 @@ export default function ReviewComments({ reviewId, currentUser }) {
    });
 
    const { data: allCommentReactions = [] } = useQuery({
-     queryKey: ['allCommentReactions', reviewId, comments.map(c => c.id).join(',')],
+     queryKey: ['allCommentReactions', reviewId],
      queryFn: async () => {
        if (comments.length === 0) return [];
        const allReactions = await base44.entities.CommentReaction.list();
        const commentIds = comments.map(c => c.id);
        return allReactions.filter(r => commentIds.includes(r.comment_id));
      },
-     enabled: !!reviewId,
+     enabled: !!reviewId && comments.length > 0,
    });
 
    const createCommentMutation = useMutation({

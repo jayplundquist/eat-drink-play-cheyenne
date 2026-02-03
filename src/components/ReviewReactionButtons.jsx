@@ -10,11 +10,14 @@ export default function ReviewReactionButtons({ ratingId, userEmail }) {
 
    const { data: reactions = [] } = useQuery({
      queryKey: ['reviewReactions', ratingId],
-     queryFn: () => base44.entities.ReviewReaction.filter({ rating_id: ratingId }),
+     queryFn: () => {
+       if (!ratingId) return [];
+       return base44.entities.ReviewReaction.filter({ rating_id: ratingId });
+     },
      enabled: !!ratingId,
    });
 
-  const toggleReactionMutation = useMutation({
+   const toggleReactionMutation = useMutation({
     mutationFn: async (reactionType) => {
       const existing = reactions.find(r => r.user_email === userEmail && r.reaction_type === reactionType);
       if (existing) {

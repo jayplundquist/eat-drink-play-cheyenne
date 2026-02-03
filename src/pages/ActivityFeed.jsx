@@ -87,7 +87,7 @@ export default function ActivityFeed() {
 
   const { data: venues = [] } = useQuery({
     queryKey: ['venues'],
-    queryFn: () => base44.entities.Venue.list(),
+    queryFn: () => base44.entities.Venue.list('-created_date', 200),
   });
 
   const { data: userFollows = [] } = useQuery({

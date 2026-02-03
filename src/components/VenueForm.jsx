@@ -799,7 +799,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             </Button>
               <Button
                 type="submit"
-                disabled={!formData.name || !(formData.categories || []).length || isSaving || optionsLoading}
+                disabled={!formData.name || !(formData.categories || []).length || isSaving}
                 className="bg-amber-600 hover:bg-amber-700 text-white"
               >
                 <Save className="w-4 h-4 mr-2" />

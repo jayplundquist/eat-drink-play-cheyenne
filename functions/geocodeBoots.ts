@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     return Response.json({ 
       message: `Geocoded ${updated} boots`,
       updated,
-      total: bootsToGeocode.length
+      total: boots.length
     });
   } catch (error) {
     console.error('Geocoding error:', error);

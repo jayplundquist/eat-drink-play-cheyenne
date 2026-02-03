@@ -50,6 +50,7 @@ const foodTypes = [
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout, onDelete }) {
    const [formData, setFormData] = useState(venue ? {
          ...venue,
+          categories: venue.categories && venue.categories.length > 0 ? venue.categories : [],
           menu_pictures: venue.menu_pictures || [],
           locked_fields: venue.locked_fields || [],
           critter_friendly: venue.critter_friendly ?? false,

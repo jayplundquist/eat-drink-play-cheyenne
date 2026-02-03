@@ -19,7 +19,8 @@ import BootCheckList from "../components/BootCheckList";
 
 export default function Profile() {
   const urlParams = new URLSearchParams(window.location.search);
-  const defaultTab = urlParams.get('defaultValue') || 'favorites';
+  const sectionParam = urlParams.get('section');
+  const defaultTab = sectionParam === 'boots' ? 'bigboots' : urlParams.get('defaultValue') || 'favorites';
   const tabsRef = React.useRef(null);
 
   const [user, setUser] = useState(null);

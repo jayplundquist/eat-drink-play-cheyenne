@@ -111,7 +111,7 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                    </div>
                  </TooltipTrigger>
                  <TooltipContent>
-                   <p>Written 10+ reviews but never commented on others</p>
+                   <p>10+ reviews submitted without adding comments</p>
                  </TooltipContent>
                </Tooltip>
              </TooltipProvider>

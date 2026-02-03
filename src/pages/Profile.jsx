@@ -75,7 +75,10 @@ export default function Profile() {
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: (data) => base44.auth.updateMe(data),
+    mutationFn: async (data) => {
+      await base44.auth.updateMe(data);
+      return await base44.auth.me();
+    },
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
       setEditMode(false);

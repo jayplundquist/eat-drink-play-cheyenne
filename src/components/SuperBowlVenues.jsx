@@ -100,9 +100,9 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
         </Link>
 
         {/* Auto-scrolling venue carousel */}
-        <div className="football-field p-6 border-t-4 border-green-900 overflow-hidden">
+        <div className="football-field p-6 border-t-4 border-green-900">
           <div className="field-line"></div>
-          <div className="relative z-10 flex items-center justify-center gap-4 overflow-hidden">
+          <div className="relative z-10 flex items-center justify-center gap-4">
             <Button
               variant="outline"
               size="icon"

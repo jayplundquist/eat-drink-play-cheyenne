@@ -102,38 +102,39 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
         {/* Auto-scrolling venue carousel */}
         <div className="football-field p-6 border-t-4 border-green-900">
           <div className="field-line"></div>
-          <div className="relative z-10 flex items-center justify-center gap-4">
+          <div className="relative z-10 flex items-center justify-center gap-6">
             <Button
               variant="outline"
               size="icon"
               onClick={() => setCurrentIndex(prev => (prev - 1 + superBowlVenues.length) % superBowlVenues.length)}
-              className="border-green-300 text-green-600 hover:bg-green-50"
+              className="border-green-300 text-green-600 hover:bg-green-50 flex-shrink-0"
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
 
-            {currentVenue && (
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="w-full max-w-sm"
-              >
-                <VenueCard
-                  venue={currentVenue}
-                  isFavorite={isFavorite(currentVenue.id)}
-                  onToggleFavorite={() => user ? onToggleFavorite(currentVenue.id) : window.location.href = createPageUrl('Home')}
-                />
-              </motion.div>
-            )}
+            <div className="w-full max-w-sm">
+              {currentVenue && (
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <VenueCard
+                    venue={currentVenue}
+                    isFavorite={isFavorite(currentVenue.id)}
+                    onToggleFavorite={() => user ? onToggleFavorite(currentVenue.id) : window.location.href = createPageUrl('Home')}
+                  />
+                </motion.div>
+              )}
+            </div>
 
             <Button
               variant="outline"
               size="icon"
               onClick={() => setCurrentIndex(prev => (prev + 1) % superBowlVenues.length)}
-              className="border-green-300 text-green-600 hover:bg-green-50"
+              className="border-green-300 text-green-600 hover:bg-green-50 flex-shrink-0"
             >
               <ChevronRight className="w-5 h-5" />
             </Button>

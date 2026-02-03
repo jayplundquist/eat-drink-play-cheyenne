@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { BootRating } from './BootRating';
+import BootRating from './BootRating';
 
 const categoryLabels = {
   restaurant: "Restaurant",

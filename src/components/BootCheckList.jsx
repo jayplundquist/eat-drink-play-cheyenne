@@ -143,6 +143,14 @@ export default function BootCheckList({ user }) {
         </div>
       </div>
 
+      {/* Boot Map */}
+      {bootsWithCoords.length > 0 && (
+        <div>
+          <h3 className="text-xl font-bold text-stone-800 mb-3">Find the Nearest Boot</h3>
+          <BootMap boots={bootsWithCoords} />
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {boots.map((boot, i) => {
           const visited = isVisited(boot.name);

@@ -24,6 +24,7 @@ import VenueCard from "../components/VenueCard";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
 import HatTip from "../components/HatTip";
+import WetYerWhistle from "../components/WetYerWhistle";
 import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {
@@ -194,15 +195,24 @@ export default function Home() {
       />
 
       {/* Spin the Spur & Quick Draw */}
-       {!searchQuery && activeTab === 'all' && (
-         <SpinTheSpur 
-           favorites={userFavorites}
-           venues={venues}
-           userRatings={userRatings}
-           user={user}
-           onSignInRequired={() => base44.auth.redirectToLogin()}
-         />
-       )}
+      {!searchQuery && activeTab === 'all' && (
+        <SpinTheSpur 
+          favorites={userFavorites}
+          venues={venues}
+          userRatings={userRatings}
+          user={user}
+          onSignInRequired={() => base44.auth.redirectToLogin()}
+        />
+      )}
+
+      {/* Wet Yer Whistle */}
+      {!searchQuery && activeTab === 'all' && (
+        <WetYerWhistle 
+          venues={venues}
+          user={user}
+          onSignInRequired={() => base44.auth.redirectToLogin()}
+        />
+      )}
 
        {/* The Hitching Post */}
        {!searchQuery && activeTab === 'all' && (

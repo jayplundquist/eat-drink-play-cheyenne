@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -8,6 +8,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function UserBadge({ reviewCount = 0, avgRating = 0, bootVisitCount = 0, userRatings = [], size = 'default' }) {
   const { data: allBadges = [] } = useQuery({

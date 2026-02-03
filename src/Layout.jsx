@@ -180,9 +180,15 @@ export default function Layout({ children, currentPageName }) {
                         Big Boots
                       </Link>
                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageReports')} className="cursor-pointer">
+                        <Flag className="w-4 h-4 mr-2" />
+                        User Reports
+                      </Link>
+                    </DropdownMenuItem>
+                    </DropdownMenuContent>
+                    </DropdownMenu>
+                    )}
             </div>
 
             {/* User Menu */}

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin, PawPrint, Star } from "lucide-react";
+import { X, Plus, Save, Upload, Loader2, Check, ChevronsUpDown, Zap, Lock, Unlock, MapPin, PawPrint, Star, Tv } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -674,6 +674,30 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                       <Star className="w-4 h-4 fill-current" />
                     </div>
                     {formData.veteran_owned ? 'Veteran Owned ✓' : 'Mark as Veteran Owned'}
+                  </Button>
+                </div>
+              )}
+
+          {/* Super Bowl Broadcasts - Feature */}
+              {venue && (user?.is_premium || user?.role === 'admin') && (
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-300 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🏈</span>
+                      <Label className="text-green-900 font-semibold">Super Bowl Watch Party</Label>
+                    </div>
+                  </div>
+                  <p className="text-sm text-green-700">
+                    Will you be broadcasting the Super Bowl? Let fans know where to watch the game!
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => handleChange('broadcasts_superbowl', !formData.broadcasts_superbowl)}
+                    variant={formData.broadcasts_superbowl ? "default" : "outline"}
+                    className={formData.broadcasts_superbowl ? "w-full bg-green-600 hover:bg-green-700 text-white" : "w-full border-green-300 text-green-700 hover:bg-green-50"}
+                  >
+                    <span className="mr-2">🏈</span>
+                    {formData.broadcasts_superbowl ? 'Broadcasting Super Bowl ✓' : 'Mark as Super Bowl Venue'}
                   </Button>
                 </div>
               )}

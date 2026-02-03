@@ -125,41 +125,43 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
              )}
 
             {/* The Duster Badge */}
-           <motion.div
-             initial={{ opacity: 0, scale: 0.8 }}
-             animate={{ opacity: 1, scale: 1 }}
-           >
-             <TooltipProvider>
-               <Tooltip>
-                 <TooltipTrigger asChild>
-                   <div 
-                     className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
-                       dusterEarned
-                         ? 'bg-amber-50 border-amber-400'
-                         : 'bg-stone-100 border-stone-300'
-                     }`}
-                   >
-                     <div className={`text-4xl mb-2 ${dusterEarned ? '' : 'opacity-30'}`}>
-                       🌪️
-                     </div>
-                     <div className={`text-xs font-semibold ${
-                       dusterEarned ? 'text-amber-900' : 'text-stone-600'
-                     }`}>
-                       The Duster
-                     </div>
-                     <div className={`text-xs mt-1 ${
-                       dusterEarned ? 'text-amber-800' : 'text-stone-500'
-                     }`}>
-                       25+ low ratings
-                     </div>
-                   </div>
-                 </TooltipTrigger>
-                 <TooltipContent>
-                   <p>25+ ratings given at 1-2 stars</p>
-                 </TooltipContent>
-               </Tooltip>
-             </TooltipProvider>
-           </motion.div>
+            {dusterBadge && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
+                        dusterEarned
+                          ? 'bg-amber-50 border-amber-400'
+                          : 'bg-stone-100 border-stone-300'
+                      }`}
+                    >
+                      <div className={`text-4xl mb-2 ${dusterEarned ? '' : 'opacity-30'}`}>
+                        🌪️
+                      </div>
+                      <div className={`text-xs font-semibold ${
+                        dusterEarned ? 'text-amber-900' : 'text-stone-600'
+                      }`}>
+                        {dusterBadge.name}
+                      </div>
+                      <div className={`text-xs mt-1 ${
+                        dusterEarned ? 'text-amber-800' : 'text-stone-500'
+                      }`}>
+                        {dusterBadge.min_count}+ low ratings
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{dusterBadge.description}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </motion.div>
+            )}
 
            {/* Boot Challenge Badges */}
           <div>

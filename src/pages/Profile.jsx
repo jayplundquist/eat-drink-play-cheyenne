@@ -43,7 +43,7 @@ export default function Profile() {
     base44.auth.me()
       .then(userData => {
         setUser(userData);
-        setFormData({ full_name: userData.full_name || '' });
+        setFormData({ full_name: userData.display_name || userData.full_name || '' });
         setLoading(false);
       })
       .catch(() => {

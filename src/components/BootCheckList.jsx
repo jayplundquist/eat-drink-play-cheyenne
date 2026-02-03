@@ -94,6 +94,36 @@ export default function BootCheckList({ user }) {
   const isVisited = (bootName) => visits.some(v => v.boot_name === bootName);
   const getVisit = (bootName) => visits.find(v => v.boot_name === bootName);
 
+  // Geocode boots to get coordinates for map
+  useEffect(() => {
+    const geocodeBoots = async () => {
+      if (boots.length === 0) return;
+
+      const results = [];
+      for (const boot of boots) {
+        try {
+          const encoded = encodeURIComponent(boot.address);
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`
+          );
+          const data = await response.json();
+          if (data.length > 0) {
+            results.push({
+              ...boot,
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+            });
+          }
+        } catch (err) {
+          console.error('Geocoding error for', boot.name, err);
+        }
+      }
+      setBootsWithCoords(results);
+    };
+
+    geocodeBoots();
+  }, [boots]);
+
   const visitedCount = visits.length;
   const totalCount = boots.length;
 

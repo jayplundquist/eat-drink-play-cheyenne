@@ -65,6 +65,7 @@ import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
+import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +88,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
+    "SuperBowlWatchParty": SuperBowlWatchParty,
 }
 
 export const pagesConfig = {

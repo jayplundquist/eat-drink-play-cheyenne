@@ -294,20 +294,20 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                  <Label htmlFor="description">Description</Label>
                  {renderFieldLockButton('description')}
                </div>
-               <span className="text-sm text-stone-500">{(formData.description || '').length}/250</span>
+               <span className="text-sm text-stone-500">{(formData.description || '').length}/500</span>
              </div>
              <Textarea
                id="description"
                value={formData.description}
                onChange={(e) => {
                  const value = e.target.value;
-                 if (value.length <= 250) {
+                 if (value.length <= 500) {
                    handleChange('description', value);
                  }
                }}
                placeholder="Tell visitors about this place..."
                rows={4}
-               maxLength={250}
+               maxLength={500}
                disabled={!isFieldEditable('description')}
              />
            </div>

@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -37,6 +37,7 @@ export default function Home() {
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
   const { data: customOptions = [] } = useQuery({
     queryKey: ['customVenueOptions'],
@@ -67,9 +68,18 @@ export default function Home() {
 
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => setUser(null));
-  }, []);
+    useEffect(() => {
+      base44.auth.me().then(setUser).catch(() => setUser(null));
+    }, []);
+
+    useEffect(() => {
+      if (recentReviews.length > 0) {
+        const interval = setInterval(() => {
+          setReviewIndex(prev => (prev + 1) % recentReviews.length);
+        }, 5000);
+        return () => clearInterval(interval);
+      }
+    }, [recentReviews.length]);
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['venues'],
@@ -259,37 +269,58 @@ export default function Home() {
             <Sparkles className="w-5 h-5 text-amber-800" />
             <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {recentReviews.map((review, i) => {
-              const venue = venues.find(v => v.id === review.venue_id);
-              return (
-                <motion.div
-                  key={review.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
+          <div className="flex items-center justify-center gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setReviewIndex(prev => (prev - 1 + recentReviews.length) % recentReviews.length)}
+              className="border-amber-700 text-amber-700 hover:bg-amber-50"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+
+            <motion.div
+              key={reviewIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-sm"
+            >
+              {(() => {
+                const review = recentReviews[reviewIndex];
+                const venue = venues.find(v => v.id === review.venue_id);
+                return (
                   <Link to={createPageUrl(`VenueDetails?id=${review.venue_id}`)}>
-                    <div className="bg-white rounded-lg border border-amber-200 p-4 h-full hover:shadow-md transition-shadow cursor-pointer">
-                      <h3 className="font-semibold text-amber-900 truncate text-sm mb-3">{venue?.name || 'Venue'}</h3>
+                    <div className="bg-white rounded-lg border border-amber-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
+                      <h3 className="font-semibold text-amber-900 text-lg mb-3">{venue?.name || 'Venue'}</h3>
                       <div className="flex gap-1 mb-3">
                         {[...Array(5)].map((_, idx) => (
-                          <div key={idx} className="w-5 h-5">
+                          <div key={idx} className="w-6 h-6">
                             <CowboyBoot filled={idx < review.boots} size="sm" />
                           </div>
                         ))}
                       </div>
                       {review.comment && (
-                        <p className="text-stone-600 text-xs line-clamp-2">{review.comment}</p>
+                        <p className="text-stone-600 text-sm line-clamp-3">{review.comment}</p>
                       )}
-                      <p className="text-xs text-stone-400 mt-3">
+                      <p className="text-sm text-stone-400 mt-4">
                         by {review.user_email?.split('@')[0]}
                       </p>
                     </div>
                   </Link>
-                </motion.div>
-              );
-            })}
+                );
+              })()}
+            </motion.div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setReviewIndex(prev => (prev + 1) % recentReviews.length)}
+              className="border-amber-700 text-amber-700 hover:bg-amber-50"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
           </div>
         </section>
       )}

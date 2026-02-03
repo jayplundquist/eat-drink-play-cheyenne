@@ -378,12 +378,13 @@ export default function VenueDetails() {
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Header Image */}
-      {venue.image_url && (
+      {venue.image_url && !imageLoadError && (
         <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
           <img
             src={venue.image_url}
             alt={venue.name}
             className="w-full h-full object-cover"
+            onError={() => setImageLoadError(true)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         

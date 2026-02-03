@@ -11,12 +11,12 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (superBowlVenues.length === 0) return;
+    if (superBowlVenues.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % superBowlVenues.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [superBowlVenues.length]);
+  }, [superBowlVenues]);
 
   if (superBowlVenues.length === 0) return null;
 

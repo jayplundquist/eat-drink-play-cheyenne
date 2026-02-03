@@ -19,6 +19,12 @@ const bootIcon = new L.Icon({
   popupAnchor: [0, -16],
 });
 
+const bouncingBootIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48c3R5bGU+QGtleWZyYW1lcyBib3VuY2Uge30lLDEwMCV7dHJhbnNmb3JtOnRyYW5zbGF0ZVkoMCl9NTAle3RyYW5zZm9ybTp0cmFuc2xhdGVZKC04cHgpfX0udGV4dHtmb250LXNpemU6MjRweDthbmltYXRpb246Ym91bmNlIDAuNnMgaW5maW5pdGU7fTwvc3R5bGU+PHRleHQgY2xhc3M9InRleHQiIHg9IjE2IiB5PSIyNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+CjvCrDwvdGV4dD48L3N2Zz4=',
+  iconSize: [32, 32],
+  popupAnchor: [0, -16],
+});
+
 export default function BootMap({ boots = [] }) {
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);

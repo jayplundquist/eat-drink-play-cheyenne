@@ -173,12 +173,22 @@ export default function ManageVenues() {
               </p>
             </div>
             
-            <Link to={createPageUrl('AddVenue')}>
-              <Button className="bg-amber-600 hover:bg-amber-700 text-white">
-                <Plus className="w-5 h-5 mr-2" />
-                Add New Venue
+            <div className="flex gap-2">
+              <Button 
+                variant="outline"
+                onClick={() => uncheckSuperBowlMutation.mutate()}
+                disabled={uncheckSuperBowlMutation.isPending || venues.filter(v => v.broadcasts_superbowl).length === 0}
+                className="border-white text-white hover:bg-white/10"
+              >
+                Uncheck All Super Bowl
               </Button>
-            </Link>
+              <Link to={createPageUrl('AddVenue')}>
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+                  <Plus className="w-5 h-5 mr-2" />
+                  Add New Venue
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

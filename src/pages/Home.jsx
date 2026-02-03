@@ -118,10 +118,9 @@ export default function Home() {
 
   const submitSuggestionMutation = useMutation({
     mutationFn: async () => {
-      await base44.integrations.Core.SendEmail({
-        to: 'support@eatdrinkplaycheyenne.com',
-        subject: 'New Suggestion from Cheyenne Guide',
-        body: `User: ${user?.email || 'Anonymous'}\n\nSuggestion:\n${suggestion}`
+      await base44.entities.Suggestion.create({
+        user_email: user?.email || 'anonymous',
+        suggestion_text: suggestion
       });
     },
     onSuccess: () => {

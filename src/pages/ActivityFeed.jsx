@@ -162,6 +162,28 @@ export default function ActivityFeed() {
     queryFn: () => base44.entities.Rating.list('-created_date', 100),
   });
 
+  // Calculate reaction counts per review
+  const reactionCounts = allReactions.reduce((acc, reaction) => {
+    acc[reaction.rating_id] = (acc[reaction.rating_id] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Get popular reviews (sorted by reaction count)
+  const popularReviews = allRatings
+    .filter(rating => reactionCounts[rating.id] >= 3) // Reviews with 3+ reactions
+    .filter(rating => !followedUserRatings.find(r => r.id === rating.id)) // Exclude already shown reviews
+    .map(rating => ({
+      type: 'review',
+      data: rating,
+      timestamp: rating.updated_date,
+      user_email: rating.user_email,
+      isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
+      isOwn: rating.user_email === currentUser?.email,
+      reactionCount: reactionCounts[rating.id]
+    }))
+    .sort((a, b) => b.reactionCount - a.reactionCount)
+    .slice(0, 5); // Limit to top 5 popular reviews
+
   const activityItems = [
     ...followedUserRatings.map(rating => ({
       type: 'review',
@@ -169,7 +191,8 @@ export default function ActivityFeed() {
       timestamp: rating.updated_date,
       user_email: rating.user_email,
       isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-      isOwn: rating.user_email === currentUser?.email
+      isOwn: rating.user_email === currentUser?.email,
+      isPopular: false
     })),
     ...followedUserFavorites.map(fav => ({
       type: 'favorite',
@@ -177,7 +200,8 @@ export default function ActivityFeed() {
       timestamp: fav.updated_date,
       user_email: fav.user_email,
       isBoosted: false,
-      isOwn: false
+      isOwn: false,
+      isPopular: false
     })),
     ...followedBootShares.map(share => ({
       type: 'boot_share',
@@ -185,7 +209,8 @@ export default function ActivityFeed() {
       timestamp: share.shared_date,
       user_email: share.user_email,
       isBoosted: false,
-      isOwn: false
+      isOwn: false,
+      isPopular: false
     })),
     ...currentUserRatings.map(rating => ({
       type: 'review',
@@ -193,7 +218,8 @@ export default function ActivityFeed() {
       timestamp: rating.updated_date,
       user_email: rating.user_email,
       isBoosted: rating.boosted_until && new Date(rating.boosted_until) > new Date(),
-      isOwn: true
+      isOwn: true,
+      isPopular: false
     })),
     ...currentUserBootShares.map(share => ({
       type: 'boot_share',
@@ -201,12 +227,19 @@ export default function ActivityFeed() {
       timestamp: share.shared_date,
       user_email: share.user_email,
       isBoosted: false,
-      isOwn: true
+      isOwn: true,
+      isPopular: false
+    })),
+    ...popularReviews.map(item => ({
+      ...item,
+      isPopular: true
     }))
   ].sort((a, b) => {
-    // Boosted items first, then by timestamp
+    // Boosted items first, then popular, then by timestamp
     if (a.isBoosted && !b.isBoosted) return -1;
     if (!a.isBoosted && b.isBoosted) return 1;
+    if (a.isPopular && !b.isPopular) return -1;
+    if (!a.isPopular && b.isPopular) return 1;
     return new Date(b.timestamp) - new Date(a.timestamp);
   });
 

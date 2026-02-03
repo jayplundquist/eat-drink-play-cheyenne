@@ -258,7 +258,7 @@ export default function Home() {
 
        {/* Hat Tip Section - Trending Venues */}
        {!searchQuery && activeTab === 'all' && (
-         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-2">
+         <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-4 py-0">
            <HatTip 
              venues={venues}
              favorites={favorites}

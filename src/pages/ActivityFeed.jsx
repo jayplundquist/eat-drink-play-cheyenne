@@ -10,11 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
-import BootRating from "../components/BootRating";
-import UserBadge from "../components/UserBadge";
-import ReviewReactionButtons from "../components/ReviewReactionButtons";
-import ReviewBoostButton from "../components/ReviewBoostButton";
-import ReviewComments from "../components/ReviewComments";
+import ActivityFeedItem from "../components/ActivityFeedItem";
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);

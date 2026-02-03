@@ -22,25 +22,21 @@ export default function Analytics() {
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['allVenues'],
     queryFn: () => base44.entities.Venue.list(),
-    enabled: !!user && user.role === 'admin',
   });
 
   const { data: ratings = [], isLoading: ratingsLoading } = useQuery({
     queryKey: ['allRatings'],
     queryFn: () => base44.entities.Rating.list(),
-    enabled: !!user && user.role === 'admin',
   });
 
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ['allUsers'],
     queryFn: () => base44.entities.User.list(),
-    enabled: !!user && user.role === 'admin',
   });
 
   const { data: favorites = [], isLoading: favoritesLoading } = useQuery({
     queryKey: ['allFavorites'],
     queryFn: () => base44.entities.Favorite.list(),
-    enabled: !!user && user.role === 'admin',
   });
 
   const reviewsWithComments = ratings.filter(r => r.comment && r.comment.trim());
@@ -88,25 +84,6 @@ export default function Analytics() {
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <div className="text-center">
           <Skeleton className="h-8 w-48 mx-auto" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!user || user.role !== 'admin') {
-    return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-stone-800 mb-4">Admin Access Required</h2>
-          <p className="text-stone-600 mb-6">You need admin privileges to view analytics.</p>
-          <div className="flex gap-3 justify-center">
-            <Button onClick={() => base44.auth.redirectToLogin()} variant="outline">
-              Sign In
-            </Button>
-            <Link to={createPageUrl('Home')}>
-              <Button variant="outline">Back to Home</Button>
-            </Link>
-          </div>
         </div>
       </div>
     );

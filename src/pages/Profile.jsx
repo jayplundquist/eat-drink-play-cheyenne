@@ -76,11 +76,15 @@ export default function Profile() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
+      console.log('Updating profile with:', data);
       const result = await base44.auth.updateMe(data);
+      console.log('Update result:', result);
       const updated = await base44.auth.me();
+      console.log('Refetched user:', updated);
       return updated;
     },
     onSuccess: (updatedUser) => {
+      console.log('Success, setting user to:', updatedUser);
       setUser(updatedUser);
       setFormData({ full_name: updatedUser.full_name || '' });
       setEditMode(false);

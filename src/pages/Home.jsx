@@ -87,14 +87,12 @@ export default function Home() {
 
   const { data: userFavorites = [] } = useQuery({
     queryKey: ['userFavorites', user?.email],
-    queryFn: () => user ? base44.entities.Favorite.filter({ user_email: user.email }) : [],
-    enabled: !!user,
+    queryFn: () => user ? base44.entities.Favorite.filter({ user_email: user.email }) : Promise.resolve([]),
   });
 
   const { data: userRatings = [] } = useQuery({
     queryKey: ['userRatings', user?.email],
-    queryFn: () => user ? base44.entities.Rating.filter({ user_email: user.email }) : [],
-    enabled: !!user,
+    queryFn: () => user ? base44.entities.Rating.filter({ user_email: user.email }) : Promise.resolve([]),
   });
 
   const { data: recentReviews = [] } = useQuery({

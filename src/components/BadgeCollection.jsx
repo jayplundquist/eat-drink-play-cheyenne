@@ -20,6 +20,8 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
   const bootBadges = allBadges.filter(b => b.type === 'boot').sort((a, b) => a.min_count - b.min_count);
   
   const strongSilentTypeEarned = reviewCount >= 10 && userRatings.every(r => !r.comment);
+  const lowRatingCount = userRatings.filter(r => r.boots >= 1 && r.boots <= 2).length;
+  const dusterEarned = lowRatingCount >= 25;
 
   return (
     <Card className="mb-6 border-stone-200">

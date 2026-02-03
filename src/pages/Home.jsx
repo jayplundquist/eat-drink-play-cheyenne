@@ -302,24 +302,6 @@ export default function Home() {
           <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-8 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>
 
-            {/* Earn Badges Badge */}
-            <div className="absolute top-8 right-8 transform rotate-12">
-              <div className="relative">
-                <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 text-amber-900 px-6 py-4 rounded-lg shadow-2xl border-4 border-yellow-300 animate-pulse">
-                  <div className="text-center">
-                    <div className="text-3xl mb-1">🏆</div>
-                    <div className="font-bold text-lg" style={{ fontFamily: 'Rye, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}>
-                      EARN
-                    </div>
-                    <div className="font-bold text-xl" style={{ fontFamily: 'Rye, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}>
-                      BADGES
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg blur opacity-50 animate-pulse"></div>
-              </div>
-            </div>
-
             <div className="relative z-10">
               <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
                 <div className="flex-1">
@@ -329,12 +311,32 @@ export default function Home() {
                   <p className="text-amber-50 mb-4 text-lg">
                     Cheyenne is home to {boots.length} iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
                   </p>
-                  <ul className="text-amber-100 space-y-2 mb-6 text-sm">
-                    <li>✓ {boots.length} boots to discover</li>
-                    <li>✓ Upload photos as proof</li>
-                    <li>✓ Track your progress</li>
-                    <li>✓ Complete the challenge</li>
-                  </ul>
+                  <div className="flex gap-6 items-start mb-6">
+                    <ul className="text-amber-100 space-y-2 text-sm flex-1">
+                      <li>✓ {boots.length} boots to discover</li>
+                      <li>✓ Upload photos as proof</li>
+                      <li>✓ Track your progress</li>
+                      <li>✓ Complete the challenge</li>
+                    </ul>
+
+                    {/* Earn Badges Badge */}
+                    <div className="transform rotate-12 flex-shrink-0">
+                      <div className="relative">
+                        <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 text-amber-900 px-4 py-3 rounded-lg shadow-2xl border-4 border-yellow-300 animate-pulse">
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">🏆</div>
+                            <div className="font-bold text-sm" style={{ fontFamily: 'Rye, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}>
+                              EARN
+                            </div>
+                            <div className="font-bold text-base" style={{ fontFamily: 'Rye, serif', textShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}>
+                              BADGES
+                            </div>
+                          </div>
+                        </div>
+                        <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg blur opacity-50 animate-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <Link to={createPageUrl('Profile?defaultValue=bigboots')} className="flex-shrink-0">
                   <Button className="bg-white text-amber-700 hover:bg-amber-50 font-semibold text-lg px-8 py-6">

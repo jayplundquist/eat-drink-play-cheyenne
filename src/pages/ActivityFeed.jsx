@@ -188,7 +188,9 @@ export default function ActivityFeed() {
     .slice(0, 5); // Limit to top 5 popular reviews
 
   const activityItems = [
-    ...followedUserRatings.map(rating => ({
+    ...followedUserRatings
+      .filter(rating => rating.user_email !== currentUser?.email) // Don't duplicate current user's reviews
+      .map(rating => ({
       type: 'review',
       data: rating,
       timestamp: rating.updated_date,

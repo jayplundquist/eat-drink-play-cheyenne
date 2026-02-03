@@ -96,6 +96,7 @@ export default function VenueDetails() {
   const [claimModalOpen, setClaimModalOpen] = useState(false);
   const [reviewsToShow, setReviewsToShow] = useState(10);
   const [ratingFilter, setRatingFilter] = useState('all');
+  const [imageLoadError, setImageLoadError] = useState(false);
 
   const queryClient = useQueryClient();
 

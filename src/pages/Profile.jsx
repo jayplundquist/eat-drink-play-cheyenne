@@ -327,11 +327,12 @@ export default function Profile() {
         )}
 
         {/* Badge Collection */}
-        <BadgeCollection 
-          reviewCount={userRatings.length}
-          avgRating={userRatings.length > 0 ? userRatings.reduce((sum, r) => sum + (r.boots || 0), 0) / userRatings.length : 0}
-          bootVisitCount={userBootVisits.length}
-        />
+         <BadgeCollection 
+           reviewCount={userRatings.length}
+           avgRating={userRatings.length > 0 ? userRatings.reduce((sum, r) => sum + (r.boots || 0), 0) / userRatings.length : 0}
+           bootVisitCount={userBootVisits.length}
+           userEmail={user?.email}
+         />
 
         {/* Tabs Section */}
         <div ref={tabsRef}>

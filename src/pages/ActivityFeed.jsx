@@ -258,7 +258,10 @@ export default function ActivityFeed() {
     if (a.isPopular && !b.isPopular) return -1;
     if (!a.isPopular && b.isPopular) return 1;
     return new Date(b.timestamp) - new Date(a.timestamp);
-  });
+  };
+  
+  return seenIds, activityItems;
+  }, [followedUserRatings, followedUserFavorites, followedBootShares, currentUserRatings, currentUserBootShares, allRatings, reactionCounts, currentUser?.email]);
 
   const filteredActivityItems = searchEmail
     ? activityItems.filter(item => item.user_email.split('@')[0].toLowerCase().includes(searchEmail.toLowerCase()))

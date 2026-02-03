@@ -62,6 +62,7 @@ export default function ReviewComments({ reviewId, currentUser }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviewComments', reviewId] });
+      queryClient.invalidateQueries({ queryKey: ['allCommentReactions', reviewId] });
     },
   });
 
@@ -104,11 +105,7 @@ export default function ReviewComments({ reviewId, currentUser }) {
           ) : (
             <div className="space-y-2">
               {comments.map((comment) => {
-                const commentReactionsQuery = useQuery({
-                  queryKey: ['commentReactions', comment.id],
-                  queryFn: () => base44.entities.CommentReaction.filter({ comment_id: comment.id }),
-                });
-                const commentReactions = commentReactionsQuery.data || [];
+                const commentReactions = allCommentReactions.filter(r => r.comment_id === comment.id);
                 const thumbsUpCount = commentReactions.filter(r => r.reaction_type === 'thumbs_up').length;
                 const thumbsDownCount = commentReactions.filter(r => r.reaction_type === 'thumbs_down').length;
                 const userReaction = commentReactions.find(r => r.user_email === currentUser?.email);

@@ -154,10 +154,17 @@ export default function BootCheckList({ user }) {
       </div>
 
       {/* Boot Map */}
-      {bootsWithCoords.length > 0 && (
+      {!geocodingLoading && bootsWithCoords.length > 0 && (
         <div>
           <h3 className="text-xl font-bold text-stone-800 mb-3">Find the Nearest Boot</h3>
           <BootMap boots={bootsWithCoords} />
+        </div>
+      )}
+      
+      {geocodingLoading && (
+        <div className="bg-amber-50 rounded-lg p-8 text-center">
+          <Loader2 className="w-6 h-6 animate-spin text-amber-600 mx-auto mb-2" />
+          <p className="text-stone-600">Loading map...</p>
         </div>
       )}
 

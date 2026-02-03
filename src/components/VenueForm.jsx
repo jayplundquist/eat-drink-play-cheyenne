@@ -76,21 +76,7 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
      const [menuUploading, setMenuUploading] = useState(false);
      const [foodTypeOpen, setFoodTypeOpen] = useState(false);
 
-     useEffect(() => {
-       if (venue) {
-         setFormData({
-           ...venue,
-           categories: venue.categories && venue.categories.length > 0 ? venue.categories : [],
-           menu_pictures: venue.menu_pictures || [],
-           locked_fields: venue.locked_fields || [],
-           critter_friendly: venue.critter_friendly ?? false,
-           veteran_owned: venue.veteran_owned ?? false,
-           broadcasts_superbowl: venue.broadcasts_superbowl ?? false,
-           permanently_closed: venue.permanently_closed ?? false,
-           has_big_boot: venue.has_big_boot ?? false,
-         });
-       }
-     }, [venue?.id]);
+
 
       const queryClient = useQueryClient();
 

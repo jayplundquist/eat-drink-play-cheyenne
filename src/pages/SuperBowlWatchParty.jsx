@@ -30,6 +30,8 @@ export default function SuperBowlWatchParty() {
 
   const isFavorite = (venueId) => favorites.some(f => f.venue_id === venueId);
 
+  const queryClient = React.useQueryClient?.();
+  
   const toggleFavoriteMutation = React.useMutation({
     mutationFn: async (venueId) => {
       const existing = favorites.find(f => f.venue_id === venueId);
@@ -40,8 +42,7 @@ export default function SuperBowlWatchParty() {
       }
     },
     onSuccess: () => {
-      const queryClient = React.useQueryClient();
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient?.invalidateQueries({ queryKey: ['favorites'] });
     },
   });
 

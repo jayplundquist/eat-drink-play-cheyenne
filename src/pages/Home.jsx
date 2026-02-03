@@ -235,20 +235,20 @@ export default function Home() {
             </div>
 
             <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+              <QuickDraw 
+                venues={venues}
+                user={user}
+                onSignInRequired={() => base44.auth.redirectToLogin()}
+                quickDrawCategories={quickDrawCategories}
+              />
+            </div>
+
+            <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
               <WetYerWhistle 
                 venues={venues}
                 user={user}
                 onSignInRequired={() => base44.auth.redirectToLogin()}
                 wetYerWhistleCategories={wetYerWhistleCategories}
-              />
-            </div>
-
-            <div className="bg-white rounded-lg p-4 aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
-              <HatTip 
-                venues={venues}
-                favorites={favorites}
-                user={user}
-                onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
               />
             </div>
           </div>

@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Search, ArrowLeft, Pencil, Trash2, ExternalLink } from "lucide-react";
+import { Plus, Search, ArrowLeft, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
@@ -53,6 +53,7 @@ export default function ManageVenues() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [deleteVenue, setDeleteVenue] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const queryClient = useQueryClient();
 
@@ -65,7 +66,7 @@ export default function ManageVenues() {
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['venues'],
-    queryFn: () => base44.entities.Venue.list('-created_date', 100),
+    queryFn: () => base44.entities.Venue.list('-created_date', 10000),
     enabled: !!user,
   });
 
@@ -96,6 +97,12 @@ export default function ManageVenues() {
     const venueCategories = getCategories(venue);
     const matchesCategory = selectedCategory === 'all' || venueCategories.includes(selectedCategory);
     return matchesSearch && matchesCategory;
+  }).sort((a, b) => {
+    const nameA = a.name || '';
+    const nameB = b.name || '';
+    return sortOrder === 'asc' 
+      ? nameA.localeCompare(nameB)
+      : nameB.localeCompare(nameA);
   });
 
   if (loading) {
@@ -166,15 +173,25 @@ export default function ManageVenues() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Search & Filters */}
         <div className="space-y-4 mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
-            <Input
-              type="text"
-              placeholder="Search venues..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative max-w-md flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+              <Input
+                type="text"
+                placeholder="Search venues..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              className="border-stone-300 text-stone-700 hover:bg-stone-100"
+            >
+              <ArrowUpDown className="w-4 h-4 mr-2" />
+              {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
+            </Button>
           </div>
           
           <CategoryFilter 

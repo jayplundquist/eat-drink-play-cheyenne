@@ -16,12 +16,15 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
     queryFn: () => base44.entities.Badge.list(),
   });
 
-  const reviewBadges = allBadges.filter(b => b.type === 'review').sort((a, b) => a.min_count - b.min_count);
+  const reviewBadges = allBadges.filter(b => b.type === 'review' && b.name !== 'The Strong Silent Type' && b.name !== 'The Duster').sort((a, b) => a.min_count - b.min_count);
   const bootBadges = allBadges.filter(b => b.type === 'boot').sort((a, b) => a.min_count - b.min_count);
   
-  const strongSilentTypeEarned = reviewCount >= 10 && userRatings.every(r => !r.comment);
+  const strongSilentTypeBadge = allBadges.find(b => b.name === 'The Strong Silent Type');
+  const strongSilentTypeEarned = strongSilentTypeBadge && reviewCount >= 10 && userRatings.every(r => !r.comment);
+  
+  const dusterBadge = allBadges.find(b => b.name === 'The Duster');
   const lowRatingCount = userRatings.filter(r => r.boots >= 1 && r.boots <= 2).length;
-  const dusterEarned = lowRatingCount >= 25;
+  const dusterEarned = dusterBadge && lowRatingCount >= 25;
 
   return (
     <Card className="mb-6 border-stone-200">

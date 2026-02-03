@@ -191,9 +191,8 @@ export default function ActivityFeed() {
     .slice(0, 5); // Limit to top 5 popular reviews
 
   // Track seen IDs to prevent duplicates
-  const seenIds = new Set();
-
-  const activityItems = [
+  const activityItems = useMemo(() => {
+    const seenIds = new Set();
     ...followedUserRatings
       .filter(rating => rating.user_email !== currentUser?.email)
       .map(rating => ({

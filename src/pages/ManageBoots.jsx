@@ -24,27 +24,6 @@ export default function ManageBoots() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  useEffect(() => {
-    if (user?.role === 'admin' && boots.length === 0) {
-      importBootsMutation.mutate();
-    }
-  }, [user?.role]);
-
-  useEffect(() => {
-    if (boots.length > 0) {
-      const addressMap = new Map();
-      const hasDuplicates = boots.some(boot => {
-        if (addressMap.has(boot.address)) return true;
-        addressMap.set(boot.address, true);
-        return false;
-      });
-      
-      if (hasDuplicates) {
-        removeDuplicatesMutation.mutate();
-      }
-    }
-  }, [boots.length]);
-
   const { data: boots = [], isLoading } = useQuery({
     queryKey: ['boots'],
     queryFn: () => base44.entities.Boot.list(),

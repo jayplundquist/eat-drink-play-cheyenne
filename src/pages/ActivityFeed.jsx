@@ -476,20 +476,6 @@ export default function ActivityFeed() {
                         <Link 
                            to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
                           className="flex-shrink-0"
-                          onClick={async (e) => {
-                            if (!venues.find(v => v.id === venue.id) && !venueCache[venue.id]) {
-                              e.preventDefault();
-                              try {
-                                const v = await base44.entities.Venue.filter({ id: venue.id });
-                                if (v.length > 0) {
-                                  setVenueCache(prev => ({ ...prev, [venue.id]: v[0] }));
-                                  window.location.href = createPageUrl('VenueDetails') + `?id=${venue.id}`;
-                                }
-                              } catch (err) {
-                                console.error('Failed to fetch venue:', err);
-                              }
-                            }
-                          }}
                         >
                           <img
                             src={venue.image_url || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400'}

@@ -15,7 +15,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export default function ReviewActions({ ratingId, reviewUserId, currentUserEmail, isAlreadyBoosted }) {
+export default function ReviewActions({ ratingId, reviewUserId, currentUserEmail, isAlreadyBoosted, currentUser }) {
+  if (!currentUser) return null;
+  
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [boostOpen, setBoostOpen] = useState(false);

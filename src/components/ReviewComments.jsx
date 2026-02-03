@@ -25,14 +25,13 @@ export default function ReviewComments({ reviewId, currentUser }) {
   });
 
   const { data: allCommentReactions = [] } = useQuery({
-    queryKey: ['allCommentReactions', reviewId],
+    queryKey: ['allCommentReactions', reviewId, comments.map(c => c.id).join(',')],
     queryFn: async () => {
       if (comments.length === 0) return [];
+      // Fetch all comment reactions at once and filter in memory
+      const allReactions = await base44.entities.CommentReaction.list();
       const commentIds = comments.map(c => c.id);
-      const reactions = await Promise.all(
-        commentIds.map(id => base44.entities.CommentReaction.filter({ comment_id: id }))
-      );
-      return reactions.flat();
+      return allReactions.filter(r => commentIds.includes(r.comment_id));
     },
     enabled: showComments && comments.length > 0,
   });

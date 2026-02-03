@@ -90,6 +90,19 @@ export default function ManageVenues() {
     },
   });
 
+  const uncheckSuperBowlMutation = useMutation({
+    mutationFn: async () => {
+      const superBowlVenues = venues.filter(v => v.broadcasts_superbowl);
+      await Promise.all(
+        superBowlVenues.map(v => base44.entities.Venue.update(v.id, { broadcasts_superbowl: false }))
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['venues'] });
+      toast.success('All Super Bowl venues unchecked');
+    },
+  });
+
   const filteredVenues = venues.filter(venue => {
     const matchesSearch = !searchQuery || 
       venue.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||

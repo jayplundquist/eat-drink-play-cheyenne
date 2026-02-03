@@ -62,10 +62,10 @@ import ManageVenueOptions from './pages/ManageVenueOptions';
 import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
-import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
 import __Layout from './Layout.jsx';
 
 
@@ -85,10 +85,10 @@ export const PAGES = {
     "ManageVenues": ManageVenues,
     "Profile": Profile,
     "Settings": Settings,
+    "SuperBowlWatchParty": SuperBowlWatchParty,
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
-    "SuperBowlWatchParty": SuperBowlWatchParty,
 }
 
 export const pagesConfig = {

@@ -312,7 +312,7 @@ export default function Home() {
                     Cheyenne is home to {boots.length} iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
                   </p>
                   <div className="flex gap-6 items-start mb-6">
-                    <ul className="text-amber-100 space-y-2 text-sm flex-1">
+                    <ul className="text-amber-100 flex flex-wrap gap-x-4 gap-y-2 text-sm flex-1">
                       <li>✓ {boots.length} boots to discover</li>
                       <li>✓ Upload photos as proof</li>
                       <li>✓ Track your progress</li>

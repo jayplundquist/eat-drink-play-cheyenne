@@ -26,7 +26,6 @@ import SpinTheSpur from "../components/SpinTheSpur";
 import QuickDraw from "../components/QuickDraw";
 import WetYerWhistle from "../components/WetYerWhistle";
 import HatTip from "../components/HatTip";
-import { MessageCircle } from "lucide-react";
 import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {

@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import ActivityFeed from './pages/ActivityFeed';
 import AddVenue from './pages/AddVenue';
 import Analytics from './pages/Analytics';
 import EditVenue from './pages/EditVenue';
@@ -64,11 +65,11 @@ import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
-import ActivityFeed from './pages/ActivityFeed';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ActivityFeed": ActivityFeed,
     "AddVenue": AddVenue,
     "Analytics": Analytics,
     "EditVenue": EditVenue,
@@ -86,7 +87,6 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
-    "ActivityFeed": ActivityFeed,
 }
 
 export const pagesConfig = {

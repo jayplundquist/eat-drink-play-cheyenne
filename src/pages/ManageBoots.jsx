@@ -82,39 +82,44 @@ export default function ManageBoots() {
   const importBootsMutation = useMutation({
     mutationFn: async () => {
       const cheyenneBoots = [
-        { name: "Big Blue Boot", address: "1600 Carey Ave, Cheyenne, WY 82001" },
-        { name: "Cowboy Boot", address: "200 W Lincolnway, Cheyenne, WY 82001" },
-        { name: "Red White & Blue Boot", address: "1902 Thomes Ave, Cheyenne, WY 82001" },
-        { name: "Golden Boot", address: "1621 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Native American Boot", address: "309 W Lincolnway, Cheyenne, WY 82001" },
-        { name: "Western Heritage Boot", address: "1617 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Frontier Days Boot", address: "4610 Carey Ave, Cheyenne, WY 82001" },
-        { name: "Rodeo Boot", address: "121 W 15th St, Cheyenne, WY 82001" },
-        { name: "Painted Pony Boot", address: "1512 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Wyoming Boot", address: "2232 Dell Range Blvd, Cheyenne, WY 82009" },
-        { name: "Sunset Boot", address: "1401 Dell Range Blvd, Cheyenne, WY 82009" },
-        { name: "Mountain Boot", address: "3650 E Lincolnway, Cheyenne, WY 82001" },
-        { name: "Prairie Boot", address: "1800 Dell Range Blvd, Cheyenne, WY 82009" },
-        { name: "Wildlife Boot", address: "2250 Etchepare Dr, Cheyenne, WY 82007" },
-        { name: "Patriotic Boot", address: "415 W Pershing Blvd, Cheyenne, WY 82001" },
-        { name: "Ranch Boot", address: "1635 Stillwater Ave, Cheyenne, WY 82009" },
-        { name: "Thunder Boot", address: "1904 Thomes Ave, Cheyenne, WY 82001" },
-        { name: "Spirit Boot", address: "1920 Thomes Ave, Cheyenne, WY 82001" },
-        { name: "Starlight Boot", address: "204 W Fox Farm Rd, Cheyenne, WY 82007" },
-        { name: "Desert Boot", address: "3620 E Lincolnway, Cheyenne, WY 82001" },
-        { name: "Canyon Boot", address: "1632 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Eagle Boot", address: "300 W Lincolnway, Cheyenne, WY 82001" },
-        { name: "Buffalo Boot", address: "1805 Carey Ave, Cheyenne, WY 82001" },
-        { name: "Thunderbird Boot", address: "2020 House Ave, Cheyenne, WY 82001" },
-        { name: "Longhorn Boot", address: "1516 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Mustang Boot", address: "1520 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Pioneer Boot", address: "314 W Lincolnway, Cheyenne, WY 82001" },
-        { name: "Cheyenne Boot", address: "1617 Capitol Ave, Cheyenne, WY 82001" },
-        { name: "Freedom Boot", address: "5025 E Lincolnway, Cheyenne, WY 82001" }
+        { name: "Gamblers Boot", address: "4610 Carey Ave (Old West Museum)" },
+        { name: "LCCC Eagle Eye on the Future", address: "1400 E College Dr (campus, south side)" },
+        { name: "Where the Deer and the Antelope Play", address: "Cheyenne Depot Plaza" },
+        { name: "Springtime in Cheyenne", address: "6106 Yellowstone Rd" },
+        { name: "People Places and Things", address: "311 Cleveland Place (lobby)" },
+        { name: "Don't Feed the Animals", address: "Cheyenne Depot Plaza" },
+        { name: "Licensed to Boot", address: "2301 Central Ave" },
+        { name: "Outlaws of Wyoming", address: "Morrie Ave/Lincolnway (Holliday Park)" },
+        { name: "Governors of Wyoming", address: "Cheyenne Depot Plaza" },
+        { name: "Atmospheric Research", address: "8120 Veta Dr" },
+        { name: "Memories of the Old West", address: "Cheyenne Depot Plaza (by the tracks)" },
+        { name: "Blue Skies Over Cheyenne", address: "4020 Airport Pkwy (in terminal)" },
+        { name: "8-Second Steps to the Big Time", address: "1912 Capitol Ave" },
+        { name: "Downtown Cheyenne", address: "Cheyenne Depot Plaza" },
+        { name: "Milestones: Chamber 100th Anniversary", address: "Cheyenne Depot Plaza" },
+        { name: "Journey of the Soul", address: "710 S. Lions Park Dr (Cheyenne Botanic Gardens)" },
+        { name: "Book Boot", address: "2200 Pioneer Avenue" },
+        { name: "Cheyenne Vision Clinic", address: "1854 Dell Range Blvd." },
+        { name: "All Things Wyoming", address: "502 Bonanza Trail" },
+        { name: "Hub International", address: "1620 E Pershing Blvd (in lobby)" },
+        { name: "Wyoming Bank & Trust 100th Anniversary", address: "5827 Yellowstone Rd" },
+        { name: "Walmart Boot", address: "426 Logistics Dr" },
+        { name: "Wyoming Financial Properties", address: "6101 Yellowstone Rd (in lobby)" },
+        { name: "Our Legacy, Improving Life with Energy", address: "1301 W 24th St" },
+        { name: "Saga of Tom Horn", address: "1902 Carey Ave (east side)" },
+        { name: "Wyoming Women 1st to Vote", address: "Capitol Ave (between 17th & 18th)" },
+        { name: "Honoring Healthcare Heroes", address: "214 E. 23rd St" },
+        { name: "Exeter's Pony Express", address: "Cheyenne Depot Plaza" },
+        { name: "First American Title", address: "245 Storey Boulevard" },
+        { name: "Religion's a Kick", address: "2200 O'Neil Ave" },
+        { name: "South High Class of 2022", address: "1213 W. Allison Rd. (South High)" },
+        { name: "We're With You", address: "1715 Stillwater Ave" },
+        { name: "Happy Birthday Cheyenne!", address: "2101 O'Neil Ave" },
+        { name: "Lewis Auto Repair", address: "285 North American Rd" }
       ];
 
-      const existingNames = boots.map(b => b.name);
-      const newBoots = cheyenneBoots.filter(boot => !existingNames.includes(boot.name));
+      const existingAddresses = boots.map(b => b.address);
+      const newBoots = cheyenneBoots.filter(boot => !existingAddresses.includes(boot.address));
       
       if (newBoots.length === 0) {
         throw new Error('All boots are already imported');

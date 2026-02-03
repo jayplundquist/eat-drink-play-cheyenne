@@ -156,7 +156,7 @@ export default function BootMap({ boots = [] }) {
           </Marker>
 
           {/* Boot markers */}
-          {boots.map((boot) => (
+          {boots.filter(boot => boot.lat && boot.lng).map((boot) => (
             <Marker 
               key={boot.name} 
               position={[boot.lat, boot.lng]} 

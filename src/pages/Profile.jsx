@@ -76,15 +76,18 @@ export default function Profile() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
-      await base44.auth.updateMe(data);
-      return await base44.auth.me();
+      const result = await base44.auth.updateMe(data);
+      const updated = await base44.auth.me();
+      return updated;
     },
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
+      setFormData({ full_name: updatedUser.full_name || '' });
       setEditMode(false);
       toast.success('Profile updated successfully!');
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Profile update error:', error);
       toast.error('Failed to update profile');
     },
   });

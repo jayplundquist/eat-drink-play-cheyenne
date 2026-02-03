@@ -475,7 +475,7 @@ export default function ActivityFeed() {
 
                         <div className="flex-1 min-w-0">
                           <Link 
-                            to={createPageUrl('VenueDetails') + `?venueId=${venue.id}`}
+                            to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
                             className="hover:text-amber-600 transition-colors block"
                           >
                             <h3 className="font-semibold text-stone-800">

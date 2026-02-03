@@ -48,37 +48,28 @@ const foodTypes = [
 ];
 
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout, onDelete }) {
-   const [formData, setFormData] = useState(venue ? {
-         ...venue,
-          categories: venue.categories && venue.categories.length > 0 ? venue.categories : [],
-          menu_pictures: venue.menu_pictures || [],
-          locked_fields: venue.locked_fields || [],
-          critter_friendly: venue.critter_friendly ?? false,
-          veteran_owned: venue.veteran_owned ?? false,
-          broadcasts_superbowl: venue.broadcasts_superbowl ?? false,
-          permanently_closed: venue.permanently_closed ?? false,
-          has_big_boot: venue.has_big_boot ?? false,
-       } : {
-         name: '',
-         categories: [],
-         description: '',
-         address: '',
-         phone: '',
-         website: '',
-         image_url: '',
-         price_range: '$$',
-         hours: '',
-         features: [],
-         food_types: [],
-         menu_pictures: [],
-         quick_draw_boost: false,
-         locked_fields: [],
-         critter_friendly: false,
-         veteran_owned: false,
-         broadcasts_superbowl: false,
-         permanently_closed: false,
-         has_big_boot: false,
-         });
+   const [formData, setFormData] = useState({
+          name: venue?.name || '',
+          categories: venue?.categories && venue.categories.length > 0 ? venue.categories : [],
+          description: venue?.description || '',
+          address: venue?.address || '',
+          phone: venue?.phone || '',
+          website: venue?.website || '',
+          image_url: venue?.image_url || '',
+          price_range: venue?.price_range || '$$',
+          hours: venue?.hours || '',
+          features: venue?.features || [],
+          food_types: venue?.food_types || [],
+          menu_pictures: venue?.menu_pictures || [],
+          quick_draw_boost: venue?.quick_draw_boost ?? false,
+          locked_fields: venue?.locked_fields || [],
+          critter_friendly: venue?.critter_friendly ?? false,
+          veteran_owned: venue?.veteran_owned ?? false,
+          broadcasts_superbowl: venue?.broadcasts_superbowl ?? false,
+          permanently_closed: venue?.permanently_closed ?? false,
+          has_big_boot: venue?.has_big_boot ?? false,
+          boost_expires_date: venue?.boost_expires_date || null,
+          });
 
    const [newFeature, setNewFeature] = useState('');
      const [uploading, setUploading] = useState(false);

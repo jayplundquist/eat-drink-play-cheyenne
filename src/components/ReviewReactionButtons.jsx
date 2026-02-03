@@ -2,7 +2,7 @@ import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, Heart, Zap, Angry } from "lucide-react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ReviewReactionButtons({ ratingId, userEmail }) {
@@ -38,10 +38,7 @@ export default function ReviewReactionButtons({ ratingId, userEmail }) {
 
   const reactionConfigs = [
     { type: 'thumbs_up', icon: ThumbsUp, label: 'Thumbs Up' },
-    { type: 'thumbs_down', icon: ThumbsDown, label: 'Thumbs Down' },
-    { type: 'heart', icon: Heart, label: 'Love' },
-    { type: 'shocked', icon: Zap, label: 'Shocked' },
-    { type: 'mad', icon: Angry, label: 'Mad' }
+    { type: 'thumbs_down', icon: ThumbsDown, label: 'Thumbs Down' }
   ];
 
   const userReaction = reactions.find(r => r.user_email === userEmail);
@@ -62,8 +59,8 @@ export default function ReviewReactionButtons({ ratingId, userEmail }) {
           disabled={toggleReactionMutation.isPending}
           className={userReaction?.reaction_type === type ? 'bg-amber-600 hover:bg-amber-700 border-amber-700' : 'border-stone-300'}
         >
-          <Icon className="w-4 h-4 mr-1" />
-          {reactionCounts[type] > 0 && <span className="text-xs">{reactionCounts[type]}</span>}
+          <Icon className="w-4 h-4 mr-2" />
+          <span className="text-xs font-semibold">{reactionCounts[type] || 0}</span>
         </Button>
       ))}
     </div>

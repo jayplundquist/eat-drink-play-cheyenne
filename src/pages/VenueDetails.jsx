@@ -94,6 +94,8 @@ export default function VenueDetails() {
   const [reportPhotoReason, setReportPhotoReason] = useState('');
   const [selectedPhotoUrl, setSelectedPhotoUrl] = useState(null);
   const [claimModalOpen, setClaimModalOpen] = useState(false);
+  const [reviewsToShow, setReviewsToShow] = useState(10);
+  const [ratingFilter, setRatingFilter] = useState('all');
 
   const queryClient = useQueryClient();
 
@@ -667,9 +669,26 @@ export default function VenueDetails() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-lg font-semibold text-stone-800 mb-4">
-                Reviews ({ratings.length})
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-stone-800">
+                  Reviews ({ratings.length})
+                </h2>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-stone-600">Filter:</label>
+                  <select
+                    value={ratingFilter}
+                    onChange={(e) => setRatingFilter(e.target.value)}
+                    className="text-sm border border-stone-300 rounded-md px-3 py-1.5 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  >
+                    <option value="all">All Ratings</option>
+                    <option value="5">5 Boots</option>
+                    <option value="4">4 Boots</option>
+                    <option value="3">3 Boots</option>
+                    <option value="2">2 Boots</option>
+                    <option value="1">1 Boot</option>
+                  </select>
+                </div>
+              </div>
               
               {ratingsLoading ? (
                 <div className="space-y-4">
@@ -690,8 +709,12 @@ export default function VenueDetails() {
                   <p className="text-stone-500">No reviews yet. Be the first to review!</p>
                 </Card>
               ) : (
+                <>
                 <div className="space-y-4">
-                    {ratings.map((rating) => {
+                    {ratings
+                      .filter(r => ratingFilter === 'all' || r.boots === parseInt(ratingFilter))
+                      .slice(0, reviewsToShow)
+                      .map((rating) => {
                       const userReviewCount = ratings.filter(r => r.user_email === rating.user_email).length;
                       return (
                       <Card key={rating.id} className="p-4 bg-white border-stone-200">
@@ -789,6 +812,18 @@ export default function VenueDetails() {
                           );
                           })}
                           </div>
+                          {ratings.filter(r => ratingFilter === 'all' || r.boots === parseInt(ratingFilter)).length > reviewsToShow && (
+                            <div className="mt-6 text-center">
+                              <Button
+                                onClick={() => setReviewsToShow(reviewsToShow + 10)}
+                                variant="outline"
+                                className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                              >
+                                Show More Reviews
+                              </Button>
+                            </div>
+                          )}
+                          </>
                           )}
                           </motion.div>
           </div>

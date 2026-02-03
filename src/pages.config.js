@@ -82,7 +82,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
-    "Stats": Analytics,
+    "Analytics": Analytics,
 }
 
 export const pagesConfig = {

@@ -87,6 +87,9 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
           >
             <ChevronRight className="w-5 h-5" />
           </Button>
+
+          {/* Football emoji */}
+          <span className="absolute top-4 right-4 text-4xl animate-bounce">🏈</span>
           </div>
           </div>
           </div>

@@ -12,11 +12,11 @@ export default function ReviewComments({ reviewId, currentUser }) {
    const [commentText, setCommentText] = useState('');
    const queryClient = useQueryClient();
 
-  const { data: comments = [], isLoading } = useQuery({
-    queryKey: ['reviewComments', reviewId],
-    queryFn: () => base44.entities.ReviewComment.filter({ review_id: reviewId }, '-created_date'),
-    enabled: showComments,
-  });
+   const { data: comments = [], isLoading } = useQuery({
+     queryKey: ['reviewComments', reviewId],
+     queryFn: () => base44.entities.ReviewComment.filter({ review_id: reviewId }, '-created_date'),
+     enabled: showComments && !!reviewId,
+   });
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['users'],

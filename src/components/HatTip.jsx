@@ -61,7 +61,7 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
 
   return (
     <section className="mx-auto px-4 py-10 max-w-6xl sm:px-6">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="mb-6 flex items-center gap-3">
         <motion.div
           animate={{
             rotateZ: [0, 180, 360],

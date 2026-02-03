@@ -98,14 +98,20 @@ export default function BootCheckList({ user }) {
   // Geocode boots to get coordinates for map
   useEffect(() => {
     const geocodeBoots = async () => {
-      if (boots.length === 0) return;
+      setGeocodingLoading(true);
+      if (boots.length === 0) {
+        setBootsWithCoords([]);
+        setGeocodingLoading(false);
+        return;
+      }
 
       const results = [];
       for (const boot of boots) {
         try {
           const encoded = encodeURIComponent(boot.address);
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`
+            `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`,
+            { signal: AbortSignal.timeout(5000) }
           );
           const data = await response.json();
           if (data.length > 0) {
@@ -114,12 +120,15 @@ export default function BootCheckList({ user }) {
               lat: parseFloat(data[0].lat),
               lng: parseFloat(data[0].lon),
             });
+          } else {
+            console.warn('No geocoding result for', boot.address);
           }
         } catch (err) {
           console.error('Geocoding error for', boot.name, err);
         }
       }
       setBootsWithCoords(results);
+      setGeocodingLoading(false);
     };
 
     geocodeBoots();

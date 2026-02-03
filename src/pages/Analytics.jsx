@@ -39,6 +39,11 @@ export default function Analytics() {
     queryFn: () => base44.entities.Favorite.list(),
   });
 
+  const { data: siteVisits = [], isLoading: siteVisitsLoading } = useQuery({
+    queryKey: ['allSiteVisits'],
+    queryFn: () => base44.entities.SiteVisit.list(),
+  });
+
   const reviewsWithComments = ratings.filter(r => r.comment && r.comment.trim());
 
   const stats = [

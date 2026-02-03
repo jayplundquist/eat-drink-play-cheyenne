@@ -102,10 +102,10 @@ export default function ActivityFeed() {
     enabled: !!currentUser,
   });
 
-  const followingEmails = userFollows.map(f => f.following_email);
+  const followingEmails = useMemo(() => userFollows.map(f => f.following_email), [userFollows]);
 
   const { data: followedUserRatings = [] } = useQuery({
-    queryKey: ['followedUserRatings', followingEmails],
+    queryKey: ['followedUserRatings', followingEmails.join(',')],
     queryFn: async () => {
       if (followingEmails.length === 0) return [];
       const allRatings = [];

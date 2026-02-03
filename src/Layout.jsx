@@ -182,6 +182,12 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageBadges')} className="cursor-pointer">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Manage Badges
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link to={createPageUrl('ManageReports')} className="cursor-pointer">
                         <Flag className="w-4 h-4 mr-2" />
                         User Reports

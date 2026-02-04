@@ -39,6 +39,7 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                 {reviewBadges.map((badge) => {
                   const isEarned = reviewCount >= badge.min_count;
+                  const [open, setOpen] = useState(false);
                   return (
                     <motion.div
                       key={badge.id}
@@ -46,15 +47,18 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                       animate={{ opacity: 1, scale: 1 }}
                     >
                       <TooltipProvider>
-                        <Tooltip>
+                        <Tooltip open={open} onOpenChange={setOpen}>
                           <TooltipTrigger asChild>
-                            <div className={`cursor-help transition-all ${isEarned ? '' : 'opacity-30'}`}>
+                            <button 
+                              onClick={() => setOpen(!open)}
+                              className={`cursor-pointer transition-all ${isEarned ? '' : 'opacity-30'} focus:outline-none`}
+                            >
                               {badge.icon_url ? (
                                 <img src={badge.icon_url} alt={badge.name} className="w-24 h-24 object-cover rounded-lg" />
                               ) : (
                                 <div className="w-24 h-24 flex items-center justify-center text-6xl">🎖️</div>
                               )}
-                            </div>
+                            </button>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="font-semibold">{badge.name}</p>
@@ -67,56 +71,68 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                 })}
 
                 {/* The Strong Silent Type Badge */}
-                {strongSilentTypeBadge && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className={`cursor-help transition-all ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
-                          {strongSilentTypeBadge.icon_url ? (
-                            <img src={strongSilentTypeBadge.icon_url} alt={strongSilentTypeBadge.name} className="w-24 h-24 object-cover rounded-lg" />
-                          ) : (
-                            <div className="w-24 h-24 flex items-center justify-center text-6xl">🤐</div>
-                          )}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="font-semibold">{strongSilentTypeBadge.name}</p>
-                        <p className="text-xs">{strongSilentTypeBadge.description}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </motion.div>
-                )}
+                {strongSilentTypeBadge && (() => {
+                  const [open, setOpen] = useState(false);
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip open={open} onOpenChange={setOpen}>
+                          <TooltipTrigger asChild>
+                            <button 
+                              onClick={() => setOpen(!open)}
+                              className={`cursor-pointer transition-all ${strongSilentTypeEarned ? '' : 'opacity-30'} focus:outline-none`}
+                            >
+                              {strongSilentTypeBadge.icon_url ? (
+                                <img src={strongSilentTypeBadge.icon_url} alt={strongSilentTypeBadge.name} className="w-24 h-24 object-cover rounded-lg" />
+                              ) : (
+                                <div className="w-24 h-24 flex items-center justify-center text-6xl">🤐</div>
+                              )}
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="font-semibold">{strongSilentTypeBadge.name}</p>
+                            <p className="text-xs">{strongSilentTypeBadge.description}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </motion.div>
+                  );
+                })()}
 
                 {/* The Duster Badge */}
-                {dusterBadge && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className={`cursor-help transition-all ${dusterEarned ? '' : 'opacity-30'}`}>
-                          {dusterBadge.icon_url ? (
-                            <img src={dusterBadge.icon_url} alt={dusterBadge.name} className="w-24 h-24 object-cover rounded-lg" />
-                          ) : (
-                            <div className="w-24 h-24 flex items-center justify-center text-6xl">🌪️</div>
-                          )}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="font-semibold">{dusterBadge.name}</p>
-                        <p className="text-xs">{dusterBadge.description}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </motion.div>
-                )}
+                {dusterBadge && (() => {
+                  const [open, setOpen] = useState(false);
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    >
+                      <TooltipProvider>
+                        <Tooltip open={open} onOpenChange={setOpen}>
+                          <TooltipTrigger asChild>
+                            <button 
+                              onClick={() => setOpen(!open)}
+                              className={`cursor-pointer transition-all ${dusterEarned ? '' : 'opacity-30'} focus:outline-none`}
+                            >
+                              {dusterBadge.icon_url ? (
+                                <img src={dusterBadge.icon_url} alt={dusterBadge.name} className="w-24 h-24 object-cover rounded-lg" />
+                              ) : (
+                                <div className="w-24 h-24 flex items-center justify-center text-6xl">🌪️</div>
+                              )}
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="font-semibold">{dusterBadge.name}</p>
+                            <p className="text-xs">{dusterBadge.description}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </motion.div>
+                  );
+                })()}
               </div>
               </div>
 
@@ -126,6 +142,7 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {bootBadges.map((badge) => {
                 const isEarned = bootVisitCount >= badge.min_count;
+                const [open, setOpen] = useState(false);
                 return (
                   <motion.div
                     key={badge.name}
@@ -133,15 +150,18 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                     animate={{ opacity: 1, scale: 1 }}
                   >
                     <TooltipProvider>
-                      <Tooltip>
+                      <Tooltip open={open} onOpenChange={setOpen}>
                         <TooltipTrigger asChild>
-                          <div className={`cursor-help transition-all ${isEarned ? '' : 'opacity-30'}`}>
+                          <button 
+                            onClick={() => setOpen(!open)}
+                            className={`cursor-pointer transition-all ${isEarned ? '' : 'opacity-30'} focus:outline-none`}
+                          >
                             {badge.icon_url ? (
                               <img src={badge.icon_url} alt={badge.name} className="w-24 h-24 object-cover rounded-lg" />
                             ) : (
                               <div className="w-24 h-24 flex items-center justify-center text-6xl">🎖️</div>
                             )}
-                          </div>
+                          </button>
                         </TooltipTrigger>
                         <TooltipContent>
                           <p className="font-semibold">{badge.name}</p>

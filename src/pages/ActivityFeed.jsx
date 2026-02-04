@@ -116,29 +116,60 @@ export default function ActivityFeed() {
     const followedEmails = follows.map(f => f.following_email);
     const items = [];
 
-    // Add reviews from followed users
-    allRatings.forEach(rating => {
-      if (followedEmails.includes(rating.user_email)) {
-        const venue = allVenues.find(v => v.id === rating.venue_id);
-        if (venue) {
-          const boostExpired = rating.boosted_until ? new Date(rating.boosted_until) < new Date() : true;
-          const isBoosted = rating.boosted_until && !boostExpired;
-          const reactionCount = allReviewReactions.filter(r => r.rating_id === rating.id).length;
+    // Process all reviews (not just followed users)
+    const reviewItems = allRatings.map(rating => {
+      const venue = allVenues.find(v => v.id === rating.venue_id);
+      if (!venue) return null;
 
-          items.push({
-            type: 'review',
-            id: rating.id,
-            timestamp: rating.created_date,
-            data: rating,
-            user_email: rating.user_email,
-            isOwn: rating.user_email === currentUser.email,
-            isBoosted,
-            isPopular: reactionCount >= 3 && !isBoosted,
-            sortScore: isBoosted ? 2 : (reactionCount >= 3 ? 1 : 0),
-          });
-        }
-      }
-    });
+      const boostExpired = rating.boosted_until ? new Date(rating.boosted_until) < new Date() : true;
+      const isBoosted = rating.boosted_until && !boostExpired;
+      const reactionCount = allReviewReactions.filter(r => r.rating_id === rating.id).length;
+      const isFromFollowed = followedEmails.includes(rating.user_email);
+
+      return {
+        type: 'review',
+        id: rating.id,
+        timestamp: rating.created_date,
+        data: rating,
+        user_email: rating.user_email,
+        isOwn: rating.user_email === currentUser.email,
+        isBoosted,
+        isPopular: reactionCount >= 3,
+        isFromFollowed,
+        reactionCount,
+      };
+    }).filter(Boolean);
+
+    // Sort all reviews by date
+    reviewItems.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // Take top 50 most recent
+    const recentReviews = reviewItems.slice(0, 50);
+
+    // Get trending reviews that fell past the 50 mark (high reactions)
+    const trendingReviews = reviewItems.slice(50).filter(r => r.reactionCount >= 5);
+
+    // Get followed reviews that fell past the 50 mark
+    const followedReviews = reviewItems.slice(50).filter(r => r.isFromFollowed);
+
+    // Merge: start with recent 50, then intersperse trending and followed
+    const allReviewsToShow = [...recentReviews];
+    const specialReviews = [...trendingReviews, ...followedReviews];
+    
+    // Intersperse special reviews throughout the feed (every 5 items)
+    let specialIndex = 0;
+    for (let i = 10; i < allReviewsToShow.length && specialIndex < specialReviews.length; i += 5) {
+      allReviewsToShow.splice(i, 0, specialReviews[specialIndex]);
+      specialIndex++;
+    }
+
+    // Add remaining special reviews at the end
+    while (specialIndex < specialReviews.length) {
+      allReviewsToShow.push(specialReviews[specialIndex]);
+      specialIndex++;
+    }
+
+    items.push(...allReviewsToShow);
 
     // Add favorites from followed users
     allFavorites.forEach(fav => {
@@ -151,7 +182,6 @@ export default function ActivityFeed() {
             timestamp: fav.created_date,
             data: fav,
             user_email: fav.user_email,
-            sortScore: 0,
           });
         }
       }
@@ -167,14 +197,21 @@ export default function ActivityFeed() {
           data: share,
           user_email: share.user_email,
           isOwn: share.user_email === currentUser.email,
-          sortScore: 1,
         });
       }
     });
 
-    // Sort by boosted/popular first, then by date
+    // Final sort: prioritize boosted, then popular, then by date
     return items.sort((a, b) => {
-      if (a.sortScore !== b.sortScore) return b.sortScore - a.sortScore;
+      // Boosted reviews first
+      if (a.isBoosted && !b.isBoosted) return -1;
+      if (!a.isBoosted && b.isBoosted) return 1;
+      
+      // Then popular reviews
+      if (a.isPopular && !b.isPopular) return -1;
+      if (!a.isPopular && b.isPopular) return 1;
+      
+      // Then by date
       return new Date(b.timestamp) - new Date(a.timestamp);
     });
   }, [currentUser, follows, allRatings, allFavorites, allBootShares, allVenues, allReviewReactions]);

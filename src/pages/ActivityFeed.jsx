@@ -28,9 +28,11 @@ export default function ActivityFeed() {
   const { data: allRatings = [] } = useQuery({
     queryKey: ['recentRatings'],
     queryFn: () => base44.entities.Rating.list('-created_date', 50),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     enabled: !!currentUser?.email,
   });
 
@@ -38,27 +40,33 @@ export default function ActivityFeed() {
     queryKey: ['follows', currentUser?.email],
     queryFn: () => base44.entities.Follow.filter({ user_email: currentUser?.email }),
     enabled: !!currentUser?.email,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const { data: allFavorites = [] } = useQuery({
     queryKey: ['recentFavorites'],
-    queryFn: () => base44.entities.Favorite.list('-created_date', 20),
+    queryFn: () => base44.entities.Favorite.list('-created_date', 15),
     enabled: !!currentUser?.email && follows.length > 0,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const { data: allBootShares = [] } = useQuery({
     queryKey: ['recentBootShares'],
-    queryFn: () => base44.entities.BootShare.list('-shared_date', 20),
+    queryFn: () => base44.entities.BootShare.list('-shared_date', 15),
     enabled: !!currentUser?.email && follows.length > 0,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   // Fetch venues once - reuse cache from Home page
@@ -68,9 +76,11 @@ export default function ActivityFeed() {
       const venues = await base44.entities.Venue.list('-created_date', 100);
       return venues;
     },
-    staleTime: 10 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     enabled: !!currentUser?.email,
   });
 

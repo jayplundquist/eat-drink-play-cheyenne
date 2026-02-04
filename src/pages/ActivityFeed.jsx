@@ -28,9 +28,9 @@ export default function ActivityFeed() {
   // Stagger query loading to prevent rate limits
   useEffect(() => {
     if (!currentUser) return;
-    const timer1 = setTimeout(() => setLoadStage(1), 100);
-    const timer2 = setTimeout(() => setLoadStage(2), 500);
-    const timer3 = setTimeout(() => setLoadStage(3), 1000);
+    const timer1 = setTimeout(() => setLoadStage(1), 300);
+    const timer2 = setTimeout(() => setLoadStage(2), 1000);
+    const timer3 = setTimeout(() => setLoadStage(3), 2000);
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -66,9 +66,9 @@ export default function ActivityFeed() {
 
   const { data: allRatings = [] } = useQuery({
     queryKey: ['recentRatings'],
-    queryFn: () => base44.entities.Rating.list('-created_date', 50),
-    staleTime: 10 * 60 * 1000,
-    gcTime: 15 * 60 * 1000,
+    queryFn: () => base44.entities.Rating.list('-created_date', 30),
+    staleTime: 15 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -77,10 +77,10 @@ export default function ActivityFeed() {
 
   const { data: allFavorites = [] } = useQuery({
     queryKey: ['recentFavorites'],
-    queryFn: () => base44.entities.Favorite.list('-created_date', 10),
+    queryFn: () => base44.entities.Favorite.list('-created_date', 5),
     enabled: !!currentUser?.email && follows.length > 0 && loadStage >= 3,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 15 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -88,10 +88,10 @@ export default function ActivityFeed() {
 
   const { data: allBootShares = [] } = useQuery({
     queryKey: ['recentBootShares'],
-    queryFn: () => base44.entities.BootShare.list('-shared_date', 10),
+    queryFn: () => base44.entities.BootShare.list('-shared_date', 5),
     enabled: !!currentUser?.email && follows.length > 0 && loadStage >= 3,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 15 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

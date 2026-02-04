@@ -28,7 +28,6 @@ import WetYerWhistle from "../components/WetYerWhistle";
 import HatTip from "../components/HatTip";
 import SuperBowlVenues from "../components/SuperBowlVenues";
 import { CowboyBoot } from "../components/BootRating";
-import VenueRolodex from "../components/VenueRolodex";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -589,7 +588,23 @@ export default function Home() {
 
           {/* Venues Results */}
           {filteredVenues.length > 0 && (
-            <VenueRolodex venues={allFilteredVenues} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredVenues.map((venue, i) => (
+                <motion.div
+                  key={venue.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <VenueCard 
+                    venue={venue}
+                    isFavorite={isFavorite(venue.id)}
+                    onToggleFavorite={() => user ? toggleFavoriteMutation.mutate(venue.id) : base44.auth.redirectToLogin()}
+                    hideAddress
+                  />
+                </motion.div>
+              ))}
+            </div>
           )}
           </>
           )}
@@ -621,7 +636,7 @@ export default function Home() {
                 </section>
 
                 {/* Export & Suggestions */}
-                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex gap-3 justify-center mt-8">
+                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex gap-3 justify-center">
                 <Button 
                 onClick={exportVenuesToExcel}
                 variant="outline" 

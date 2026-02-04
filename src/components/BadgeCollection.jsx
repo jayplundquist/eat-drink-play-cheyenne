@@ -2,12 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVisitCount = 0, userRatings = [] }) {
@@ -45,40 +39,31 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                     >
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div 
-                              className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
-                                isEarned
-                                  ? 'bg-amber-50 border-amber-300'
-                                  : 'bg-stone-100 border-stone-300'
-                              }`}
-                            >
-                              <div className={`text-4xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
-                                {badge.icon_url ? (
-                                  <img src={badge.icon_url} alt={badge.name} className="w-10 h-10 mx-auto" />
-                                ) : (
-                                  '🎖️'
-                                )}
-                              </div>
-                              <div className={`text-xs font-semibold ${
-                                isEarned ? 'text-amber-900' : 'text-stone-600'
-                              }`}>
-                                {badge.name}
-                              </div>
-                              <div className={`text-xs mt-1 ${
-                                isEarned ? 'text-amber-700' : 'text-stone-500'
-                              }`}>
-                                {badge.min_count}+ reviews
-                              </div>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{badge.description}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <div 
+                        className={`text-center p-3 rounded-lg border-2 transition-all ${
+                          isEarned
+                            ? 'bg-amber-50 border-amber-300'
+                            : 'bg-stone-100 border-stone-300'
+                        }`}
+                      >
+                        <div className={`text-3xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
+                          {badge.icon_url ? (
+                            <img src={badge.icon_url} alt={badge.name} className="w-8 h-8 mx-auto" />
+                          ) : (
+                            '🎖️'
+                          )}
+                        </div>
+                        <div className={`text-xs font-semibold mb-1 ${
+                          isEarned ? 'text-amber-900' : 'text-stone-600'
+                        }`}>
+                          {badge.name}
+                        </div>
+                        <div className={`text-xs ${
+                          isEarned ? 'text-amber-700' : 'text-stone-500'
+                        }`}>
+                          {badge.description}
+                        </div>
+                      </div>
                     </motion.div>
                   );
                 })}
@@ -89,36 +74,27 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div 
-                          className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
-                            strongSilentTypeEarned
-                              ? 'bg-slate-50 border-slate-400'
-                              : 'bg-stone-100 border-stone-300'
-                          }`}
-                        >
-                          <div className={`text-4xl mb-2 ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
-                            🤐
-                          </div>
-                          <div className={`text-xs font-semibold ${
-                            strongSilentTypeEarned ? 'text-slate-900' : 'text-stone-600'
-                          }`}>
-                            {strongSilentTypeBadge.name}
-                          </div>
-                          <div className={`text-xs mt-1 ${
-                            strongSilentTypeEarned ? 'text-slate-700' : 'text-stone-500'
-                          }`}>
-                            {strongSilentTypeBadge.min_count}+ reviews
-                          </div>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{strongSilentTypeBadge.description}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <div 
+                    className={`text-center p-3 rounded-lg border-2 transition-all ${
+                      strongSilentTypeEarned
+                        ? 'bg-slate-50 border-slate-400'
+                        : 'bg-stone-100 border-stone-300'
+                    }`}
+                  >
+                    <div className={`text-3xl mb-2 ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
+                      🤐
+                    </div>
+                    <div className={`text-xs font-semibold mb-1 ${
+                      strongSilentTypeEarned ? 'text-slate-900' : 'text-stone-600'
+                    }`}>
+                      {strongSilentTypeBadge.name}
+                    </div>
+                    <div className={`text-xs ${
+                      strongSilentTypeEarned ? 'text-slate-700' : 'text-stone-500'
+                    }`}>
+                      {strongSilentTypeBadge.description}
+                    </div>
+                  </div>
                 </motion.div>
                 )}
 
@@ -128,36 +104,27 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div 
-                          className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
-                            dusterEarned
-                              ? 'bg-amber-50 border-amber-400'
-                              : 'bg-stone-100 border-stone-300'
-                          }`}
-                        >
-                          <div className={`text-4xl mb-2 ${dusterEarned ? '' : 'opacity-30'}`}>
-                            🌪️
-                          </div>
-                          <div className={`text-xs font-semibold ${
-                            dusterEarned ? 'text-amber-900' : 'text-stone-600'
-                          }`}>
-                            {dusterBadge.name}
-                          </div>
-                          <div className={`text-xs mt-1 ${
-                            dusterEarned ? 'text-amber-800' : 'text-stone-500'
-                          }`}>
-                            {dusterBadge.min_count}+ low ratings
-                          </div>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{dusterBadge.description}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <div 
+                    className={`text-center p-3 rounded-lg border-2 transition-all ${
+                      dusterEarned
+                        ? 'bg-amber-50 border-amber-400'
+                        : 'bg-stone-100 border-stone-300'
+                    }`}
+                  >
+                    <div className={`text-3xl mb-2 ${dusterEarned ? '' : 'opacity-30'}`}>
+                      🌪️
+                    </div>
+                    <div className={`text-xs font-semibold mb-1 ${
+                      dusterEarned ? 'text-amber-900' : 'text-stone-600'
+                    }`}>
+                      {dusterBadge.name}
+                    </div>
+                    <div className={`text-xs ${
+                      dusterEarned ? 'text-amber-800' : 'text-stone-500'
+                    }`}>
+                      {dusterBadge.description}
+                    </div>
+                  </div>
                 </motion.div>
                 )}
               </div>
@@ -175,40 +142,31 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                   >
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div 
-                            className={`text-center p-4 rounded-lg border-2 transition-all cursor-help ${
-                              isEarned
-                                ? 'bg-amber-50 border-amber-300'
-                                : 'bg-stone-100 border-stone-300'
-                            }`}
-                          >
-                            <div className={`text-4xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
-                              {badge.icon_url ? (
-                                <img src={badge.icon_url} alt={badge.name} className="w-10 h-10 mx-auto" />
-                              ) : (
-                                '🎖️'
-                              )}
-                            </div>
-                            <div className={`text-xs font-semibold ${
-                              isEarned ? 'text-amber-900' : 'text-stone-600'
-                            }`}>
-                              {badge.name}
-                            </div>
-                            <div className={`text-xs mt-1 ${
-                              isEarned ? 'text-amber-700' : 'text-stone-500'
-                            }`}>
-                              {badge.min_count}+ boots
-                            </div>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{badge.description}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <div 
+                      className={`text-center p-3 rounded-lg border-2 transition-all ${
+                        isEarned
+                          ? 'bg-amber-50 border-amber-300'
+                          : 'bg-stone-100 border-stone-300'
+                      }`}
+                    >
+                      <div className={`text-3xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
+                        {badge.icon_url ? (
+                          <img src={badge.icon_url} alt={badge.name} className="w-8 h-8 mx-auto" />
+                        ) : (
+                          '🎖️'
+                        )}
+                      </div>
+                      <div className={`text-xs font-semibold mb-1 ${
+                        isEarned ? 'text-amber-900' : 'text-stone-600'
+                      }`}>
+                        {badge.name}
+                      </div>
+                      <div className={`text-xs ${
+                        isEarned ? 'text-amber-700' : 'text-stone-500'
+                      }`}>
+                        {badge.description}
+                      </div>
+                    </div>
                   </motion.div>
                 );
               })}

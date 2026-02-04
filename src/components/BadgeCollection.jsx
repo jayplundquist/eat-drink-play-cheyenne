@@ -40,25 +40,23 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                       animate={{ opacity: 1, scale: 1 }}
                     >
                       <div 
-                        className={`text-center p-3 rounded-lg border-2 transition-all ${
-                          isEarned
-                            ? 'bg-amber-50 border-amber-300'
-                            : 'bg-stone-100 border-stone-300'
+                        className={`text-center p-2 transition-all ${
+                          isEarned ? '' : 'opacity-40 grayscale'
                         }`}
                       >
-                        <div className={`text-3xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
-                          {badge.icon_url ? (
-                            <img src={badge.icon_url} alt={badge.name} className="w-8 h-8 mx-auto" />
-                          ) : (
-                            '🎖️'
-                          )}
-                        </div>
-                        <div className={`text-xs font-semibold mb-1 ${
+                        {badge.icon_url && (
+                          <img 
+                            src={badge.icon_url} 
+                            alt={badge.name} 
+                            className="w-full h-auto rounded-lg shadow-md"
+                          />
+                        )}
+                        <div className={`text-xs font-semibold mt-2 ${
                           isEarned ? 'text-amber-900' : 'text-stone-600'
                         }`}>
                           {badge.name}
                         </div>
-                        <div className={`text-xs ${
+                        <div className={`text-xs mt-1 ${
                           isEarned ? 'text-amber-700' : 'text-stone-500'
                         }`}>
                           {badge.description}
@@ -75,21 +73,23 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                   animate={{ opacity: 1, scale: 1 }}
                 >
                   <div 
-                    className={`text-center p-3 rounded-lg border-2 transition-all ${
-                      strongSilentTypeEarned
-                        ? 'bg-slate-50 border-slate-400'
-                        : 'bg-stone-100 border-stone-300'
+                    className={`text-center p-2 transition-all ${
+                      strongSilentTypeEarned ? '' : 'opacity-40 grayscale'
                     }`}
                   >
-                    <div className={`text-3xl mb-2 ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
-                      🤐
-                    </div>
-                    <div className={`text-xs font-semibold mb-1 ${
+                    {strongSilentTypeBadge.icon_url && (
+                      <img 
+                        src={strongSilentTypeBadge.icon_url} 
+                        alt={strongSilentTypeBadge.name} 
+                        className="w-full h-auto rounded-lg shadow-md"
+                      />
+                    )}
+                    <div className={`text-xs font-semibold mt-2 ${
                       strongSilentTypeEarned ? 'text-slate-900' : 'text-stone-600'
                     }`}>
                       {strongSilentTypeBadge.name}
                     </div>
-                    <div className={`text-xs ${
+                    <div className={`text-xs mt-1 ${
                       strongSilentTypeEarned ? 'text-slate-700' : 'text-stone-500'
                     }`}>
                       {strongSilentTypeBadge.description}
@@ -105,21 +105,23 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                   animate={{ opacity: 1, scale: 1 }}
                 >
                   <div 
-                    className={`text-center p-3 rounded-lg border-2 transition-all ${
-                      dusterEarned
-                        ? 'bg-amber-50 border-amber-400'
-                        : 'bg-stone-100 border-stone-300'
+                    className={`text-center p-2 transition-all ${
+                      dusterEarned ? '' : 'opacity-40 grayscale'
                     }`}
                   >
-                    <div className={`text-3xl mb-2 ${dusterEarned ? '' : 'opacity-30'}`}>
-                      🌪️
-                    </div>
-                    <div className={`text-xs font-semibold mb-1 ${
+                    {dusterBadge.icon_url && (
+                      <img 
+                        src={dusterBadge.icon_url} 
+                        alt={dusterBadge.name} 
+                        className="w-full h-auto rounded-lg shadow-md"
+                      />
+                    )}
+                    <div className={`text-xs font-semibold mt-2 ${
                       dusterEarned ? 'text-amber-900' : 'text-stone-600'
                     }`}>
                       {dusterBadge.name}
                     </div>
-                    <div className={`text-xs ${
+                    <div className={`text-xs mt-1 ${
                       dusterEarned ? 'text-amber-800' : 'text-stone-500'
                     }`}>
                       {dusterBadge.description}
@@ -143,25 +145,23 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                     animate={{ opacity: 1, scale: 1 }}
                   >
                     <div 
-                      className={`text-center p-3 rounded-lg border-2 transition-all ${
-                        isEarned
-                          ? 'bg-amber-50 border-amber-300'
-                          : 'bg-stone-100 border-stone-300'
+                      className={`text-center p-2 transition-all ${
+                        isEarned ? '' : 'opacity-40 grayscale'
                       }`}
                     >
-                      <div className={`text-3xl mb-2 ${isEarned ? '' : 'opacity-30'}`}>
-                        {badge.icon_url ? (
-                          <img src={badge.icon_url} alt={badge.name} className="w-8 h-8 mx-auto" />
-                        ) : (
-                          '🎖️'
-                        )}
-                      </div>
-                      <div className={`text-xs font-semibold mb-1 ${
+                      {badge.icon_url && (
+                        <img 
+                          src={badge.icon_url} 
+                          alt={badge.name} 
+                          className="w-full h-auto rounded-lg shadow-md"
+                        />
+                      )}
+                      <div className={`text-xs font-semibold mt-2 ${
                         isEarned ? 'text-amber-900' : 'text-stone-600'
                       }`}>
                         {badge.name}
                       </div>
-                      <div className={`text-xs ${
+                      <div className={`text-xs mt-1 ${
                         isEarned ? 'text-amber-700' : 'text-stone-500'
                       }`}>
                         {badge.description}

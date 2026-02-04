@@ -78,7 +78,7 @@ export default function Home() {
     queryKey: ['venues'],
     queryFn: async () => {
       const allVenues = await base44.entities.Venue.list('-created_date', 10000);
-      return allVenues.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      return allVenues.sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' }));
     },
   });
 
@@ -207,7 +207,7 @@ export default function Home() {
     if (a.permanently_closed !== b.permanently_closed) {
       return (a.permanently_closed ? 1 : 0) - (b.permanently_closed ? 1 : 0);
     }
-    return (a.name || '').localeCompare((b.name || ''));
+    return (a.name || '').localeCompare((b.name || ''), undefined, { sensitivity: 'base' });
   });
 
   const itemsPerPage = 20;

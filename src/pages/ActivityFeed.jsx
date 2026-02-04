@@ -24,11 +24,13 @@ export default function ActivityFeed() {
       });
   }, []);
 
-  // Fetch only what we need with limits and stale time
+  // Fetch only what we need with limits and aggressive caching
   const { data: allRatings = [] } = useQuery({
     queryKey: ['recentRatings'],
-    queryFn: () => base44.entities.Rating.list('-created_date', 100),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryFn: () => base44.entities.Rating.list('-created_date', 50),
+    staleTime: 5 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     enabled: !!currentUser?.email,
   });
 
@@ -36,46 +38,49 @@ export default function ActivityFeed() {
     queryKey: ['follows', currentUser?.email],
     queryFn: () => base44.entities.Follow.filter({ user_email: currentUser?.email }),
     enabled: !!currentUser?.email,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: allFavorites = [] } = useQuery({
     queryKey: ['recentFavorites'],
-    queryFn: () => base44.entities.Favorite.list('-created_date', 30),
+    queryFn: () => base44.entities.Favorite.list('-created_date', 20),
     enabled: !!currentUser?.email && follows.length > 0,
-    staleTime: 2 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: allBootShares = [] } = useQuery({
     queryKey: ['recentBootShares'],
-    queryFn: () => base44.entities.BootShare.list('-shared_date', 30),
+    queryFn: () => base44.entities.BootShare.list('-shared_date', 20),
     enabled: !!currentUser?.email && follows.length > 0,
-    staleTime: 2 * 60 * 1000,
-  });
-
-  const { data: allReviewReactions = [] } = useQuery({
-    queryKey: ['reviewReactions'],
-    queryFn: () => base44.entities.ReviewReaction.list('-created_date', 300),
-    staleTime: 2 * 60 * 1000,
-    enabled: !!currentUser?.email,
+    staleTime: 5 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch venues once - reuse cache from Home page
   const { data: allVenues = [] } = useQuery({
     queryKey: ['venues'],
     queryFn: async () => {
-      const venues = await base44.entities.Venue.list('-created_date', 150);
+      const venues = await base44.entities.Venue.list('-created_date', 100);
       return venues;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 10 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     enabled: !!currentUser?.email,
   });
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['searchUsers'],
-    queryFn: () => base44.entities.User.list('-created_date', 50),
+    queryFn: () => base44.entities.User.list('-created_date', 30),
     enabled: searchEmail.length > 2,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   // Mutations

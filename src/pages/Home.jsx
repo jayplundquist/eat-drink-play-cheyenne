@@ -113,6 +113,12 @@ export default function Home() {
     }
   }, [recentReviews.length]);
 
+  useEffect(() => {
+    if (currentPage > 1) {
+      document.getElementById('venue-listings')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [currentPage]);
+
   const { data: boots = [] } = useQuery({
     queryKey: ['boots'],
     queryFn: () => base44.entities.Boot.list(),
@@ -416,7 +422,7 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <section id="venue-listings" className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="mb-6 flex gap-2 flex-wrap items-center">
           <Button
             variant={activeTab === 'all' ? 'default' : 'outline'}

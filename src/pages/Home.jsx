@@ -30,15 +30,16 @@ import SuperBowlVenues from "../components/SuperBowlVenues";
 import { CowboyBoot } from "../components/BootRating";
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
-  const [minBootRating, setMinBootRating] = useState(0);
-  const [selectedPrice, setSelectedPrice] = useState('');
+  const urlParams = new URLSearchParams(window.location.search);
+  const [searchQuery, setSearchQuery] = useState(urlParams.get('search') || '');
+  const [activeTab, setActiveTab] = useState(urlParams.get('tab') || 'all');
+  const [minBootRating, setMinBootRating] = useState(parseInt(urlParams.get('rating') || '0'));
+  const [selectedPrice, setSelectedPrice] = useState(urlParams.get('price') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [user, setUser] = useState(null);
   const [suggestionOpen, setSuggestionOpen] = useState(false);
   const [suggestion, setSuggestion] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(parseInt(urlParams.get('page') || '1'));
   const [reviewIndex, setReviewIndex] = useState(0);
 
   const { data: customOptions = [] } = useQuery({
@@ -118,6 +119,18 @@ export default function Home() {
       document.getElementById('venue-listings')?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [currentPage]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('search', searchQuery);
+    if (activeTab !== 'all') params.set('tab', activeTab);
+    if (minBootRating > 0) params.set('rating', minBootRating.toString());
+    if (selectedPrice) params.set('price', selectedPrice);
+    if (currentPage > 1) params.set('page', currentPage.toString());
+    
+    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
+  }, [searchQuery, activeTab, minBootRating, selectedPrice, currentPage]);
 
   const { data: boots = [] } = useQuery({
     queryKey: ['boots'],

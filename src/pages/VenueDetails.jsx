@@ -388,7 +388,7 @@ export default function VenueDetails() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         
         <div className="absolute top-4 left-4 right-4 flex justify-between">
-          <Link to={createPageUrl('Home')}>
+          <Link to={createPageUrl('Home') + (window.location.search.replace(/[?&]id=[^&]*/g, '').replace(/^&/, '?') || '')}>
             <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
@@ -429,12 +429,12 @@ export default function VenueDetails() {
       {(!venue.image_url || imageLoadError) && (
         <div className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <Link to={createPageUrl('Home')}>
-              <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-            </Link>
+                <Link to={createPageUrl('Home') + (window.location.search.replace(/[?&]id=[^&]*/g, '').replace(/^&/, '?') || '')}>
+                  <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
+                  </Button>
+                </Link>
             {user && (user.role === 'admin' || (user.is_premium && venue.claimed_by === user.email)) && (
               <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
                 <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white ml-2 mb-4">

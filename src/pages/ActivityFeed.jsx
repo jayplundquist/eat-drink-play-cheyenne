@@ -24,49 +24,58 @@ export default function ActivityFeed() {
       });
   }, []);
 
-  // Fetch only what we need with limits
+  // Fetch only what we need with limits and stale time
   const { data: allRatings = [] } = useQuery({
     queryKey: ['recentRatings'],
-    queryFn: () => base44.entities.Rating.list('-created_date', 150),
+    queryFn: () => base44.entities.Rating.list('-created_date', 100),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    enabled: !!currentUser?.email,
   });
 
   const { data: follows = [] } = useQuery({
-    queryKey: ['follows'],
+    queryKey: ['follows', currentUser?.email],
     queryFn: () => base44.entities.Follow.filter({ user_email: currentUser?.email }),
     enabled: !!currentUser?.email,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: allFavorites = [] } = useQuery({
     queryKey: ['recentFavorites'],
-    queryFn: () => base44.entities.Favorite.list('-created_date', 50),
+    queryFn: () => base44.entities.Favorite.list('-created_date', 30),
     enabled: !!currentUser?.email && follows.length > 0,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: allBootShares = [] } = useQuery({
     queryKey: ['recentBootShares'],
-    queryFn: () => base44.entities.BootShare.list('-shared_date', 50),
+    queryFn: () => base44.entities.BootShare.list('-shared_date', 30),
     enabled: !!currentUser?.email && follows.length > 0,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: allReviewReactions = [] } = useQuery({
     queryKey: ['reviewReactions'],
-    queryFn: () => base44.entities.ReviewReaction.list('-created_date', 500),
+    queryFn: () => base44.entities.ReviewReaction.list('-created_date', 300),
+    staleTime: 2 * 60 * 1000,
+    enabled: !!currentUser?.email,
   });
 
   // Fetch venues once - reuse cache from Home page
   const { data: allVenues = [] } = useQuery({
     queryKey: ['venues'],
     queryFn: async () => {
-      const venues = await base44.entities.Venue.list('-created_date', 200);
+      const venues = await base44.entities.Venue.list('-created_date', 150);
       return venues;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !!currentUser?.email,
   });
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['searchUsers'],
-    queryFn: () => base44.entities.User.list('-created_date', 100),
-    enabled: searchEmail.length > 0,
+    queryFn: () => base44.entities.User.list('-created_date', 50),
+    enabled: searchEmail.length > 2,
+    staleTime: 5 * 60 * 1000,
   });
 
   // Mutations

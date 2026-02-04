@@ -636,7 +636,7 @@ export default function Home() {
                 </section>
 
                 {/* Export & Suggestions */}
-                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex gap-3 justify-center">
+                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex gap-3 justify-center mt-8">
                 <Button 
                 onClick={exportVenuesToExcel}
                 variant="outline" 

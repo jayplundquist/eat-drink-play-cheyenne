@@ -52,7 +52,6 @@ import AddVenue from './pages/AddVenue';
 import Analytics from './pages/Analytics';
 import EditVenue from './pages/EditVenue';
 import Favorites from './pages/Favorites';
-import Home from './pages/Home';
 import ManageBadges from './pages/ManageBadges';
 import ManageBoots from './pages/ManageBoots';
 import ManageClaimRequests from './pages/ManageClaimRequests';
@@ -66,6 +65,7 @@ import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
 import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -75,7 +75,6 @@ export const PAGES = {
     "Analytics": Analytics,
     "EditVenue": EditVenue,
     "Favorites": Favorites,
-    "Home": Home,
     "ManageBadges": ManageBadges,
     "ManageBoots": ManageBoots,
     "ManageClaimRequests": ManageClaimRequests,
@@ -89,6 +88,7 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
+    "Home": Home,
 }
 
 export const pagesConfig = {

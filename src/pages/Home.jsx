@@ -76,7 +76,10 @@ export default function Home() {
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
     queryKey: ['venues'],
-    queryFn: () => base44.entities.Venue.list('-created_date', 10000),
+    queryFn: async () => {
+      const allVenues = await base44.entities.Venue.list('-created_date', 10000);
+      return allVenues.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    },
   });
 
 

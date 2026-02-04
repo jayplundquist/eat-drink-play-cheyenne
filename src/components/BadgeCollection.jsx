@@ -50,9 +50,9 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                           <TooltipTrigger asChild>
                             <div className={`cursor-help transition-all ${isEarned ? '' : 'opacity-30'}`}>
                               {badge.icon_url ? (
-                                <img src={badge.icon_url} alt={badge.name} className="w-full h-auto rounded-lg" />
+                                <img src={badge.icon_url} alt={badge.name} className="w-24 h-24 object-cover rounded-lg" />
                               ) : (
-                                <div className="text-6xl">🎖️</div>
+                                <div className="w-24 h-24 flex items-center justify-center text-6xl">🎖️</div>
                               )}
                             </div>
                           </TooltipTrigger>
@@ -77,9 +77,9 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                       <TooltipTrigger asChild>
                         <div className={`cursor-help transition-all ${strongSilentTypeEarned ? '' : 'opacity-30'}`}>
                           {strongSilentTypeBadge.icon_url ? (
-                            <img src={strongSilentTypeBadge.icon_url} alt={strongSilentTypeBadge.name} className="w-full h-auto rounded-lg" />
+                            <img src={strongSilentTypeBadge.icon_url} alt={strongSilentTypeBadge.name} className="w-24 h-24 object-cover rounded-lg" />
                           ) : (
-                            <div className="text-6xl">🤐</div>
+                            <div className="w-24 h-24 flex items-center justify-center text-6xl">🤐</div>
                           )}
                         </div>
                       </TooltipTrigger>
@@ -103,9 +103,9 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                       <TooltipTrigger asChild>
                         <div className={`cursor-help transition-all ${dusterEarned ? '' : 'opacity-30'}`}>
                           {dusterBadge.icon_url ? (
-                            <img src={dusterBadge.icon_url} alt={dusterBadge.name} className="w-full h-auto rounded-lg" />
+                            <img src={dusterBadge.icon_url} alt={dusterBadge.name} className="w-24 h-24 object-cover rounded-lg" />
                           ) : (
-                            <div className="text-6xl">🌪️</div>
+                            <div className="w-24 h-24 flex items-center justify-center text-6xl">🌪️</div>
                           )}
                         </div>
                       </TooltipTrigger>
@@ -137,9 +137,9 @@ export default function BadgeCollection({ reviewCount = 0, avgRating = 0, bootVi
                         <TooltipTrigger asChild>
                           <div className={`cursor-help transition-all ${isEarned ? '' : 'opacity-30'}`}>
                             {badge.icon_url ? (
-                              <img src={badge.icon_url} alt={badge.name} className="w-full h-auto rounded-lg" />
+                              <img src={badge.icon_url} alt={badge.name} className="w-24 h-24 object-cover rounded-lg" />
                             ) : (
-                              <div className="text-6xl">🎖️</div>
+                              <div className="w-24 h-24 flex items-center justify-center text-6xl">🎖️</div>
                             )}
                           </div>
                         </TooltipTrigger>

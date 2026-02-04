@@ -231,7 +231,7 @@ export default function ActivityFeed() {
       // Then by date
       return new Date(b.timestamp) - new Date(a.timestamp);
     });
-  }, [currentUser, follows, allRatings, allFavorites, allBootShares, allVenues, allReviewReactions]);
+  }, [currentUser, follows, allRatings, allFavorites, allBootShares, allVenues]);
 
   // Search results
   const searchResults = useMemo(() => {

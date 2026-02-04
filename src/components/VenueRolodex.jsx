@@ -40,15 +40,14 @@ export default function VenueRolodex({ venues }) {
       const cardCenter = card.offsetTop + (card.offsetHeight / 2);
       const dist = cardCenter - viewCenter;
 
-      const rotation = dist / 7;
-      const scale = Math.max(0.7, 1 - Math.abs(dist) / 600);
-      const opacity = Math.max(0.3, 1 - Math.abs(dist) / 400);
+      const angle = dist / 4.5;
+      card.style.transform = `rotateX(${-angle}deg) translateZ(${Math.abs(angle) * -0.3}px)`;
       
-      card.style.transform = `rotateX(${-rotation}deg) translateZ(${Math.abs(rotation) * -1.8}px) scale(${scale})`;
-      card.style.opacity = opacity;
+      const opacity = 1 - Math.abs(dist) / 400;
+      card.style.opacity = opacity < 0.1 ? 0 : opacity;
       
       if (shadow) {
-        shadow.style.opacity = Math.min(Math.abs(dist) / 450, 0.7);
+        shadow.style.opacity = Math.min(Math.abs(dist) / 250, 0.7);
       }
 
       if (Math.abs(dist) < minDistance) {
@@ -59,7 +58,7 @@ export default function VenueRolodex({ venues }) {
 
     if (currentActive !== lastActiveIndex) {
       playTick();
-      if (navigator.vibrate) navigator.vibrate(10);
+      if (navigator.vibrate) navigator.vibrate(12);
       setLastActiveIndex(currentActive);
     }
   };
@@ -69,12 +68,11 @@ export default function VenueRolodex({ venues }) {
   const handleCardClick = (venue, el) => {
     const rect = el.getBoundingClientRect();
     const screenCenter = window.innerHeight / 2;
-    if (Math.abs((rect.top + rect.height/2) - screenCenter) < 100) {
-      el.style.backgroundColor = "#d32f2f";
-      el.style.color = "white";
+    if (Math.abs((rect.top + rect.height/2) - screenCenter) < 70) {
+      el.style.backgroundColor = "#eee";
       setTimeout(() => {
         navigate(createPageUrl(`VenueDetails?id=${venue.id}`));
-      }, 200);
+      }, 150);
     } else {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
@@ -83,25 +81,45 @@ export default function VenueRolodex({ venues }) {
   return (
     <div>
       <style>{`
-        .rolo-wrapper {
+        .rolo-machine {
+          width: 100%;
+          max-width: 500px;
+          margin: 0 auto;
+          height: 650px;
+          background: #1a1a1a;
+          border-radius: 40px;
+          position: relative;
+          box-shadow: 0 40px 80px rgba(0,0,0,0.6);
           display: flex;
           flex-direction: column;
-          align-items: center;
-          height: 700px;
           overflow: hidden;
-          font-family: sans-serif;
+          border: 6px solid #222;
+        }
+
+        .spindle {
+          position: absolute;
+          width: 30px;
+          height: 90%;
+          background: linear-gradient(to right, #000 0%, #444 50%, #000 100%);
+          top: 5%;
+          left: 50%;
+          transform: translateX(-50%);
+          border-radius: 15px;
+          z-index: 2;
+          opacity: 0.9;
+          pointer-events: none;
         }
 
         .rolodex-viewport {
           width: 100%;
           height: 500px;
           overflow-y: scroll;
-          perspective: 1500px;
+          perspective: 2000px;
           scroll-snap-type: y mandatory;
           scrollbar-width: none;
-          padding-top: 200px;
-          padding-bottom: 200px;
-          mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+          z-index: 10;
+          padding-top: 220px;
+          padding-bottom: 250px;
         }
 
         .rolodex-viewport::-webkit-scrollbar { display: none; }
@@ -114,21 +132,22 @@ export default function VenueRolodex({ venues }) {
         }
 
         .venue-card {
-          width: 320px;
+          width: 340px;
           height: 180px;
           background: #ffffff;
-          margin-bottom: -110px;
-          border-radius: 12px;
+          margin-bottom: -130px;
+          border-radius: 10px;
           padding: 20px;
           box-sizing: border-box;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-          border-left: 8px solid #d32f2f;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+          border-top: 12px solid #d32f2f;
           scroll-snap-align: center;
           scroll-snap-stop: always;
-          transform-origin: center center -250px;
+          transform-origin: center center -280px;
           position: relative;
           cursor: pointer;
-          transition: background-color 0.2s, color 0.2s, opacity 0.1s, transform 0.1s;
+          backface-visibility: hidden;
+          transition: background-color 0.2s;
         }
 
         .card-shadow {
@@ -136,16 +155,24 @@ export default function VenueRolodex({ venues }) {
           top: 0; left: 0; right: 0; bottom: 0;
           background: black;
           opacity: 0;
-          border-radius: 12px;
+          border-radius: 10px;
           pointer-events: none;
         }
 
-        .venue-card h3 { margin: 0 0 5px 0; color: #1a1a1a; }
-        .venue-card p { font-size: 14px; color: #555; margin: 0; }
-        .view-hint { margin-top: 15px; font-size: 12px; color: #d32f2f; font-weight: bold; }
+        .venue-card h3 { margin: 5px 0; color: #111; font-size: 20px; font-weight: 800; }
+        .venue-card p { font-size: 14px; color: #444; line-height: 1.4; margin: 0; }
+        .view-btn { 
+          margin-top: 20px; 
+          font-size: 11px; 
+          color: #d32f2f; 
+          font-weight: bold; 
+          letter-spacing: 1px;
+        }
       `}</style>
 
-      <div className="rolo-wrapper">
+      <div className="rolo-machine">
+        <div className="spindle"></div>
+
         <div 
           className="rolodex-viewport" 
           ref={viewportRef}
@@ -153,7 +180,7 @@ export default function VenueRolodex({ venues }) {
         >
           <div className="rolodex-stack" ref={stackRef}>
             {venues.length === 0 ? (
-              <p>No venues found.</p>
+              <p style={{color: '#666', marginTop: '50px'}}>No venues found.</p>
             ) : (
               venues.map((venue) => (
                 <div 
@@ -164,7 +191,7 @@ export default function VenueRolodex({ venues }) {
                   <div className="card-shadow"></div>
                   <h3>{venue.name}</h3>
                   <p>{venue.description ? venue.description.substring(0, 80) + '...' : ''}</p>
-                  <div className="view-hint">VIEW DETAILS →</div>
+                  <div className="view-btn">EXPLORE →</div>
                 </div>
               ))
             )}

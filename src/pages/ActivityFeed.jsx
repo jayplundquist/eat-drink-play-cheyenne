@@ -167,27 +167,23 @@ export default function ActivityFeed() {
     // Take top 50 most recent
     const recentReviews = reviewItems.slice(0, 50);
 
-    // Get trending reviews that fell past the 50 mark (high reactions)
-    const trendingReviews = reviewItems.slice(50).filter(r => r.reactionCount >= 5);
-
     // Get followed reviews that fell past the 50 mark
     const followedReviews = reviewItems.slice(50).filter(r => r.isFromFollowed);
 
-    // Merge: start with recent 50, then intersperse trending and followed
+    // Merge: start with recent 50, then add followed
     const allReviewsToShow = [...recentReviews];
-    const specialReviews = [...trendingReviews, ...followedReviews];
     
-    // Intersperse special reviews throughout the feed (every 5 items)
-    let specialIndex = 0;
-    for (let i = 10; i < allReviewsToShow.length && specialIndex < specialReviews.length; i += 5) {
-      allReviewsToShow.splice(i, 0, specialReviews[specialIndex]);
-      specialIndex++;
+    // Intersperse followed reviews throughout the feed (every 5 items)
+    let followedIndex = 0;
+    for (let i = 10; i < allReviewsToShow.length && followedIndex < followedReviews.length; i += 5) {
+      allReviewsToShow.splice(i, 0, followedReviews[followedIndex]);
+      followedIndex++;
     }
 
-    // Add remaining special reviews at the end
-    while (specialIndex < specialReviews.length) {
-      allReviewsToShow.push(specialReviews[specialIndex]);
-      specialIndex++;
+    // Add remaining followed reviews at the end
+    while (followedIndex < followedReviews.length) {
+      allReviewsToShow.push(followedReviews[followedIndex]);
+      followedIndex++;
     }
 
     items.push(...allReviewsToShow);

@@ -145,7 +145,6 @@ export default function ActivityFeed() {
 
       const boostExpired = rating.boosted_until ? new Date(rating.boosted_until) < new Date() : true;
       const isBoosted = rating.boosted_until && !boostExpired;
-      const reactionCount = allReviewReactions.filter(r => r.rating_id === rating.id).length;
       const isFromFollowed = followedEmails.includes(rating.user_email);
 
       return {
@@ -156,9 +155,9 @@ export default function ActivityFeed() {
         user_email: rating.user_email,
         isOwn: rating.user_email === currentUser.email,
         isBoosted,
-        isPopular: reactionCount >= 3,
+        isPopular: false, // Simplified to reduce queries
         isFromFollowed,
-        reactionCount,
+        reactionCount: 0,
       };
     }).filter(Boolean);
 

@@ -31,6 +31,7 @@ const categories = [
   { value: "music_hall", label: "Music Hall" },
   { value: "activity", label: "Activity" },
   { value: "recreation", label: "Recreation" },
+  { value: "food_trucks", label: "Food Truck" },
 ];
 
 const priceRanges = ["Free", "$", "$$", "$$$", "$$$$"];

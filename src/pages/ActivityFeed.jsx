@@ -14,6 +14,7 @@ export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
   const [searchEmail, setSearchEmail] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [loadStage, setLoadStage] = useState(0);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -23,6 +24,19 @@ export default function ActivityFeed() {
         base44.auth.redirectToLogin();
       });
   }, []);
+
+  // Stagger query loading to prevent rate limits
+  useEffect(() => {
+    if (!currentUser) return;
+    const timer1 = setTimeout(() => setLoadStage(1), 100);
+    const timer2 = setTimeout(() => setLoadStage(2), 500);
+    const timer3 = setTimeout(() => setLoadStage(3), 1000);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [currentUser]);
 
   // Fetch only what we need with limits and aggressive caching
   const { data: allRatings = [] } = useQuery({

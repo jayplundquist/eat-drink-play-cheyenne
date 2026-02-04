@@ -41,7 +41,11 @@ export default function VenueRolodex({ venues }) {
       const dist = cardCenter - viewCenter;
 
       const rotation = dist / 7;
-      card.style.transform = `rotateX(${-rotation}deg) translateZ(${Math.abs(rotation) * -1.8}px)`;
+      const scale = Math.max(0.7, 1 - Math.abs(dist) / 600);
+      const opacity = Math.max(0.3, 1 - Math.abs(dist) / 400);
+      
+      card.style.transform = `rotateX(${-rotation}deg) translateZ(${Math.abs(rotation) * -1.8}px) scale(${scale})`;
+      card.style.opacity = opacity;
       
       if (shadow) {
         shadow.style.opacity = Math.min(Math.abs(dist) / 450, 0.7);
@@ -117,14 +121,14 @@ export default function VenueRolodex({ venues }) {
           border-radius: 12px;
           padding: 20px;
           box-sizing: border-box;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
           border-left: 8px solid #d32f2f;
           scroll-snap-align: center;
           scroll-snap-stop: always;
           transform-origin: center center -250px;
           position: relative;
           cursor: pointer;
-          transition: background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s, color 0.2s, opacity 0.1s, transform 0.1s;
         }
 
         .card-shadow {

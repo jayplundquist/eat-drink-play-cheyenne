@@ -3,7 +3,6 @@ import { createPageUrl } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 
 export default function VenueRolodex({ venues }) {
-  const [searchQuery, setSearchQuery] = useState('');
   const [lastActiveIndex, setLastActiveIndex] = useState(-1);
   const stackRef = useRef(null);
   const viewportRef = useRef(null);
@@ -12,10 +11,6 @@ export default function VenueRolodex({ venues }) {
   useEffect(() => {
     audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
   }, []);
-
-  const filteredVenues = venues.filter(v => 
-    v.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const playTick = () => {
     if (!audioCtxRef.current) return;
@@ -93,19 +88,6 @@ export default function VenueRolodex({ venues }) {
           font-family: sans-serif;
         }
 
-        #roloSearch {
-          width: 80%;
-          max-width: 400px;
-          padding: 15px;
-          border-radius: 30px;
-          border: 2px solid #ddd;
-          margin-bottom: 20px;
-          outline: none;
-          transition: border-color 0.3s;
-        }
-
-        #roloSearch:focus { border-color: #d32f2f; }
-
         .rolodex-viewport {
           width: 100%;
           height: 500px;
@@ -160,23 +142,16 @@ export default function VenueRolodex({ venues }) {
       `}</style>
 
       <div className="rolo-wrapper">
-        <input 
-          type="text" 
-          id="roloSearch" 
-          placeholder="Search Cheyenne venues..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
         <div 
           className="rolodex-viewport" 
           ref={viewportRef}
           onScroll={updatePhysics}
         >
           <div className="rolodex-stack" ref={stackRef}>
-            {filteredVenues.length === 0 ? (
+            {venues.length === 0 ? (
               <p>No venues found.</p>
             ) : (
-              filteredVenues.map((venue) => (
+              venues.map((venue) => (
                 <div 
                   key={venue.id}
                   className="venue-card" 

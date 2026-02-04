@@ -24,15 +24,10 @@ export default function ActivityFeed() {
       });
   }, []);
 
-  // Fetch all data upfront
-  const { data: allVenues = [] } = useQuery({
-    queryKey: ['allVenues'],
-    queryFn: () => base44.entities.Venue.list(),
-  });
-
-  const { data: allUsers = [] } = useQuery({
-    queryKey: ['allUsers'],
-    queryFn: () => base44.entities.User.list(),
+  // Fetch only what we need with limits
+  const { data: allRatings = [] } = useQuery({
+    queryKey: ['recentRatings'],
+    queryFn: () => base44.entities.Rating.list('-created_date', 150),
   });
 
   const { data: follows = [] } = useQuery({
@@ -41,24 +36,53 @@ export default function ActivityFeed() {
     enabled: !!currentUser?.email,
   });
 
-  const { data: allRatings = [] } = useQuery({
-    queryKey: ['allRatings'],
-    queryFn: () => base44.entities.Rating.list(),
-  });
-
   const { data: allFavorites = [] } = useQuery({
-    queryKey: ['allFavorites'],
-    queryFn: () => base44.entities.Favorite.list(),
+    queryKey: ['recentFavorites'],
+    queryFn: () => base44.entities.Favorite.list('-created_date', 50),
+    enabled: !!currentUser?.email && follows.length > 0,
   });
 
   const { data: allBootShares = [] } = useQuery({
-    queryKey: ['allBootShares'],
-    queryFn: () => base44.entities.BootShare.list(),
+    queryKey: ['recentBootShares'],
+    queryFn: () => base44.entities.BootShare.list('-shared_date', 50),
+    enabled: !!currentUser?.email && follows.length > 0,
   });
 
   const { data: allReviewReactions = [] } = useQuery({
-    queryKey: ['allReviewReactions'],
-    queryFn: () => base44.entities.ReviewReaction.list(),
+    queryKey: ['reviewReactions'],
+    queryFn: () => base44.entities.ReviewReaction.list('-created_date', 500),
+  });
+
+  // Get unique venue IDs from ratings, favorites, and boot shares
+  const venueIds = useMemo(() => {
+    const ids = new Set();
+    allRatings.forEach(r => r.venue_id && ids.add(r.venue_id));
+    allFavorites.forEach(f => f.venue_id && ids.add(f.venue_id));
+    return Array.from(ids);
+  }, [allRatings, allFavorites]);
+
+  const { data: allVenues = [] } = useQuery({
+    queryKey: ['venues', venueIds],
+    queryFn: async () => {
+      if (venueIds.length === 0) return [];
+      // Fetch venues in batches to avoid rate limits
+      const venues = [];
+      for (let i = 0; i < venueIds.length; i += 20) {
+        const batch = venueIds.slice(i, i + 20);
+        const batchVenues = await Promise.all(
+          batch.map(id => base44.entities.Venue.filter({ id }).then(v => v[0]).catch(() => null))
+        );
+        venues.push(...batchVenues.filter(Boolean));
+      }
+      return venues;
+    },
+    enabled: venueIds.length > 0,
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['searchUsers'],
+    queryFn: () => base44.entities.User.list('-created_date', 100),
+    enabled: searchEmail.length > 0,
   });
 
   // Mutations

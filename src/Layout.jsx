@@ -65,7 +65,6 @@ export default function Layout({ children, currentPageName }) {
     { name: 'ActivityFeed', icon: Plus, label: 'The Hitching Post' },
     { name: 'VisitedMap', icon: MapPin, label: 'My Map' },
     { name: 'GreenwayInfo', icon: MapPin, label: 'Greenway' },
-    { name: 'Analytics', icon: Settings, label: 'Stats' },
   ];
 
   const isHome = currentPageName === 'Home';
@@ -197,6 +196,12 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('ManageReports')} className="cursor-pointer">
                         <Flag className="w-4 h-4 mr-2" />
                         User Reports
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('Analytics')} className="cursor-pointer">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Stats
                       </Link>
                     </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -349,6 +354,12 @@ export default function Layout({ children, currentPageName }) {
                       <Button variant="ghost" className="w-full justify-start text-stone-600">
                         <Flag className="w-5 h-5 mr-3" />
                         User Reports
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('Analytics')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Settings className="w-5 h-5 mr-3" />
+                        Stats
                       </Button>
                     </Link>
                     </div>

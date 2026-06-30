@@ -51,10 +51,10 @@ function parseWaysToSegments(elements) {
     if (el.type !== 'way' || !el.geometry || el.geometry.length < 2) continue;
     const name = el.tags?.name || '';
     let trailName = 'Cheyenne Greenway';
-    if (/allison/i.test(name))      trailName = 'Allison Draw Greenway';
-    else if (/crow/i.test(name))    trailName = 'Crow Creek Greenway';
-    else if (/sun.?valley/i.test(name)) trailName = 'Sun Valley Greenway';
-    else if (/dry.?creek/i.test(name))  trailName = 'Dry Creek Greenway';
+    if (/allison/i.test(name))          trailName = 'Allison Draw Greenway';
+    else if (/crow/i.test(name))        trailName = 'Crow Creek Greenway';
+    else if (/sun[\s\-_]*valley/i.test(name)) trailName = 'Sun Valley Greenway';
+    else if (/dry[\s\-_]*creek/i.test(name))  trailName = 'Dry Creek Greenway';
     segments.push({
       id: el.id,
       name: trailName,
@@ -123,7 +123,7 @@ export default function GreenwayGuide() {
 
   // Fetch all named greenway ways from Overpass with full geometry
   useEffect(() => {
-    const QUERY = `[out:json][timeout:30];(way["name"~"Dry Creek.*Greenway|Allison Draw.*Greenway|Sun Valley Greenway|Crow Creek Greenway|Cheyenne Greenway",i](41.08,-104.89,41.22,-104.72););out geom qt;`;
+    const QUERY = `[out:json][timeout:30];(way["name"~"Greenway",i](41.08,-104.89,41.22,-104.72););out geom qt;`;
     const url = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=${encodeURIComponent(QUERY)}`;
     fetch(url, { headers: { Accept: 'application/json' } })
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })

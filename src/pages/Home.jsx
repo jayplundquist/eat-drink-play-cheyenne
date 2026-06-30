@@ -14,13 +14,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight, LayoutGrid, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 import HeroSection from "../components/HeroSection";
 import VenueCard from "../components/VenueCard";
+import RolodexView from "../components/RolodexView";
 import CategoryFilter from "../components/CategoryFilter";
 import SpinTheSpur from "../components/SpinTheSpur";
 import QuickDraw from "../components/QuickDraw";
@@ -41,6 +42,8 @@ export default function Home() {
   const [suggestion, setSuggestion] = useState('');
   const [currentPage, setCurrentPage] = useState(parseInt(urlParams.get('page') || '1'));
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [viewMode, setViewMode] = useState('rolodex');
+  const rolodexReturnIndex = parseInt(urlParams.get('rolodex') || '-1');
 
   const { data: customOptions = [] } = useQuery({
     queryKey: ['customVenueOptions'],
@@ -516,7 +519,27 @@ export default function Home() {
             🚚 Chuck Wagons
           </Button>
 
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            {/* View mode toggle */}
+            <div className="flex items-center border-2 border-amber-700 rounded-md overflow-hidden">
+              <button
+                onClick={() => setViewMode('rolodex')}
+                className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors ${viewMode === 'rolodex' ? 'bg-amber-700 text-white' : 'text-amber-700 hover:bg-amber-50'}`}
+                title="Rolodex View"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                Rolodex
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors border-l-2 border-amber-700 ${viewMode === 'grid' ? 'bg-amber-700 text-white' : 'text-amber-700 hover:bg-amber-50'}`}
+                title="Grid View"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                Grid
+              </button>
+            </div>
+
             <Button
               variant={showFilters ? 'default' : 'outline'}
               onClick={() => setShowFilters(!showFilters)}
@@ -645,7 +668,7 @@ export default function Home() {
           )}
 
           {/* Venues Results */}
-          {filteredVenues.length > 0 && (
+          {filteredVenues.length > 0 && viewMode === 'grid' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredVenues.map((venue, i) => (
                 <motion.div
@@ -664,11 +687,20 @@ export default function Home() {
               ))}
             </div>
           )}
+
+          {allFilteredVenues.length > 0 && viewMode === 'rolodex' && (
+            <RolodexView
+              venues={allFilteredVenues}
+              isFavorite={isFavorite}
+              onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+              initialIndex={rolodexReturnIndex >= 0 ? rolodexReturnIndex : 0}
+            />
+          )}
           </>
           )}
 
-                {/* Pagination */}
-                {allFilteredVenues.length > itemsPerPage && (
+                {/* Pagination — only in grid mode */}
+                {viewMode === 'grid' && allFilteredVenues.length > itemsPerPage && (
                 <div className="mt-8 flex items-center justify-center gap-4">
                 <Button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}

@@ -316,6 +316,42 @@ export default function Home() {
                 </section>
               )}
 
+      {/* Greenway Trail Banner */}
+      {!searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <Link to={createPageUrl('GreenwayInfo')}>
+            <div className="relative bg-gradient-to-r from-green-900 via-green-800 to-teal-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer group border-2 border-green-700">
+              {/* Subtle texture */}
+              <div className="absolute inset-0 opacity-10 text-[180px] flex items-center justify-end pr-8 pointer-events-none select-none leading-none">
+                🌿
+              </div>
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 p-6 md:p-8">
+                <div className="flex items-center gap-4 text-white">
+                  <div className="w-14 h-14 bg-green-700/60 border-2 border-green-400/40 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">
+                    🛤️
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-green-300 mb-0.5">Explore Outdoors</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-white leading-tight" style={{ fontFamily: 'Rye, serif' }}>
+                      Greater Cheyenne Greenway
+                    </h3>
+                    <p className="text-green-200 text-sm mt-1">
+                      20+ miles of paved trails · 12 trailheads · GPS-enabled map
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center gap-2 bg-amber-400 group-hover:bg-amber-300 transition-colors text-amber-950 font-bold px-6 py-3 rounded-xl text-sm shadow-lg border-2 border-amber-200">
+                    <MapPin className="w-4 h-4" />
+                    Explore the Trails
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
       {/* Just Blew In Section - Recent Reviews */}
        {recentReviews.length > 0 && !searchQuery && activeTab === 'all' && (
          <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">

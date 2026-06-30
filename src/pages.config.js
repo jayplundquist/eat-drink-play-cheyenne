@@ -67,6 +67,7 @@ import UserProfile from './pages/UserProfile';
 import VenueDetails from './pages/VenueDetails';
 import VisitedMap from './pages/VisitedMap';
 import GreenwayGuide from './pages/GreenwayGuide';
+import GreenwayInfo from './pages/GreenwayInfo';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +92,7 @@ export const PAGES = {
     "VenueDetails": VenueDetails,
     "VisitedMap": VisitedMap,
     "GreenwayGuide": GreenwayGuide,
+    "GreenwayInfo": GreenwayInfo,
 }
 
 export const pagesConfig = {

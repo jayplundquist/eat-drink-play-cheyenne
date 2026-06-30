@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import VenueCard from './VenueCard';
 
 export default function RolodexView({ venues, isFavorite, onToggleFavorite, initialIndex = 0 }) {
-  const [activeIndex, setActiveIndex] = useState(() => Math.min(Math.max(initialIndex, 0), venues.length - 1));
-  const [direction, setDirection] = useState(0); // 1 = next, -1 = prev
+  const [activeIndex, setActiveIndex] = useState(Math.min(initialIndex, Math.max(0, venues.length - 1)));
   const containerRef = useRef(null);
   const touchStartY = useRef(null);
   const lastWheelTime = useRef(0);
-  const isInside = useRef(false);
 
+  // Clamp active index when venues change
+  useEffect(() => {
+    setActiveIndex(prev => Math.min(prev, Math.max(0, venues.length - 1)));
+  }, [venues.length]);
+
+  // Reset to initialIndex when it changes (e.g. user returns from a venue)
   useEffect(() => {
     if (initialIndex >= 0 && initialIndex < venues.length) {
       setActiveIndex(initialIndex);
@@ -23,44 +27,28 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
     setActiveIndex(prev => {
       const next = prev + dir;
       if (next < 0 || next >= venues.length) return prev;
-      setDirection(dir);
       return next;
     });
   }, [venues.length]);
 
-  // Block page scroll only while mouse is over the rolodex
+  // Mouse wheel handler with throttle
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
-    const onEnter = () => { isInside.current = true; };
-    const onLeave = () => { isInside.current = false; };
-
     const handleWheel = (e) => {
-      if (!isInside.current) return;
       e.preventDefault();
       const now = Date.now();
-      if (now - lastWheelTime.current < 350) return;
+      if (now - lastWheelTime.current < 300) return;
       lastWheelTime.current = now;
       go(e.deltaY > 0 ? 1 : -1);
     };
-
-    el.addEventListener('mouseenter', onEnter);
-    el.addEventListener('mouseleave', onLeave);
-    // Attach to window so we can preventDefault on the native scroll
-    window.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      el.removeEventListener('mouseenter', onEnter);
-      el.removeEventListener('mouseleave', onLeave);
-      window.removeEventListener('wheel', handleWheel);
-    };
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
   }, [go]);
 
-  // Keyboard
+  // Keyboard handler
   useEffect(() => {
     const handleKey = (e) => {
-      if (!isInside.current) return;
       if (e.key === 'ArrowDown') { e.preventDefault(); go(1); }
       if (e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
     };
@@ -68,9 +56,8 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
     return () => window.removeEventListener('keydown', handleKey);
   }, [go]);
 
-  // Touch swipe
+  // Touch / swipe handler
   const handleTouchStart = (e) => { touchStartY.current = e.touches[0].clientY; };
-  const handleTouchMove = (e) => { e.preventDefault(); }; // block page scroll during swipe
   const handleTouchEnd = (e) => {
     if (touchStartY.current === null) return;
     const delta = touchStartY.current - e.changedTouches[0].clientY;
@@ -80,18 +67,17 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
 
   if (venues.length === 0) return null;
 
-  const venue = venues[activeIndex];
+  // Render a window of cards: 2 above, active, 2 below
+  const VISIBLE = 2;
+  const visibleCards = [];
+  for (let offset = -VISIBLE; offset <= VISIBLE; offset++) {
+    const idx = activeIndex + offset;
+    if (idx < 0 || idx >= venues.length) continue;
+    visibleCards.push({ venue: venues[idx], offset, idx });
+  }
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col items-center w-full select-none"
-      onMouseEnter={() => { isInside.current = true; }}
-      onMouseLeave={() => { isInside.current = false; }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="flex flex-col items-center w-full select-none">
       {/* Counter */}
       <div className="text-amber-800 text-sm font-medium mb-3 font-mono">
         {activeIndex + 1} / {venues.length}
@@ -106,42 +92,89 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
         <ChevronUp className="w-5 h-5" />
       </button>
 
-      {/* Card area — fixed size, cards animate in/out */}
-      <div className="relative w-full max-w-lg mx-auto overflow-hidden" style={{ minHeight: 480 }}>
-        {/* Rolodex tab */}
-        <div
-          className="absolute -top-5 left-4 z-20 bg-amber-800 text-amber-100 text-xs font-bold px-3 py-0.5 rounded-t-md border-2 border-amber-900 border-b-0 truncate max-w-[220px]"
-          style={{ fontFamily: 'Rye, serif', letterSpacing: '0.05em' }}
-        >
-          {venue.name}
-        </div>
+      {/* Rolodex stack */}
+      <div
+        ref={containerRef}
+        className="relative w-full max-w-lg mx-auto"
+        style={{ height: 420 }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        tabIndex={0}
+        onFocus={() => {}}
+      >
+        {/* Spine / rod */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-1 bg-amber-900/20 rounded-full z-0 pointer-events-none" />
 
-        <AnimatePresence mode="wait" initial={false} custom={direction}>
-          <motion.div
-            key={venue.id}
-            custom={direction}
-            variants={{
-              enter: (d) => ({ y: d > 0 ? 60 : -60, opacity: 0, scale: 0.97 }),
-              center: { y: 0, opacity: 1, scale: 1 },
-              exit: (d) => ({ y: d > 0 ? -60 : 60, opacity: 0, scale: 0.97 }),
-            }}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.22, ease: 'easeInOut' }}
-            className="border-4 border-amber-900 shadow-2xl shadow-amber-900/30 bg-amber-50 overflow-hidden"
-          >
-            <Link
-              to={createPageUrl(`VenueDetails?id=${venue.id}`) + `&rolodex=${activeIndex}`}
-              style={{ display: 'block' }}
-            >
-              <VenueCard
-                venue={venue}
-                isFavorite={isFavorite(venue.id)}
-                onToggleFavorite={onToggleFavorite}
-              />
-            </Link>
-          </motion.div>
+        <AnimatePresence initial={false}>
+          {visibleCards.map(({ venue, offset, idx }) => {
+            const isActive = offset === 0;
+            const absOffset = Math.abs(offset);
+            const yPercent = offset * 55;
+            const scale = isActive ? 1 : 1 - absOffset * 0.07;
+            const opacity = isActive ? 1 : 1 - absOffset * 0.3;
+            const zIndex = VISIBLE + 1 - absOffset;
+            const rotateX = offset * -6;
+
+            return (
+              <motion.div
+                key={venue.id}
+                initial={{ opacity: 0, y: offset > 0 ? 60 : -60 }}
+                animate={{
+                  y: `${yPercent}%`,
+                  scale,
+                  opacity,
+                  rotateX,
+                  zIndex,
+                }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  transformOrigin: 'center top',
+                  perspective: 800,
+                  zIndex,
+                  pointerEvents: isActive ? 'auto' : 'none',
+                }}
+                onClick={() => { if (!isActive) go(offset > 0 ? 1 : -1); }}
+              >
+                {/* Rolodex tab */}
+                <div
+                  className="absolute -top-5 left-4 z-10 bg-amber-800 text-amber-100 text-xs font-bold px-3 py-0.5 rounded-t-md border-2 border-amber-900 border-b-0 truncate max-w-[160px]"
+                  style={{ fontFamily: 'Rye, serif', letterSpacing: '0.05em' }}
+                >
+                  {venue.name}
+                </div>
+
+                {/* Card wrapper — active card links to venue */}
+                <div className={`rounded-none overflow-hidden border-4 ${isActive ? 'border-amber-900 shadow-2xl shadow-amber-900/40' : 'border-amber-700/60 shadow-md'} transition-shadow bg-amber-50`}>
+                  {isActive ? (
+                    <Link
+                      to={createPageUrl(`VenueDetails?id=${venue.id}`) + `&rolodex=${idx}`}
+                      style={{ display: 'block' }}
+                    >
+                      <VenueCard
+                        venue={venue}
+                        isFavorite={isFavorite(venue.id)}
+                        onToggleFavorite={onToggleFavorite}
+                        hideAddress={false}
+                      />
+                    </Link>
+                  ) : (
+                    <VenueCard
+                      venue={venue}
+                      isFavorite={isFavorite(venue.id)}
+                      onToggleFavorite={onToggleFavorite}
+                      hideAddress={false}
+                      showFavorite={false}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
 
@@ -149,12 +182,13 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
       <button
         onClick={() => go(1)}
         disabled={activeIndex === venues.length - 1}
-        className="mt-3 p-2 rounded-full border-2 border-amber-700 text-amber-700 hover:bg-amber-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="mt-4 p-2 rounded-full border-2 border-amber-700 text-amber-700 hover:bg-amber-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <ChevronDown className="w-5 h-5" />
       </button>
 
-      <p className="mt-2 text-xs text-amber-600/70 italic">Scroll, swipe, or use ↑↓ arrows · Click card to open</p>
+      {/* Hint */}
+      <p className="mt-2 text-xs text-amber-600/70 italic">Scroll, swipe, or use ↑↓ arrows · Click card to view details</p>
     </div>
   );
 }

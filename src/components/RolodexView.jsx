@@ -56,14 +56,27 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
     return () => window.removeEventListener('keydown', handleKey);
   }, [go]);
 
-  // Touch / swipe handler
-  const handleTouchStart = (e) => { touchStartY.current = e.touches[0].clientY; };
-  const handleTouchEnd = (e) => {
-    if (touchStartY.current === null) return;
-    const delta = touchStartY.current - e.changedTouches[0].clientY;
-    if (Math.abs(delta) > 40) go(delta > 0 ? 1 : -1);
-    touchStartY.current = null;
-  };
+  // Touch / swipe handler — attached via ref to allow preventDefault
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onTouchStart = (e) => { touchStartY.current = e.touches[0].clientY; };
+    const onTouchMove = (e) => { e.preventDefault(); };
+    const onTouchEnd = (e) => {
+      if (touchStartY.current === null) return;
+      const delta = touchStartY.current - e.changedTouches[0].clientY;
+      if (Math.abs(delta) > 40) go(delta > 0 ? 1 : -1);
+      touchStartY.current = null;
+    };
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [go]);
 
   if (venues.length === 0) return null;
 
@@ -97,8 +110,6 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
         ref={containerRef}
         className="relative w-full max-w-lg mx-auto"
         style={{ height: 420 }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
         tabIndex={0}
         onFocus={() => {}}
       >

@@ -1,0 +1,41 @@
+{
+  "name": "PhotoReport",
+  "type": "object",
+  "properties": {
+    "rating_id": {
+      "type": "string",
+      "description": "ID of the review containing the photo"
+    },
+    "venue_id": {
+      "type": "string",
+      "description": "ID of the venue"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "URL of the reported photo"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of user reporting"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for reporting"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "removed"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "rating_id",
+    "venue_id",
+    "photo_url",
+    "reason"
+  ]
+}

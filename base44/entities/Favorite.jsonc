@@ -1,0 +1,16 @@
+{
+  "name": "Favorite",
+  "type": "object",
+  "properties": {
+    "venue_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "venue_id",
+    "user_email"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "CustomVenueOption",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the option"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "category",
+        "food_type"
+      ],
+      "description": "Whether this is a venue category or food type"
+    },
+    "value": {
+      "type": "string",
+      "description": "Machine-readable value"
+    },
+    "tabs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "eat",
+          "drink",
+          "play",
+          "shop",
+          "chuck_wagon"
+        ]
+      },
+      "description": "Which tabs this category belongs under (only for categories)"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "value"
+  ]
+}

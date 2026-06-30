@@ -1,0 +1,27 @@
+{
+  "name": "Suggestion",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who submitted the suggestion"
+    },
+    "suggestion_text": {
+      "type": "string",
+      "description": "The suggestion content"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "implemented"
+      ],
+      "default": "pending",
+      "description": "Status of the suggestion"
+    }
+  },
+  "required": [
+    "suggestion_text"
+  ]
+}

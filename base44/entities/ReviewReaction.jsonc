@@ -1,0 +1,30 @@
+{
+  "name": "ReviewReaction",
+  "type": "object",
+  "properties": {
+    "rating_id": {
+      "type": "string",
+      "description": "ID of the review being reacted to"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user adding the reaction"
+    },
+    "reaction_type": {
+      "type": "string",
+      "enum": [
+        "thumbs_up",
+        "thumbs_down",
+        "heart",
+        "shocked",
+        "mad"
+      ],
+      "description": "Type of reaction"
+    }
+  },
+  "required": [
+    "rating_id",
+    "user_email",
+    "reaction_type"
+  ]
+}

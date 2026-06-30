@@ -1,0 +1,27 @@
+{
+  "name": "CommentReaction",
+  "type": "object",
+  "properties": {
+    "comment_id": {
+      "type": "string",
+      "description": "ID of the comment being reacted to"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user reacting"
+    },
+    "reaction_type": {
+      "type": "string",
+      "enum": [
+        "thumbs_up",
+        "thumbs_down"
+      ],
+      "description": "Type of reaction"
+    }
+  },
+  "required": [
+    "comment_id",
+    "user_email",
+    "reaction_type"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Rating",
+  "type": "object",
+  "properties": {
+    "venue_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "boots": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "comment": {
+      "type": "string"
+    },
+    "image_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photos from the review"
+    },
+    "boosted_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the review boost expires"
+    },
+    "boost_payment_id": {
+      "type": "string",
+      "description": "Stripe payment ID for the boost"
+    }
+  },
+  "required": [
+    "venue_id",
+    "boots"
+  ]
+}

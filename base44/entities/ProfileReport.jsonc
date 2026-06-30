@@ -1,0 +1,31 @@
+{
+  "name": "ProfileReport",
+  "type": "object",
+  "properties": {
+    "reported_email": {
+      "type": "string",
+      "description": "Email of the user being reported"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of user reporting"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for reporting"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "resolved"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "reported_email",
+    "reason"
+  ]
+}

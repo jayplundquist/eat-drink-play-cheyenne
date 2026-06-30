@@ -1,0 +1,25 @@
+{
+  "name": "GameSettings",
+  "type": "object",
+  "properties": {
+    "game_name": {
+      "type": "string",
+      "enum": [
+        "quick_draw",
+        "wet_yer_whistle"
+      ],
+      "description": "Name of the game feature"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Categories included in this game"
+    }
+  },
+  "required": [
+    "game_name",
+    "categories"
+  ]
+}

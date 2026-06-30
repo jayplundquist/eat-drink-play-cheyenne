@@ -1,0 +1,32 @@
+{
+  "name": "BootVisit",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who visited the boot"
+    },
+    "boot_name": {
+      "type": "string",
+      "description": "Name of the boot"
+    },
+    "address": {
+      "type": "string",
+      "description": "Address of the boot"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo URL of the user at the boot"
+    },
+    "visited_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the boot was visited"
+    }
+  },
+  "required": [
+    "user_email",
+    "boot_name",
+    "address"
+  ]
+}

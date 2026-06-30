@@ -13,7 +13,6 @@ import { Card } from "@/components/ui/card";
 import { Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
-const STRIPE_PUBLISHABLE_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
 export default function ClaimVenueModal({ open, onOpenChange, venueName, venueId, user }) {
   const [step, setStep] = useState('pricing'); // 'pricing' or 'processing'

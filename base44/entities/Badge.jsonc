@@ -1,0 +1,37 @@
+{
+  "name": "Badge",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Badge name"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "review",
+        "boot"
+      ],
+      "description": "Badge type (review or boot challenge)"
+    },
+    "icon_url": {
+      "type": "string",
+      "description": "URL of the badge icon image"
+    },
+    "description": {
+      "type": "string",
+      "description": "Badge description"
+    },
+    "min_count": {
+      "type": "number",
+      "description": "Minimum count required to earn badge"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "icon_url",
+    "description",
+    "min_count"
+  ]
+}

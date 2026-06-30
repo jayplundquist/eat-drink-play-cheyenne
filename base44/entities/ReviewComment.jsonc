@@ -1,0 +1,23 @@
+{
+  "name": "ReviewComment",
+  "type": "object",
+  "properties": {
+    "review_id": {
+      "type": "string",
+      "description": "ID of the review being commented on"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user making the comment"
+    },
+    "comment_text": {
+      "type": "string",
+      "description": "The comment text"
+    }
+  },
+  "required": [
+    "review_id",
+    "user_email",
+    "comment_text"
+  ]
+}

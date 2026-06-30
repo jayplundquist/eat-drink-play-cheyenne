@@ -1,0 +1,28 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "is_premium": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has a premium account"
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "description": "Stripe customer ID for payment management"
+    },
+    "profile_picture": {
+      "type": "string",
+      "description": "URL of user's profile picture"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Custom display name for the user"
+    }
+  },
+  "required": [
+    "stripe_customer_id",
+    "profile_picture",
+    "display_name"
+  ]
+}

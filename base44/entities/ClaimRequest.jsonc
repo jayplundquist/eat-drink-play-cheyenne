@@ -1,0 +1,33 @@
+{
+  "name": "ClaimRequest",
+  "type": "object",
+  "properties": {
+    "venue_id": {
+      "type": "string",
+      "description": "ID of the venue being claimed"
+    },
+    "venue_name": {
+      "type": "string",
+      "description": "Name of the venue"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user requesting to claim"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the claim request"
+    }
+  },
+  "required": [
+    "venue_id",
+    "venue_name",
+    "user_email"
+  ]
+}

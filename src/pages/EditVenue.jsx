@@ -72,7 +72,7 @@ export default function EditVenue() {
       const session = response.data;
 
       if (window.Stripe) {
-        const stripe = await window.Stripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+        const stripe = await window.Stripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
         await stripe.redirectToCheckout({ sessionId: session.id });
       }
     } catch (error) {

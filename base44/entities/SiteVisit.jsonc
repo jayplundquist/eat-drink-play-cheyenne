@@ -1,0 +1,15 @@
+{
+  "name": "SiteVisit",
+  "type": "object",
+  "properties": {
+    "user_agent": {
+      "type": "string",
+      "description": "User agent string"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address of the visitor"
+    }
+  },
+  "required": []
+}

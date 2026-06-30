@@ -16,8 +16,6 @@ import {
 } from "@/components/ui/dialog";
 
 export default function ReviewActions({ ratingId, reviewUserId, currentUserEmail, isAlreadyBoosted, currentUser }) {
-  if (!currentUser) return null;
-  
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [boostOpen, setBoostOpen] = useState(false);
@@ -161,6 +159,8 @@ export default function ReviewActions({ ratingId, reviewUserId, currentUserEmail
   const thumbsUpCount = reviewReactions.filter(r => r.reaction_type === 'thumbs_up').length;
   const thumbsDownCount = reviewReactions.filter(r => r.reaction_type === 'thumbs_down').length;
   const userReviewReaction = reviewReactions.find(r => r.user_email === currentUserEmail);
+
+  if (!currentUser) return null;
 
   return (
     <div className="mt-3 space-y-3 border-t border-stone-200 pt-3">

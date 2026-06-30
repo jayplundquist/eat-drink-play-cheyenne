@@ -1,0 +1,40 @@
+{
+  "name": "Ad",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Advertisement title or headline"
+    },
+    "description": {
+      "type": "string",
+      "description": "Advertisement description or body text"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL of the ad image"
+    },
+    "link_url": {
+      "type": "string",
+      "description": "URL the ad should link to (leave blank for no link)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this ad is currently active and visible"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the ad campaign starts"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the ad campaign ends"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

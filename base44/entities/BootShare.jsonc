@@ -1,0 +1,28 @@
+{
+  "name": "BootShare",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user sharing the boot visit"
+    },
+    "boot_name": {
+      "type": "string",
+      "description": "Name of the boot"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo URL of the visit"
+    },
+    "shared_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the boot visit was shared"
+    }
+  },
+  "required": [
+    "user_email",
+    "boot_name",
+    "photo_url"
+  ]
+}

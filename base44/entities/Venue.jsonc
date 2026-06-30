@@ -1,0 +1,151 @@
+{
+  "name": "Venue",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the venue"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "restaurant",
+          "bar",
+          "brewery",
+          "music_hall",
+          "activity",
+          "recreation",
+          "souvenir_shopping",
+          "food_trucks"
+        ]
+      },
+      "description": "Types of venue"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the venue"
+    },
+    "address": {
+      "type": "string",
+      "description": "Street address"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "price_range": {
+      "type": "string",
+      "enum": [
+        "Free",
+        "$",
+        "$$",
+        "$$$",
+        "$$$$"
+      ]
+    },
+    "hours": {
+      "type": "string"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "food_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "asian",
+          "international",
+          "mexican",
+          "american",
+          "steaks",
+          "bbq",
+          "dessert",
+          "fine_dining",
+          "pizza"
+        ]
+      },
+      "description": "Types of food served (for restaurants)"
+    },
+    "claimed_by": {
+      "type": "string",
+      "description": "Email of the user who claimed this venue"
+    },
+    "total_ratings": {
+      "type": "number",
+      "default": 0
+    },
+    "rating_sum": {
+      "type": "number",
+      "default": 0
+    },
+    "rating_count": {
+      "type": "number",
+      "default": 0
+    },
+    "quick_draw_boost": {
+      "type": "boolean",
+      "default": false,
+      "description": "Premium boost for Quick Draw selection"
+    },
+    "boost_expires_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the Quick Draw boost expires"
+    },
+    "menu_pictures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of menu pictures"
+    },
+    "locked_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of field names locked by admins",
+      "default": []
+    },
+    "has_big_boot": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this venue has one of the 29 iconic Big Boots"
+    },
+    "critter_friendly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this venue is pet/critter friendly"
+    },
+    "veteran_owned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this venue is veteran owned"
+    },
+    "broadcasts_superbowl": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this venue broadcasts the Super Bowl"
+    },
+    "permanently_closed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this venue is permanently closed"
+    }
+  },
+  "required": [
+    "name",
+    "categories"
+  ]
+}

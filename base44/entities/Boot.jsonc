@@ -1,0 +1,26 @@
+{
+  "name": "Boot",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the boot"
+    },
+    "address": {
+      "type": "string",
+      "description": "Address of the boot location"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude coordinate"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude coordinate"
+    }
+  },
+  "required": [
+    "name",
+    "address"
+  ]
+}

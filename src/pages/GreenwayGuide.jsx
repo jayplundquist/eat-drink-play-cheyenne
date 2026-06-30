@@ -31,7 +31,8 @@ const SEGMENT_STYLES = [
   { pattern: /dry.?creek/i,    color: '#166534', name: 'Dry Creek Greenway' },
   { pattern: /allison.?draw/i, color: '#0d9488', name: 'Allison Draw Greenway' },
   { pattern: /crow.?creek/i,   color: '#7c3aed', name: 'Crow Creek Greenway' },
-  { pattern: /sun.?valley/i,   color: '#b45309', name: 'Sun Valley & East Cheyenne' },
+  { pattern: /sun.?valley/i,   color: '#d97706', name: 'Sun Valley Greenway' },
+  { pattern: /storey/i,        color: '#1d4ed8', name: 'Storey Boulevard Greenway' },
 ];
 
 function styleForName(name = '') {
@@ -43,6 +44,7 @@ function styleForName(name = '') {
 }
 
 // ─── Fallback curated paths (shown while OSM loads or if fetch fails) ─────────
+// Named segments per official City of Cheyenne / Wyopath sources (47 total miles)
 const FALLBACK_SEGMENTS = [
   {
     id: 'dry-creek', name: 'Dry Creek Greenway', color: '#166534',
@@ -78,14 +80,22 @@ const FALLBACK_SEGMENTS = [
     ],
   },
   {
-    id: 'sun-valley-east', name: 'Sun Valley & East Cheyenne', color: '#b45309',
+    id: 'sun-valley', name: 'Sun Valley Greenway', color: '#d97706',
     path: [
-      [41.1012,-104.7740],[41.1030,-104.7720],[41.1060,-104.7700],[41.1090,-104.7680],
-      [41.1110,-104.7665],[41.1140,-104.7652],[41.1182,-104.7640],[41.1210,-104.7630],
-      [41.1240,-104.7625],[41.1270,-104.7620],[41.1300,-104.7618],[41.1330,-104.7618],
-      [41.1360,-104.7620],[41.1390,-104.7625],[41.1420,-104.7640],[41.1448,-104.7485],
-      [41.1475,-104.7520],[41.1510,-104.7600],[41.1540,-104.7650],[41.1578,-104.7735],
-      [41.1608,-104.7820],[41.1640,-104.7920],
+      [41.1448,-104.7485],[41.1420,-104.7468],[41.1390,-104.7452],[41.1360,-104.7440],
+      [41.1330,-104.7435],[41.1300,-104.7435],[41.1270,-104.7440],[41.1240,-104.7450],
+      [41.1210,-104.7460],[41.1182,-104.7465],[41.1155,-104.7468],[41.1130,-104.7470],
+      [41.1100,-104.7472],[41.1070,-104.7475],[41.1045,-104.7480],[41.1020,-104.7490],
+      [41.1012,-104.7520],[41.1010,-104.7555],[41.1012,-104.7590],
+    ],
+  },
+  {
+    id: 'storey-blvd', name: 'Storey Boulevard Greenway', color: '#1d4ed8',
+    path: [
+      [41.1808,-104.8060],[41.1820,-104.8020],[41.1830,-104.7975],[41.1838,-104.7935],
+      [41.1842,-104.7900],[41.1845,-104.7865],[41.1845,-104.7830],[41.1843,-104.7795],
+      [41.1840,-104.7760],[41.1835,-104.7725],[41.1828,-104.7690],[41.1820,-104.7660],
+      [41.1810,-104.7635],[41.1798,-104.7610],[41.1785,-104.7590],
     ],
   },
 ];

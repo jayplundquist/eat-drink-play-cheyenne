@@ -336,7 +336,7 @@ export default function Home() {
                       Greater Cheyenne Greenway
                     </h3>
                     <p className="text-green-200 text-sm mt-1">
-                      20+ miles of paved trails · 12 trailheads · GPS-enabled map
+                      47 miles of paved trails · 6 named segments · GPS-enabled map
                     </p>
                   </div>
                 </div>

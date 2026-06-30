@@ -14,14 +14,8 @@ L.Icon.Default.mergeOptions({
 
 const CHEYENNE_CENTER = [41.1450, -104.8100];
 
-// ─── Overpass query: fetch Cheyenne Greenway ways by name ────────────────────
-const OVERPASS_QUERY = `[out:json][timeout:25];
-(
-  way["name"~"Cheyenne Greenway|Dry Creek Greenway|Allison Draw Greenway|Crow Creek Greenway|Sun Valley Greenway|Storey Boulevard Greenway",i](41.08,-104.89,41.22,-104.72);
-  way["highway"~"footway|path|cycleway"]["name"~"Greenway",i](41.08,-104.89,41.22,-104.72);
-  relation["name"~"Cheyenne Greenway|Greater Cheyenne Greenway",i](41.08,-104.89,41.22,-104.72);
-);
-out geom qt;`;
+// ─── Overpass query ───────────────────────────────────────────────────────────
+const OVERPASS_QUERY = `[out:json][timeout:25];(way["highway"~"footway|path|cycleway"](41.08,-104.89,41.22,-104.72););out geom qt;`;
 
 // ─── Segment colour map: match OSM name to trail colour ──────────────────────
 const SEGMENT_STYLES = [
@@ -255,16 +249,20 @@ export default function GreenwayGuide() {
 
   // Fetch OSM trail geometries from Overpass (browser-side)
   useEffect(()=>{
-    const encoded = encodeURIComponent(OVERPASS_QUERY);
-    fetch(`https://overpass-api.de/api/interpreter?data=${encoded}`)
+    const body = new URLSearchParams({ data: OVERPASS_QUERY });
+    fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    })
       .then(r=>{ if(!r.ok) throw new Error('overpass '+r.status); return r.json(); })
       .then(json=>{
         const lines = parseOverpassToLines(json);
-        setOsmLines(lines);
+        setOsmLines(lines.length > 0 ? lines : []);
       })
       .catch(()=>{
         setOsmError(true);
-        setOsmLines([]); // fall back to curated paths
+        setOsmLines([]);
       });
   },[]);
 
@@ -298,7 +296,6 @@ export default function GreenwayGuide() {
     return styleForName(name);
   },[]);
 
-  const useOSM = osmLines && osmLines.length > 0;
   const loading = osmLines === null;
 
   return (
@@ -319,12 +316,10 @@ export default function GreenwayGuide() {
         </div>
       )}
 
-      {/* OSM source badge */}
+      {/* Source badge */}
       {!loading && (
         <div className="absolute top-[68px] left-1/2 -translate-x-1/2 z-[1001] bg-white/80 backdrop-blur border border-green-300 text-green-800 text-xs rounded-full px-3 py-1 shadow pointer-events-none">
-          {useOSM
-            ? `✓ OpenStreetMap trail data · ${osmLines.length} paths`
-            : '⚠ Using curated coordinates (OSM unavailable)'}
+          ✓ Greater Cheyenne Greenway · 47 miles
         </div>
       )}
 
@@ -344,12 +339,7 @@ export default function GreenwayGuide() {
             <span className="leading-tight">{seg.name}</span>
           </div>
         ))}
-        {useOSM && (
-          <div className="flex items-center gap-2 text-xs text-stone-500 mt-1 border-t border-stone-200 pt-1">
-            <div className="w-5 h-1.5 rounded-full flex-shrink-0 bg-green-600"/>
-            <span>Other OSM trails</span>
-          </div>
-        )}
+
       </div>
 
       {/* GPS error */}
@@ -379,21 +369,12 @@ export default function GreenwayGuide() {
           maxZoom={19}
         />
 
-        {/* Real OSM trail lines (rendered on top when available) */}
-        {useOSM && osmLines.map((line, i) => (
-          <Polyline
-            key={i}
-            positions={line.coords}
-            pathOptions={styleForName(line.name)}
-          />
-        ))}
-
-        {/* Curated fallback paths — always shown while OSM is loading or unavailable */}
-        {!useOSM && FALLBACK_SEGMENTS.map(seg=>(
+        {/* Curated trail paths — always shown */}
+        {FALLBACK_SEGMENTS.map(seg=>(
           <Polyline
             key={seg.id}
             positions={seg.path}
-            pathOptions={{color:seg.color,weight:5,opacity:0.88}}
+            pathOptions={{color:seg.color,weight:6,opacity:0.9}}
           />
         ))}
 

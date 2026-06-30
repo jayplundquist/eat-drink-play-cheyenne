@@ -108,8 +108,8 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
       {/* Rolodex stack */}
       <div
         ref={containerRef}
-        className="relative w-full max-w-lg mx-auto"
-        style={{ height: 420 }}
+        className="relative w-full max-w-lg mx-auto overflow-hidden"
+        style={{ height: 520, paddingTop: 80 }}
         tabIndex={0}
         onFocus={() => {}}
       >

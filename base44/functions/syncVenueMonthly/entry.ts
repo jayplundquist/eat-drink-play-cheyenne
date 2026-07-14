@@ -35,6 +35,10 @@ Deno.serve(async (req) => {
       const sorted = venues
         .slice()
         .sort((a, b) => {
+          // Failed venues get retried first so the system self-heals
+          const aFailed = a.sync_error ? 1 : 0;
+          const bFailed = b.sync_error ? 1 : 0;
+          if (aFailed !== bFailed) return bFailed - aFailed;
           const aDate = a.last_synced_date ? new Date(a.last_synced_date).getTime() : 0;
           const bDate = b.last_synced_date ? new Date(b.last_synced_date).getTime() : 0;
           if (aDate !== bDate) return aDate - bDate;

@@ -37,9 +37,11 @@ Deno.serve(async (req) => {
     const batch = sorted.slice(0, BATCH_SIZE);
     console.log(`Selected ${batch.length} venues to sync:`, batch.map(v => v.name).join(', '));
 
+    // Process venues concurrently in small chunks to keep each call fast
+    const CONCURRENCY = 5;
     const results = [];
 
-    for (const venue of batch) {
+    const syncOne = async (venue) => {
       try {
         const locationHint = venue.address ? `${venue.address}, Cheyenne, WY` : 'Cheyenne, Wyoming';
 
@@ -57,31 +59,25 @@ Deno.serve(async (req) => {
           }
         });
 
-        const update = {
-          last_synced_date: new Date().toISOString()
-        };
+        const update = { last_synced_date: new Date().toISOString() };
 
-        // Only overwrite fields the LLM returned non-empty
-        if (llmRes.description && llmRes.description.trim()) {
-          update.description = llmRes.description.trim();
-        }
-        if (llmRes.website && llmRes.website.trim()) {
-          update.website = llmRes.website.trim();
-        }
-        if (llmRes.phone && llmRes.phone.trim()) {
-          update.phone = llmRes.phone.trim();
-        }
+        if (llmRes.description && llmRes.description.trim()) update.description = llmRes.description.trim();
+        if (llmRes.website && llmRes.website.trim()) update.website = llmRes.website.trim();
+        if (llmRes.phone && llmRes.phone.trim()) update.phone = llmRes.phone.trim();
 
         await base44.asServiceRole.entities.Venue.update(venue.id, update);
-        results.push({ name: venue.name, success: true, updated: Object.keys(update).filter(k => k !== 'last_synced_date') });
         console.log(`Synced: ${venue.name}`);
+        return { name: venue.name, success: true, updated: Object.keys(update).filter(k => k !== 'last_synced_date') };
       } catch (err) {
         console.error(`Sync failed for ${venue.name}:`, err.message);
-        results.push({ name: venue.name, success: false, error: err.message });
+        return { name: venue.name, success: false, error: err.message };
       }
+    };
 
-      // Small delay between calls to be gentle on the API
-      await new Promise(r => setTimeout(r, 2000));
+    for (let i = 0; i < batch.length; i += CONCURRENCY) {
+      const chunk = batch.slice(i, i + CONCURRENCY);
+      const chunkResults = await Promise.all(chunk.map(syncOne));
+      results.push(...chunkResults);
     }
 
     return Response.json({

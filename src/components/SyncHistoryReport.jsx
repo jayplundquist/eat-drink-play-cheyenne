@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -93,8 +95,13 @@ export default function SyncHistoryReport({ venues = [] }) {
                 const changes = venue.last_sync_changes || [];
                 return (
                   <TableRow key={venue.id}>
-                    <TableCell className="font-medium text-stone-800 whitespace-nowrap">
-                      {venue.name}
+                    <TableCell className="font-medium whitespace-nowrap">
+                      <Link
+                        to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
+                        className="text-amber-800 hover:text-amber-600 hover:underline"
+                      >
+                        {venue.name}
+                      </Link>
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {synced ? (

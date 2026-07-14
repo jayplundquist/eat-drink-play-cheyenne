@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MapPin, ExternalLink, Trophy, PawPrint, Star } from "lucide-react";
+import { Heart, MapPin, ExternalLink, Trophy, PawPrint, Star, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
 import BootRating from "./BootRating";
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import moment from 'moment';
 
 const categoryLabels = {
   restaurant: "Restaurant",
@@ -206,6 +207,15 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
             {venue.description}
           </p>
         )}
+        
+        <div className="flex items-center gap-1 mt-3 text-stone-400 text-xs">
+          <Clock className="w-3 h-3" />
+          <span>
+            {venue.last_synced_date
+              ? `Synced ${moment(venue.last_synced_date).format('MMM D, YYYY')}`
+              : `Updated ${moment(venue.updated_date).format('MMM D, YYYY')}`}
+          </span>
+        </div>
       </div>
     </Card>
   );

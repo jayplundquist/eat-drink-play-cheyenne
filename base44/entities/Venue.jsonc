@@ -142,6 +142,11 @@
       "type": "boolean",
       "default": false,
       "description": "Whether this venue is permanently closed"
+    },
+    "last_synced_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When venue info was last auto-synced from Google"
     }
   },
   "required": [

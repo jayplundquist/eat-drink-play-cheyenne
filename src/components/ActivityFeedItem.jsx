@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { getVenueUrl } from "@/lib/venueUrl";
 import BootRating from "./BootRating";
 import UserBadge from "./UserBadge";
 import ReviewActions from "./ReviewActions";
@@ -124,7 +125,7 @@ export default function ActivityFeedItem({
 
             <div className="flex gap-4">
               <Link
-                to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
+                to={getVenueUrl(venue)}
                 className="flex-shrink-0"
               >
                 <img
@@ -136,7 +137,7 @@ export default function ActivityFeedItem({
 
               <div className="flex-1 min-w-0">
                 <Link
-                  to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
+                  to={getVenueUrl(venue)}
                   className="hover:text-amber-600 transition-colors block"
                 >
                   <h3 className="font-semibold text-stone-800">
@@ -211,7 +212,7 @@ export default function ActivityFeedItem({
 
             <div className="flex gap-4">
               <Link
-                to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
+                to={getVenueUrl(venue)}
                 className="flex-shrink-0"
               >
                 <img
@@ -223,7 +224,7 @@ export default function ActivityFeedItem({
 
               <div className="flex-1 min-w-0">
                 <Link
-                  to={createPageUrl('VenueDetails') + `?id=${venue.id}`}
+                  to={getVenueUrl(venue)}
                   className="hover:text-amber-600 transition-colors block"
                 >
                   <h3 className="font-semibold text-stone-800">

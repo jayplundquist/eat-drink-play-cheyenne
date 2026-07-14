@@ -51,6 +51,9 @@ const foodTypes = [
 export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onInitiateBoostCheckout, onDelete }) {
    const [formData, setFormData] = useState({
           name: venue?.name || '',
+          slug: venue?.slug || '',
+          manual_slug: venue?.manual_slug || '',
+          primary_category: venue?.primary_category || (venue?.categories && venue.categories[0]) || '',
           categories: venue?.categories && venue.categories.length > 0 ? venue.categories : [],
           description: venue?.description || '',
           address: venue?.address || '',
@@ -228,6 +231,15 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
     let dataToSave = { ...formData };
     if (dataToSave.website && !dataToSave.website.startsWith('http')) {
       dataToSave.website = `https://${dataToSave.website}`;
+    }
+
+    // Auto-generate slug from name if not already set and no manual override
+    if (!dataToSave.slug && !dataToSave.manual_slug && dataToSave.name) {
+      dataToSave.slug = dataToSave.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    // Ensure primary_category is set from categories if missing
+    if (!dataToSave.primary_category && dataToSave.categories && dataToSave.categories.length > 0) {
+      dataToSave.primary_category = dataToSave.categories[0];
     }
 
     onSave(dataToSave);
@@ -764,6 +776,57 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                 <span className="mr-2">🚫</span>
                 {formData.permanently_closed ? 'Marked as Permanently Closed' : 'Mark as Permanently Closed'}
               </Button>
+            </div>
+          )}
+
+          {/* Advanced SEO Settings — Admin Only */}
+          {user?.role === 'admin' && (
+            <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⚙️</span>
+                <Label className="text-stone-900 font-semibold">Advanced SEO Settings</Label>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="slug">Auto-Generated Slug</Label>
+                  <Input
+                    id="slug"
+                    value={formData.slug || ''}
+                    disabled
+                   placeholder="Auto-generated on save"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="manual_slug">Manual Slug Override</Label>
+                  <Input
+                    id="manual_slug"
+                    value={formData.manual_slug || ''}
+                    onChange={(e) => handleChange('manual_slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                    placeholder="custom-url-path"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="primary_category">URL Category</Label>
+                  <Select
+                    value={formData.primary_category}
+                    onValueChange={(value) => handleChange('primary_category', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map(cat => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <p className="text-xs text-stone-500">
+                URL preview: /{formData.primary_category || 'venue'}/{formData.manual_slug || formData.slug || '...'}
+              </p>
             </div>
           )}
 

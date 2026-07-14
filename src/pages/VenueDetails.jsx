@@ -76,9 +76,9 @@ const getLabelForValue = (value, customOptions, type) => {
   return value;
 };
 
-export default function VenueDetails() {
+export default function VenueDetails({ venueId: propVenueId }) {
   const urlParams = new URLSearchParams(window.location.search);
-  const venueId = urlParams.get('id') || urlParams.get('venueId');
+  const venueId = propVenueId || urlParams.get('id') || urlParams.get('venueId');
   
   const [user, setUser] = useState(null);
   const [newRating, setNewRating] = useState(0);
@@ -116,6 +116,55 @@ export default function VenueDetails() {
     },
     enabled: !!venueId,
   });
+
+  // SEO: set dynamic title + meta description + JSON-LD structured data
+  useEffect(() => {
+    if (!venue) return;
+
+    const categoryLabel = (venue.categories && venue.categories[0]) || 'venue';
+    document.title = `${venue.name} | ${categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1)}s in Cheyenne, WY`;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', venue.description || `${venue.name} — a local ${categoryLabel} in Cheyenne, Wyoming.`);
+
+    const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
+
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': venue.categories?.includes('restaurant') ? 'Restaurant' : 'LocalBusiness',
+      name: venue.name,
+      description: venue.description,
+      address: { '@type': 'PostalAddress', streetAddress: venue.address, addressLocality: 'Cheyenne', addressRegion: 'WY' },
+      telephone: venue.phone,
+      url: venue.website,
+      image: venue.image_url,
+      priceRange: venue.price_range,
+      aggregateRating: venue.rating_count > 0 ? {
+        '@type': 'AggregateRating',
+        ratingValue: avgRating.toFixed(1),
+        reviewCount: venue.rating_count
+      } : undefined,
+    };
+
+    let scriptTag = document.getElementById('venue-jsonld');
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'venue-jsonld';
+      scriptTag.setAttribute('type', 'application/ld+json');
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = JSON.stringify(jsonLd);
+
+    return () => {
+      document.title = 'Eat, Drink, Play Cheyenne';
+      if (scriptTag) scriptTag.remove();
+    };
+  }, [venue]);
 
   const { data: ratings = [], isLoading: ratingsLoading } = useQuery({
     queryKey: ['ratings', venueId],

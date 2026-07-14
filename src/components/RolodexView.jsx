@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { getVenueUrl } from '@/lib/venueUrl';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import VenueCard from './VenueCard';
 
@@ -163,7 +163,7 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
                 <div className={`rounded-none overflow-hidden border-4 ${isActive ? 'border-amber-900 shadow-2xl shadow-amber-900/40' : 'border-amber-700/60 shadow-md'} transition-shadow bg-amber-50`}>
                   {isActive ? (
                     <Link
-                      to={createPageUrl(`VenueDetails?id=${venue.id}`) + `&rolodex=${idx}`}
+                      to={getVenueUrl(venue) + `?rolodex=${idx}`}
                       style={{ display: 'block' }}
                     >
                       <VenueCard

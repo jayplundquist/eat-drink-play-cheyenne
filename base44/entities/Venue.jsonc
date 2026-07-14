@@ -6,6 +6,18 @@
       "type": "string",
       "description": "Name of the venue"
     },
+    "slug": {
+      "type": "string",
+      "description": "Auto-generated URL-friendly slug for SEO (e.g. 'luxury-diner-cheyenne')"
+    },
+    "manual_slug": {
+      "type": "string",
+      "description": "Optional admin override for the URL slug"
+    },
+    "primary_category": {
+      "type": "string",
+      "description": "The category used for the URL structure (e.g. 'restaurant')"
+    },
     "categories": {
       "type": "array",
       "items": {

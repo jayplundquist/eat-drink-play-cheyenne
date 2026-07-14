@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, ExternalLink, Trophy, PawPrint, Star, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
+import { getVenueUrl } from "@/lib/venueUrl";
 import BootRating from "./BootRating";
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -74,7 +74,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
   return (
     <Card className="group overflow-hidden bg-amber-50 border-4 border-amber-900 hover:border-amber-700 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/30 rounded-none">
       {!hideImage && venue.image_url ? (
-        <Link to={createPageUrl(`VenueDetails?id=${venue.id}`) + (window.location.search || '')}>
+        <Link to={getVenueUrl(venue)}>
           <div className="relative aspect-[4/3] overflow-hidden">
             <img
               src={venue.image_url}
@@ -127,7 +127,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
           </div>
         </Link>
       ) : (
-        <Link to={createPageUrl(`VenueDetails?id=${venue.id}`) + (window.location.search ? '&' + window.location.search.substring(1) : '')}>
+        <Link to={getVenueUrl(venue)}>
           <div className="p-4 bg-gradient-to-b from-amber-100 to-orange-100 border-b-4 border-amber-900 relative">
             {isClosed && (
               <div className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1.5 rounded-md font-bold shadow-lg transform rotate-12 z-10">

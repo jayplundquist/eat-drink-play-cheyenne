@@ -54,6 +54,13 @@ Deno.serve(async (req) => {
 
     const syncOne = async (venue) => {
       const locationHint = venue.address ? `${venue.address}, Cheyenne, WY` : 'Cheyenne, Wyoming';
+      // Give the LLM the info already on file so it can verify/enrich instead of
+      // searching blind — this is what makes venues with generic names findable.
+      const onFile = [
+        venue.website && `Existing website on file: ${venue.website}`,
+        venue.phone && `Existing phone on file: ${venue.phone}`,
+        venue.description && `Current description: ${venue.description}`,
+      ].filter(Boolean).join('\n');
       const MAX_ATTEMPTS = 3;
       let llmRes = null;
       let lastErr = null;
@@ -62,7 +69,7 @@ Deno.serve(async (req) => {
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
         try {
           llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
-            prompt: `You are a local guide researcher. Search the web for "${venue.name}" located at ${locationHint}. Find the official website, phone number, and write a compelling 2-3 sentence description of this venue based on what you find. Return only verified information. If you cannot find something, return an empty string for that field.`,
+            prompt: `You are a local guide researcher for Cheyenne, Wyoming. Look up "${venue.name}" located at ${locationHint}.${onFile ? `\n\nWe already have this on file:\n${onFile}\n\nVerify this against the web and correct or enrich it if it is outdated, incomplete, or wrong.` : `\n\nSearch the web for this venue.`}\n\nReturn the official website URL, a phone number, and a compelling 2-3 sentence description based on what you find. Return only verified information. If you truly cannot find something, return an empty string for that field.`,
             add_context_from_internet: true,
             model: 'gemini_3_flash',
             response_json_schema: {

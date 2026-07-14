@@ -16,7 +16,10 @@ Deno.serve(async (req) => {
       isScheduled = true;
     }
 
-    const BATCH_SIZE = 10;
+    // Allow manual triggers to specify a different batch size
+    let body = {};
+    try { body = await req.json(); } catch {}
+    const BATCH_SIZE = body.batch_size || 10;
     console.log(`Starting monthly venue sync (batch of ${BATCH_SIZE}). Scheduled: ${isScheduled}`);
 
     // Fetch all venues — sort alphabetically, then by last_synced_date (oldest/null first)

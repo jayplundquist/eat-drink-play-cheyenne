@@ -30,6 +30,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import CategoryFilter from "../components/CategoryFilter";
+import GoogleSyncButton from "../components/GoogleSyncButton";
 
 const categoryLabels = {
   restaurant: "Restaurant",
@@ -194,6 +195,14 @@ export default function ManageVenues() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* Google Sync */}
+        <Card className="bg-white border-stone-200 p-4 mb-6">
+          <GoogleSyncButton
+            totalVenues={venues.length}
+            onSyncComplete={() => queryClient.invalidateQueries({ queryKey: ['venues'] })}
+          />
+        </Card>
+
         {/* Search & Filters */}
         <div className="space-y-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">

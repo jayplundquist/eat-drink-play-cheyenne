@@ -199,7 +199,7 @@ export default function ManageVenues() {
         {/* Google Sync */}
         <Card className="bg-white border-stone-200 p-4 mb-6">
           <GoogleSyncButton
-            totalVenues={venues.length}
+            venues={venues}
             onSyncComplete={() => queryClient.invalidateQueries({ queryKey: ['venues'] })}
           />
           <div className="mt-4 pt-4 border-t border-stone-100">

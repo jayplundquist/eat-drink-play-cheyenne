@@ -4,29 +4,35 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
-export default function GoogleSyncButton({ totalVenues, onSyncComplete }) {
+export default function GoogleSyncButton({ venues = [], onSyncComplete }) {
   const [syncing, setSyncing] = useState(false);
   const [progress, setProgress] = useState(null);
   const stopRef = useRef(false);
 
   const BATCH_SIZE = 10;
+  const totalVenues = venues.length;
 
   const handleSyncAll = async () => {
-    if (syncing) return;
+    if (syncing || totalVenues === 0) return;
     setSyncing(true);
     stopRef.current = false;
-    const batchesNeeded = Math.ceil(totalVenues / BATCH_SIZE);
+
+    // Chunk explicit venue IDs so every venue is processed exactly once
+    const chunks = [];
+    for (let i = 0; i < venues.length; i += BATCH_SIZE) {
+      chunks.push(venues.slice(i, i + BATCH_SIZE).map(v => v.id));
+    }
+
     let totalSynced = 0;
     let totalFailed = 0;
 
-    for (let i = 0; i < batchesNeeded; i++) {
+    for (let i = 0; i < chunks.length; i++) {
       if (stopRef.current) break;
-      setProgress({ batch: i + 1, total: batchesNeeded, synced: totalSynced, failed: totalFailed });
+      setProgress({ batch: i + 1, total: chunks.length, synced: totalSynced, failed: totalFailed });
       let success = false;
-      // Retry each batch up to 3 times before giving up on that batch
       for (let attempt = 0; attempt < 3 && !success && !stopRef.current; attempt++) {
         try {
-          const res = await base44.functions.invoke('syncVenueMonthly', { batch_size: BATCH_SIZE });
+          const res = await base44.functions.invoke('syncVenueMonthly', { venue_ids: chunks[i] });
           const results = res.data?.results || [];
           const successes = results.filter(r => r.success).length;
           const failures = results.filter(r => !r.success).length;
@@ -34,7 +40,6 @@ export default function GoogleSyncButton({ totalVenues, onSyncComplete }) {
           totalFailed += failures;
           success = true;
 
-          // If entire batch failed, credits likely exhausted
           if (successes === 0 && failures > 0) {
             toast.error('Sync stopped — integration credits may be exhausted.');
             stopRef.current = true;
@@ -44,7 +49,7 @@ export default function GoogleSyncButton({ totalVenues, onSyncComplete }) {
             toast.warning(`Batch ${i + 1} failed, retrying... (${attempt + 1}/2)`);
             await new Promise(r => setTimeout(r, 2000));
           } else {
-            totalFailed += BATCH_SIZE;
+            totalFailed += chunks[i].length;
           }
         }
       }

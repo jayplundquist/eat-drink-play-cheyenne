@@ -53,22 +53,38 @@ Deno.serve(async (req) => {
     const results = [];
 
     const syncOne = async (venue) => {
-      try {
-        const locationHint = venue.address ? `${venue.address}, Cheyenne, WY` : 'Cheyenne, Wyoming';
+      const locationHint = venue.address ? `${venue.address}, Cheyenne, WY` : 'Cheyenne, Wyoming';
+      const MAX_ATTEMPTS = 3;
+      let llmRes = null;
+      let lastErr = null;
 
-        const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `You are a local guide researcher. Search the web for "${venue.name}" located at ${locationHint}. Find the official website, phone number, and write a compelling 2-3 sentence description of this venue based on what you find. Return only verified information. If you cannot find something, return an empty string for that field.`,
-          add_context_from_internet: true,
-          model: 'gemini_3_flash',
-          response_json_schema: {
-            type: 'object',
-            properties: {
-              description: { type: 'string' },
-              website: { type: 'string' },
-              phone: { type: 'string' }
+      // Retry the web-search lookup to recover from transient failures (timeouts, rate limits)
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        try {
+          llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
+            prompt: `You are a local guide researcher. Search the web for "${venue.name}" located at ${locationHint}. Find the official website, phone number, and write a compelling 2-3 sentence description of this venue based on what you find. Return only verified information. If you cannot find something, return an empty string for that field.`,
+            add_context_from_internet: true,
+            model: 'gemini_3_flash',
+            response_json_schema: {
+              type: 'object',
+              properties: {
+                description: { type: 'string' },
+                website: { type: 'string' },
+                phone: { type: 'string' }
+              }
             }
-          }
-        });
+          });
+          lastErr = null;
+          break;
+        } catch (err) {
+          lastErr = err;
+          console.warn(`Attempt ${attempt} failed for ${venue.name}: ${err.message}`);
+          if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, 2000 * attempt));
+        }
+      }
+
+      try {
+        if (lastErr) throw lastErr;
 
         const update = { last_synced_date: new Date().toISOString(), sync_error: "" };
 

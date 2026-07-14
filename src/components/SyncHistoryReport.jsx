@@ -77,6 +77,7 @@ export default function SyncHistoryReport({ venues = [] }) {
               <TableHead>Venue</TableHead>
               <TableHead className="whitespace-nowrap">Last Synced</TableHead>
               <TableHead>Altered Fields</TableHead>
+              <TableHead>Reason</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,6 +124,15 @@ export default function SyncHistoryReport({ venues = [] }) {
                         <span className="text-stone-400 text-sm italic">No changes</span>
                       ) : (
                         <span className="text-stone-300 text-sm">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {venue.sync_error ? (
+                        <span className="text-rose-600">{venue.sync_error}</span>
+                      ) : venue.last_synced_date ? (
+                        <span className="text-emerald-600">Synced</span>
+                      ) : (
+                        <span className="text-stone-400">Not yet synced</span>
                       )}
                     </TableCell>
                   </TableRow>

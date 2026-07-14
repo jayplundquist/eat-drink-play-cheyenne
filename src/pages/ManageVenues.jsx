@@ -31,7 +31,6 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import CategoryFilter from "../components/CategoryFilter";
 import GoogleSyncButton from "../components/GoogleSyncButton";
-import SyncFailuresReport from "../components/SyncFailuresReport";
 import SyncHistoryReport from "../components/SyncHistoryReport";
 
 const categoryLabels = {
@@ -203,15 +202,6 @@ export default function ManageVenues() {
             venues={venues}
             onSyncComplete={() => queryClient.invalidateQueries({ queryKey: ['venues'] })}
           />
-          <div className="mt-4 pt-4 border-t border-stone-100">
-            <h3 className="text-sm font-semibold text-stone-700 mb-3 flex items-center gap-2">
-              Sync Failures Report
-            </h3>
-            <SyncFailuresReport
-              venues={venues}
-              onRetryComplete={() => queryClient.invalidateQueries({ queryKey: ['venues'] })}
-            />
-          </div>
           <div className="mt-4 pt-4 border-t border-stone-100">
             <SyncHistoryReport venues={venues} />
           </div>

@@ -106,6 +106,12 @@ Deno.serve(async (req) => {
         }
         update.last_sync_changes = changes;
 
+        // Record a reason when the web search found nothing usable so admins
+        // can see why a venue never updates (it isn't an error — just no data).
+        if (changes.length === 0 && !newDesc && !newWeb && !newPhone) {
+          update.sync_error = "No web results found for this venue";
+        }
+
         await base44.asServiceRole.entities.Venue.update(venue.id, update);
         console.log(`Synced: ${venue.name} (${changes.length} changes)`);
         return { name: venue.name, success: true, updated: changes };

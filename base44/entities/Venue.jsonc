@@ -147,6 +147,10 @@
       "type": "string",
       "format": "date-time",
       "description": "When venue info was last auto-synced from Google"
+    },
+    "sync_error": {
+      "type": "string",
+      "description": "Error message from the last failed sync attempt (cleared on success)"
     }
   },
   "required": [

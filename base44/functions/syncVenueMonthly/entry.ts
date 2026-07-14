@@ -86,15 +86,29 @@ Deno.serve(async (req) => {
       try {
         if (lastErr) throw lastErr;
 
-        const update = { last_synced_date: new Date().toISOString(), sync_error: "" };
+        const update = { last_synced_date: new Date().toISOString(), sync_error: "", last_sync_changes: [] };
+        const changes = [];
 
-        if (llmRes.description && llmRes.description.trim()) update.description = llmRes.description.trim();
-        if (llmRes.website && llmRes.website.trim()) update.website = llmRes.website.trim();
-        if (llmRes.phone && llmRes.phone.trim()) update.phone = llmRes.phone.trim();
+        const newDesc = llmRes.description?.trim() || '';
+        if (newDesc && newDesc !== (venue.description || '').trim()) {
+          update.description = newDesc;
+          changes.push('description');
+        }
+        const newWeb = llmRes.website?.trim() || '';
+        if (newWeb && newWeb !== (venue.website || '').trim()) {
+          update.website = newWeb;
+          changes.push('website');
+        }
+        const newPhone = llmRes.phone?.trim() || '';
+        if (newPhone && newPhone !== (venue.phone || '').trim()) {
+          update.phone = newPhone;
+          changes.push('phone');
+        }
+        update.last_sync_changes = changes;
 
         await base44.asServiceRole.entities.Venue.update(venue.id, update);
-        console.log(`Synced: ${venue.name}`);
-        return { name: venue.name, success: true, updated: Object.keys(update).filter(k => k !== 'last_synced_date' && k !== 'sync_error') };
+        console.log(`Synced: ${venue.name} (${changes.length} changes)`);
+        return { name: venue.name, success: true, updated: changes };
       } catch (err) {
         console.error(`Sync failed for ${venue.name}:`, err.message);
         // Mark as synced and record the error so it doesn't block the queue

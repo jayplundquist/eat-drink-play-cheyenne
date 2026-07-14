@@ -151,6 +151,14 @@
     "sync_error": {
       "type": "string",
       "description": "Error message from the last failed sync attempt (cleared on success)"
+    },
+    "last_sync_changes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Field names actually changed during the last sync",
+      "default": []
     }
   },
   "required": [

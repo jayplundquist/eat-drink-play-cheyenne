@@ -70,6 +70,10 @@ Deno.serve(async (req) => {
         return { name: venue.name, success: true, updated: Object.keys(update).filter(k => k !== 'last_synced_date') };
       } catch (err) {
         console.error(`Sync failed for ${venue.name}:`, err.message);
+        // Mark as synced even on failure so it doesn't block the queue forever
+        try {
+          await base44.asServiceRole.entities.Venue.update(venue.id, { last_synced_date: new Date().toISOString() });
+        } catch {}
         return { name: venue.name, success: false, error: err.message };
       }
     };

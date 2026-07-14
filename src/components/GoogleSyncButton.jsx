@@ -22,22 +22,31 @@ export default function GoogleSyncButton({ totalVenues, onSyncComplete }) {
     for (let i = 0; i < batchesNeeded; i++) {
       if (stopRef.current) break;
       setProgress({ batch: i + 1, total: batchesNeeded, synced: totalSynced, failed: totalFailed });
-      try {
-        const res = await base44.functions.invoke('syncVenueMonthly', { batch_size: BATCH_SIZE });
-        const results = res.data?.results || [];
-        const successes = results.filter(r => r.success).length;
-        const failures = results.filter(r => !r.success).length;
-        totalSynced += successes;
-        totalFailed += failures;
+      let success = false;
+      // Retry each batch up to 3 times before giving up on that batch
+      for (let attempt = 0; attempt < 3 && !success && !stopRef.current; attempt++) {
+        try {
+          const res = await base44.functions.invoke('syncVenueMonthly', { batch_size: BATCH_SIZE });
+          const results = res.data?.results || [];
+          const successes = results.filter(r => r.success).length;
+          const failures = results.filter(r => !r.success).length;
+          totalSynced += successes;
+          totalFailed += failures;
+          success = true;
 
-        // If entire batch failed, credits likely exhausted
-        if (successes === 0 && failures > 0) {
-          toast.error('Sync stopped — integration credits may be exhausted.');
-          break;
+          // If entire batch failed, credits likely exhausted
+          if (successes === 0 && failures > 0) {
+            toast.error('Sync stopped — integration credits may be exhausted.');
+            stopRef.current = true;
+          }
+        } catch (err) {
+          if (attempt < 2) {
+            toast.warning(`Batch ${i + 1} failed, retrying... (${attempt + 1}/2)`);
+            await new Promise(r => setTimeout(r, 2000));
+          } else {
+            totalFailed += BATCH_SIZE;
+          }
         }
-      } catch (err) {
-        toast.error('Sync error: ' + (err.message || 'Unknown error'));
-        break;
       }
     }
 

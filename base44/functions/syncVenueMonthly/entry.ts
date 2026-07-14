@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     console.log(`Selected ${batch.length} venues to sync:`, batch.map(v => v.name).join(', '));
 
     // Process venues concurrently in small chunks to keep each call fast
-    const CONCURRENCY = 5;
+    const CONCURRENCY = 3;
     const results = [];
 
     const syncOne = async (venue) => {
@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
         } catch (err) {
           lastErr = err;
           console.warn(`Attempt ${attempt} failed for ${venue.name}: ${err.message}`);
-          if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, 2000 * attempt));
+          if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, 1000 * attempt));
         }
       }
 

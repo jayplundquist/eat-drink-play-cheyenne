@@ -29,29 +29,24 @@ export default function GoogleSyncButton({ venues = [], onSyncComplete }) {
     for (let i = 0; i < chunks.length; i++) {
       if (stopRef.current) break;
       setProgress({ batch: i + 1, total: chunks.length, synced: totalSynced, failed: totalFailed });
-      let success = false;
-      for (let attempt = 0; attempt < 3 && !success && !stopRef.current; attempt++) {
-        try {
-          const res = await base44.functions.invoke('syncVenueMonthly', { venue_ids: chunks[i] });
-          const results = res.data?.results || [];
-          const successes = results.filter(r => r.success).length;
-          const failures = results.filter(r => !r.success).length;
-          totalSynced += successes;
-          totalFailed += failures;
-          success = true;
+      try {
+        // One attempt per batch — the backend retries each venue internally,
+        // and refiring here stacks concurrent calls that trip rate limits.
+        const res = await base44.functions.invoke('syncVenueMonthly', { venue_ids: chunks[i] });
+        const results = res.data?.results || [];
+        const successes = results.filter(r => r.success).length;
+        const failures = results.filter(r => !r.success).length;
+        totalSynced += successes;
+        totalFailed += failures;
 
-          if (successes === 0 && failures > 0) {
-            toast.error('Sync stopped — integration credits may be exhausted.');
-            stopRef.current = true;
-          }
-        } catch (err) {
-          if (attempt < 2) {
-            toast.warning(`Batch ${i + 1} failed, retrying... (${attempt + 1}/2)`);
-            await new Promise(r => setTimeout(r, 2000));
-          } else {
-            totalFailed += chunks[i].length;
-          }
+        if (successes === 0 && failures > 0) {
+          toast.error('Sync stopped — integration credits may be exhausted.');
+          stopRef.current = true;
         }
+      } catch (err) {
+        // Batch timed out (backend still finishes server-side). Don't refire —
+        // just continue; any truly-failed venues will surface in the report.
+        totalFailed += chunks[i].length;
       }
     }
 

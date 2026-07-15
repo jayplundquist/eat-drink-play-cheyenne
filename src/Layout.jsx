@@ -414,6 +414,9 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('Home')} className="hover:text-amber-400 transition-colors">
                 Explore
               </Link>
+              {/* HIDDEN — re-enable by changing `false` to `true` */}
+              {false && (
+              <>
               <Link to="/breakfast" className="hover:text-amber-400 transition-colors">
                 Breakfast
               </Link>
@@ -429,6 +432,8 @@ export default function Layout({ children, currentPageName }) {
               <Link to="/greenway-walks" className="hover:text-amber-400 transition-colors">
                 Greenway
               </Link>
+              </>
+              )}
               <Button 
                 onClick={handleShare}
                 className={`${shared ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-600 hover:bg-amber-700'} text-white font-semibold`}

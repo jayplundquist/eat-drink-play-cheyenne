@@ -15,6 +15,9 @@ export default function SeoContent({ featuredVenues = [] }) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12 text-stone-700">
+      {/* HIDDEN from homepage — re-enable by changing `false` to `true` below. */}
+      {false && (
+      <>
       {/* Food & Drink */}
       <section>
         <h2 className="text-2xl font-bold text-amber-900 mb-3" style={{ fontFamily: 'Rye, serif' }}>
@@ -102,6 +105,8 @@ export default function SeoContent({ featuredVenues = [] }) {
             ))}
           </div>
         </section>
+      )}
+      </>
       )}
 
       {/* About / Local Guide */}

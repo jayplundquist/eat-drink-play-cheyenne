@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import VenueDetailsSlug from './pages/VenueDetailsSlug';
+import CategoryLanding from './pages/CategoryLanding';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -59,6 +60,13 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      {/* High-intent category landing pages for SEO */}
+      <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />
+      <Route path="/bars" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="bars" /></LayoutWrapper>} />
+      <Route path="/breweries" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breweries" /></LayoutWrapper>} />
+      <Route path="/things-to-do-tonight" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="things-to-do-tonight" /></LayoutWrapper>} />
+      <Route path="/greenway-walks" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="greenway-walks" /></LayoutWrapper>} />
+
       {/* SEO slug-based venue pages: /<category>/<slug> */}
       <Route path="/:category/:slug" element={
         <LayoutWrapper currentPageName="VenueDetails">

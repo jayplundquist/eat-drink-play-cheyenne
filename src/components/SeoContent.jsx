@@ -28,11 +28,11 @@ export default function SeoContent({ featuredVenues = [] }) {
           discover food trucks, coffee shops, and sweet treats around the city.
         </p>
         <div className="flex flex-wrap gap-2">
-          {['Breakfast', 'Lunch', 'Dinner', 'Bars', 'Breweries', 'Coffee', 'Food Trucks', 'Fine Dining'].map(label => (
-            <span key={label} className="bg-amber-100 text-amber-800 text-sm rounded-full px-3 py-1 font-medium">
-              {label}
-            </span>
-          ))}
+          <Link to="/breakfast" className="bg-amber-100 text-amber-800 text-sm rounded-full px-3 py-1 font-medium hover:bg-amber-200">Breakfast</Link>
+          <Link to="/bars" className="bg-amber-100 text-amber-800 text-sm rounded-full px-3 py-1 font-medium hover:bg-amber-200">Bars</Link>
+          <Link to="/breweries" className="bg-amber-100 text-amber-800 text-sm rounded-full px-3 py-1 font-medium hover:bg-amber-200">Breweries</Link>
+          <Link to="/things-to-do-tonight" className="bg-amber-100 text-amber-800 text-sm rounded-full px-3 py-1 font-medium hover:bg-amber-200">Things to Do Tonight</Link>
+          <Link to="/greenway-walks" className="bg-amber-100 text-amber-800 text-sm rounded-full px-3 py-1 font-medium hover:bg-amber-200">Greenway Walks Near Food</Link>
         </div>
       </section>
 
@@ -48,9 +48,14 @@ export default function SeoContent({ featuredVenues = [] }) {
           Gardens, Sloan's Lake, and the LCCC campus — all free and open year-round. Use our interactive
           map for trailhead parking, GPS tracking, and nearby restaurant stops before or after your route.
         </p>
-        <Link to={createPageUrl('GreenwayInfo')} className="text-amber-700 font-semibold underline hover:text-amber-900">
-          View the Greater Cheyenne Greenway Guide →
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link to="/greenway-walks" className="text-amber-700 font-semibold underline hover:text-amber-900">
+            Greenway walks near food →
+          </Link>
+          <Link to={createPageUrl('GreenwayGuide')} className="text-amber-700 font-semibold underline hover:text-amber-900">
+            Open the interactive Greenway map →
+          </Link>
+        </div>
       </section>
 
       {/* Things To Do */}
@@ -71,6 +76,11 @@ export default function SeoContent({ featuredVenues = [] }) {
             </span>
           ))}
         </div>
+        <p className="mt-4">
+          <Link to="/things-to-do-tonight" className="text-amber-700 font-semibold underline hover:text-amber-900">
+            Browse things to do tonight in Cheyenne →
+          </Link>
+        </p>
       </section>
 
       {/* Featured Spots */}

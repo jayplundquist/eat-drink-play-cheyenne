@@ -3,8 +3,9 @@ import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
-import { Navigation, X, Crosshair, Loader2 } from 'lucide-react';
+import { Navigation, X, Crosshair, Loader2, BookOpen } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
+import GreenwayGuidePanel from '@/components/GreenwayGuidePanel';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -122,6 +123,7 @@ export default function GreenwayGuide() {
   const [activeSegment, setActiveSegment]   = useState(null);
   const [segments, setSegments]             = useState([]);
   const [loading, setLoading]               = useState(true);
+  const [guideOpen, setGuideOpen]           = useState(false);
   const watchIdRef = useRef(null);
   const segmentsRef = useRef([]);
 
@@ -219,6 +221,18 @@ export default function GreenwayGuide() {
           <span className="text-sm pr-1">Recenter</span>
         </button>
       )}
+
+      {/* Trail Guide toggle */}
+      <button
+        onClick={() => setGuideOpen(true)}
+        className="absolute bottom-6 left-4 z-[1000] bg-amber-800 hover:bg-amber-900 text-white rounded-full shadow-xl px-4 py-3 flex items-center gap-2 font-semibold transition-colors"
+      >
+        <BookOpen className="w-5 h-5" />
+        <span className="text-sm">Trail Guide</span>
+      </button>
+
+      {/* Crawlable guide content — always in DOM for SEO */}
+      <GreenwayGuidePanel open={guideOpen} onClose={() => setGuideOpen(false)} />
 
       {/* Map */}
       <MapContainer center={CHEYENNE_CENTER} zoom={12} style={{ height: '100%', width: '100%' }}>

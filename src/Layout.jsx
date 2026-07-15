@@ -65,7 +65,7 @@ export default function Layout({ children, currentPageName }) {
     const internalPrefixes = [
       '/Settings', '/Analytics', '/ManageVenues', '/ManageVenueOptions',
       '/ManageGameSettings', '/ManageBoots', '/ManageBadges', '/ManageReports',
-      '/ManageClaimRequests', '/EditVenue', '/AddVenue', '/Profile',
+      '/ManageClaimRequests', '/EditVenue', '/Profile',
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
@@ -414,8 +414,20 @@ export default function Layout({ children, currentPageName }) {
               <Link to={createPageUrl('Home')} className="hover:text-amber-400 transition-colors">
                 Explore
               </Link>
-              <Link to={createPageUrl('Favorites')} className="hover:text-amber-400 transition-colors">
-                Favorites
+              <Link to="/breakfast" className="hover:text-amber-400 transition-colors">
+                Breakfast
+              </Link>
+              <Link to="/bars" className="hover:text-amber-400 transition-colors">
+                Bars
+              </Link>
+              <Link to="/breweries" className="hover:text-amber-400 transition-colors">
+                Breweries
+              </Link>
+              <Link to="/things-to-do-tonight" className="hover:text-amber-400 transition-colors">
+                Tonight
+              </Link>
+              <Link to="/greenway-walks" className="hover:text-amber-400 transition-colors">
+                Greenway
               </Link>
               <Button 
                 onClick={handleShare}

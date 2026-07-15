@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Navigation, X, Crosshair, Loader2 } from 'lucide-react';
+import { useSEO } from '@/hooks/useSEO';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -109,6 +110,11 @@ function RecenterControl({ target }) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function GreenwayGuide() {
+  useSEO({
+    title: 'Cheyenne Greenway Interactive Map | GPS Trail Guide',
+    description: 'Interactive GPS-enabled map of the Greater Cheyenne Greenway. Find trailheads, parking, nearby restaurants, and plan your walking or biking route across 47 miles of paved trails.',
+  });
+
   const [userLocation, setUserLocation]     = useState(null);
   const [recenterTarget, setRecenterTarget] = useState(null);
   const [selectedTrailhead, setSelectedTrailhead] = useState(null);

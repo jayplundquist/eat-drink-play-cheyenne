@@ -28,9 +28,22 @@ import QuickDraw from "../components/QuickDraw";
 import WetYerWhistle from "../components/WetYerWhistle";
 import HatTip from "../components/HatTip";
 import SuperBowlVenues from "../components/SuperBowlVenues";
+import SeoContent from "../components/SeoContent";
 import { CowboyBoot } from "../components/BootRating";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Home() {
+  useSEO({
+    title: 'Eat, Drink, Play Cheyenne — Restaurants, Bars, Trails & Things to Do',
+    description: 'Find restaurants, bars, breweries, events, Greenway trails, and things to do in Cheyenne, Wyoming. Your local guide to eating, drinking, and playing in the Capital City.',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Eat, Drink, Play Cheyenne',
+      url: typeof window !== 'undefined' ? window.location.origin : 'https://eatdrinkplaycheyenne.com',
+      description: 'A community-built discovery platform for local restaurants, bars, breweries, activities, and Greenway trails in Cheyenne, Wyoming.',
+    },
+  });
   const urlParams = new URLSearchParams(window.location.search);
   const [searchQuery, setSearchQuery] = useState(urlParams.get('search') || '');
   const [activeTab, setActiveTab] = useState(urlParams.get('tab') || 'all');
@@ -771,6 +784,11 @@ export default function Home() {
           </DialogContent>
         </Dialog>
       </section>
+
+      {/* Crawlable SEO content — keyword-rich sections for search engines */}
+      {!searchQuery && activeTab === 'all' && (
+        <SeoContent featuredVenues={venues} />
+      )}
     </div>
   );
 }

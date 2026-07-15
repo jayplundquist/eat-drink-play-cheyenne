@@ -8,8 +8,14 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import VenueCard from "../components/VenueCard";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function SuperBowlWatchParty() {
+  useSEO({
+    title: 'Super Bowl Watch Parties in Cheyenne, WY | Bars & Restaurants',
+    description: 'Find the best bars and restaurants hosting Super Bowl watch parties in Cheyenne, Wyoming — game day specials, big screens, food, and drink deals.',
+  });
+
   const [user, setUser] = useState(null);
 
   useEffect(() => {

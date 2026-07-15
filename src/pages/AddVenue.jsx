@@ -8,8 +8,15 @@ import { createPageUrl } from "@/utils";
 import VenueForm from "../components/VenueForm";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function AddVenue() {
+  useSEO({
+    title: 'Add a Venue to Eat, Drink, Play Cheyenne',
+    description: 'Submit a Cheyenne restaurant, bar, event space, activity, or local business to Eat, Drink, Play Cheyenne and help locals discover new spots.',
+    noindex: true,
+  });
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isIdle, setIsIdle] = useState(false);

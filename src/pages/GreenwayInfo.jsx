@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { MapPin, Navigation, Footprints, TreePine, Clock, Bike } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSEO } from '@/hooks/useSEO';
 
 const TRAILS = [
   {
@@ -117,6 +118,19 @@ const FACTS = [
 ];
 
 export default function GreenwayInfo() {
+  useSEO({
+    title: 'Greater Cheyenne Greenway Guide | Trails, Maps & Walking Routes',
+    description: 'Explore the Greater Cheyenne Greenway with 47 miles of paved trails, trail maps, parking tips, nearby restaurants, dog-friendly routes, and family-friendly walking ideas in Cheyenne, Wyoming.',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'TouristAttraction',
+      name: 'Greater Cheyenne Greenway',
+      description: '47 miles of paved, interconnected trails winding through parks, creek corridors, and neighborhoods across Cheyenne, Wyoming.',
+      address: { '@type': 'PostalAddress', addressLocality: 'Cheyenne', addressRegion: 'WY', addressCountry: 'US' },
+      isAccessibleForFree: true,
+    },
+  });
+
   return (
     <div className="min-h-screen bg-amber-50">
 

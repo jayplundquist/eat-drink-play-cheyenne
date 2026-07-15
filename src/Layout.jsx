@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import NotificationManager from '@/components/NotificationManager';
@@ -58,6 +58,25 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
+
+  // Auto-apply noindex to admin/internal routes so crawlers never index them
+  const location = useLocation();
+  useEffect(() => {
+    const internalPrefixes = [
+      '/Settings', '/Analytics', '/ManageVenues', '/ManageVenueOptions',
+      '/ManageGameSettings', '/ManageBoots', '/ManageBadges', '/ManageReports',
+      '/ManageClaimRequests', '/EditVenue', '/AddVenue', '/Profile',
+      '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
+    ];
+    const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    if (!metaRobots) {
+      metaRobots = document.createElement('meta');
+      metaRobots.setAttribute('name', 'robots');
+      document.head.appendChild(metaRobots);
+    }
+    metaRobots.setAttribute('content', isInternal ? 'noindex, nofollow' : 'index, follow');
+  }, [location.pathname]);
 
   const navItems = [
     { name: 'Home', icon: MapPin, label: 'Explore' },

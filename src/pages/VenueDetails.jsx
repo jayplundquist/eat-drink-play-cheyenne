@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSEO } from '@/hooks/useSEO';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -117,24 +118,17 @@ export default function VenueDetails({ venueId: propVenueId }) {
     enabled: !!venueId,
   });
 
-  // SEO: set dynamic title + meta description + JSON-LD structured data
-  useEffect(() => {
-    if (!venue) return;
+  // SEO: dynamic title + meta description + LocalBusiness JSON-LD
+  const categoryLabel = venue ? ((venue.categories && venue.categories[0]) || 'venue') : 'venue';
+  const categoryDisplay = categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1);
+  const seoAvgRating = venue && venue.rating_count > 0 ? (venue.rating_sum / venue.rating_count).toFixed(1) : null;
 
-    const categoryLabel = (venue.categories && venue.categories[0]) || 'venue';
-    document.title = `${venue.name} | ${categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1)}s in Cheyenne, WY`;
-
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.setAttribute('name', 'description');
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.setAttribute('content', venue.description || `${venue.name} — a local ${categoryLabel} in Cheyenne, Wyoming.`);
-
-    const avgRating = venue.rating_count > 0 ? venue.rating_sum / venue.rating_count : 0;
-
-    const jsonLd = {
+  useSEO({
+    title: venue ? `${venue.name} | ${categoryDisplay} in Cheyenne, WY` : 'Venue | Eat, Drink, Play Cheyenne',
+    description: venue
+      ? (venue.description || `View hours, food types, photos, directions, and local details for ${venue.name} in Cheyenne, Wyoming.`)
+      : 'View hours, food types, photos, directions, and local details for this Cheyenne, Wyoming venue.',
+    jsonLd: venue ? {
       '@context': 'https://schema.org',
       '@type': venue.categories?.includes('restaurant') ? 'Restaurant' : 'LocalBusiness',
       name: venue.name,
@@ -144,27 +138,14 @@ export default function VenueDetails({ venueId: propVenueId }) {
       url: venue.website,
       image: venue.image_url,
       priceRange: venue.price_range,
-      aggregateRating: venue.rating_count > 0 ? {
+      aggregateRating: seoAvgRating ? {
         '@type': 'AggregateRating',
-        ratingValue: avgRating.toFixed(1),
-        reviewCount: venue.rating_count
+        ratingValue: seoAvgRating,
+        reviewCount: venue.rating_count,
       } : undefined,
-    };
-
-    let scriptTag = document.getElementById('venue-jsonld');
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.id = 'venue-jsonld';
-      scriptTag.setAttribute('type', 'application/ld+json');
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.textContent = JSON.stringify(jsonLd);
-
-    return () => {
-      document.title = 'Eat, Drink, Play Cheyenne';
-      if (scriptTag) scriptTag.remove();
-    };
-  }, [venue]);
+    } : null,
+    jsonLdId: 'venue-jsonld',
+  });
 
   const { data: ratings = [], isLoading: ratingsLoading } = useQuery({
     queryKey: ['ratings', venueId],

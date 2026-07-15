@@ -61,8 +61,9 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
 
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="text-center mb-8">
         <motion.div
+          className="inline-block"
           animate={{
             rotateZ: [0, 180, 360],
             y: [0, -10, 0],
@@ -74,16 +75,16 @@ export default function HatTip({ venues, favorites, user, onToggleFavorite }) {
             ease: "easeInOut"
           }}
         >
-          <img 
+          <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e9c14c196b53cce1321b1/a19d27001_cowboy-hat.jpg"
             alt="cowboy hat"
-            width="48"
-            height="48"
-            className="object-contain"
+            width="40"
+            height="40"
+            className="object-contain mx-auto"
           />
         </motion.div>
-        <h2 className="text-3xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Hat Tip</h2>
-        <span className="text-amber-700 text-sm ml-2">Most loved & highest rated by category</span>
+        <h2 className="text-3xl font-bold text-amber-900 mt-2" style={{ fontFamily: 'Rye, serif' }}>Hat Tip</h2>
+        <p className="text-amber-700 text-sm mt-1">Most loved &amp; highest-rated by category</p>
       </div>
       
       <div className="flex items-center justify-center gap-4">

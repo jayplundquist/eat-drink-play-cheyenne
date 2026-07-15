@@ -44,7 +44,7 @@ export default function SpinTheSpur({ favorites, venues, user, onSignInRequired 
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="text-center space-y-3">
         <p className="text-sm text-stone-600">
-          Can't decide where to eat? Let fate choose from your favorites!
+          Can't decide where to eat? Spin the spur and let fate pick.
         </p>
         <Button 
           onClick={handleSpinTheSpur}

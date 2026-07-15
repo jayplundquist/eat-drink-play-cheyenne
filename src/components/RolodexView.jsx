@@ -120,9 +120,9 @@ export default function RolodexView({ venues, isFavorite, onToggleFavorite, init
           {visibleCards.map(({ venue, offset, idx }) => {
             const isActive = offset === 0;
             const absOffset = Math.abs(offset);
-            const yPercent = offset * 55;
+            const yPercent = offset * 70;
             const scale = isActive ? 1 : 1 - absOffset * 0.07;
-            const opacity = isActive ? 1 : 1 - absOffset * 0.3;
+            const opacity = isActive ? 1 : Math.max(0.12, 1 - absOffset * 0.55);
             const zIndex = VISIBLE + 1 - absOffset;
             const rotateX = offset * -6;
 

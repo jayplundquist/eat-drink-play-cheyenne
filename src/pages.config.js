@@ -1,98 +1,33 @@
 /**
  * pages.config.js - Page routing configuration
- * 
- * This file is AUTO-GENERATED. Do not add imports or modify PAGES manually.
- * Pages are auto-registered when you create files in the ./pages/ folder.
- * 
- * THE ONLY EDITABLE VALUE: mainPage
- * This controls which page is the landing page (shown when users visit the app).
- * 
- * Example file structure:
- * 
- *   import HomePage from './pages/HomePage';
- *   import Dashboard from './pages/Dashboard';
- *   import Settings from './pages/Settings';
- *   
- *   export const PAGES = {
- *       "HomePage": HomePage,
- *       "Dashboard": Dashboard,
- *       "Settings": Settings,
- *   }
- *   
- *   export const pagesConfig = {
- *       mainPage: "HomePage",
- *       Pages: PAGES,
- *   };
- * 
- * Example with Layout (wraps all pages):
  *
- *   import Home from './pages/Home';
- *   import Settings from './pages/Settings';
- *   import __Layout from './Layout.jsx';
+ * Only PUBLIC, crawlable pages are registered here. These are the pages the
+ * Base44 platform exposes in its auto-generated public page directory and
+ * sitemap (the "Pages" list seen by crawlers).
  *
- *   export const PAGES = {
- *       "Home": Home,
- *       "Settings": Settings,
- *   }
+ * Internal / admin / app-user pages are intentionally NOT registered here.
+ * They are wired as explicit <Route> elements in App.jsx so they remain
+ * fully functional for logged-in users but are never exposed in the public
+ * page registry. Layout.jsx also applies `noindex, nofollow` to them.
  *
- *   export const pagesConfig = {
- *       mainPage: "Home",
- *       Pages: PAGES,
- *       Layout: __Layout,
- *   };
- *
- * To change the main page from HomePage to Dashboard, use find_replace:
- *   Old: mainPage: "HomePage",
- *   New: mainPage: "Dashboard",
- *
- * The mainPage value must match a key in the PAGES object exactly.
+ * THE ONLY EDITABLE VALUE: mainPage (which page loads at "/").
  */
-import ActivityFeed from './pages/ActivityFeed';
-import AddVenue from './pages/AddVenue';
-import Analytics from './pages/Analytics';
-import EditVenue from './pages/EditVenue';
-import Favorites from './pages/Favorites';
 import Home from './pages/Home';
-import ManageBadges from './pages/ManageBadges';
-import ManageBoots from './pages/ManageBoots';
-import ManageClaimRequests from './pages/ManageClaimRequests';
-import ManageGameSettings from './pages/ManageGameSettings';
-import ManageReports from './pages/ManageReports';
-import ManageVenueOptions from './pages/ManageVenueOptions';
-import ManageVenues from './pages/ManageVenues';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
-import UserProfile from './pages/UserProfile';
-import VenueDetails from './pages/VenueDetails';
-import VisitedMap from './pages/VisitedMap';
+import AddVenue from './pages/AddVenue';
 import GreenwayGuide from './pages/GreenwayGuide';
 import GreenwayInfo from './pages/GreenwayInfo';
+import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
+import VenueDetails from './pages/VenueDetails';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "ActivityFeed": ActivityFeed,
-    "AddVenue": AddVenue,
-    "Analytics": Analytics,
-    "EditVenue": EditVenue,
-    "Favorites": Favorites,
     "Home": Home,
-    "ManageBadges": ManageBadges,
-    "ManageBoots": ManageBoots,
-    "ManageClaimRequests": ManageClaimRequests,
-    "ManageGameSettings": ManageGameSettings,
-    "ManageReports": ManageReports,
-    "ManageVenueOptions": ManageVenueOptions,
-    "ManageVenues": ManageVenues,
-    "Profile": Profile,
-    "Settings": Settings,
-    "SuperBowlWatchParty": SuperBowlWatchParty,
-    "UserProfile": UserProfile,
-    "VenueDetails": VenueDetails,
-    "VisitedMap": VisitedMap,
+    "AddVenue": AddVenue,
     "GreenwayGuide": GreenwayGuide,
     "GreenwayInfo": GreenwayInfo,
+    "SuperBowlWatchParty": SuperBowlWatchParty,
+    "VenueDetails": VenueDetails,
 }
 
 export const pagesConfig = {

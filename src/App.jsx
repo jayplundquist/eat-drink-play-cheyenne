@@ -9,6 +9,23 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import VenueDetailsSlug from './pages/VenueDetailsSlug';
 import CategoryLanding from './pages/CategoryLanding';
+// Internal / admin / app-user pages — kept out of pages.config so the platform's
+// public page directory never lists them. Wired here as explicit routes.
+import ActivityFeed from './pages/ActivityFeed';
+import Analytics from './pages/Analytics';
+import EditVenue from './pages/EditVenue';
+import Favorites from './pages/Favorites';
+import ManageBadges from './pages/ManageBadges';
+import ManageBoots from './pages/ManageBoots';
+import ManageClaimRequests from './pages/ManageClaimRequests';
+import ManageGameSettings from './pages/ManageGameSettings';
+import ManageReports from './pages/ManageReports';
+import ManageVenueOptions from './pages/ManageVenueOptions';
+import ManageVenues from './pages/ManageVenues';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import UserProfile from './pages/UserProfile';
+import VisitedMap from './pages/VisitedMap';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -60,6 +77,23 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      {/* Internal / admin / app-user pages — functional but not in the public page registry */}
+      <Route path="/ActivityFeed" element={<LayoutWrapper currentPageName="ActivityFeed"><ActivityFeed /></LayoutWrapper>} />
+      <Route path="/Analytics" element={<LayoutWrapper currentPageName="Analytics"><Analytics /></LayoutWrapper>} />
+      <Route path="/EditVenue" element={<LayoutWrapper currentPageName="EditVenue"><EditVenue /></LayoutWrapper>} />
+      <Route path="/Favorites" element={<LayoutWrapper currentPageName="Favorites"><Favorites /></LayoutWrapper>} />
+      <Route path="/ManageBadges" element={<LayoutWrapper currentPageName="ManageBadges"><ManageBadges /></LayoutWrapper>} />
+      <Route path="/ManageBoots" element={<LayoutWrapper currentPageName="ManageBoots"><ManageBoots /></LayoutWrapper>} />
+      <Route path="/ManageClaimRequests" element={<LayoutWrapper currentPageName="ManageClaimRequests"><ManageClaimRequests /></LayoutWrapper>} />
+      <Route path="/ManageGameSettings" element={<LayoutWrapper currentPageName="ManageGameSettings"><ManageGameSettings /></LayoutWrapper>} />
+      <Route path="/ManageReports" element={<LayoutWrapper currentPageName="ManageReports"><ManageReports /></LayoutWrapper>} />
+      <Route path="/ManageVenueOptions" element={<LayoutWrapper currentPageName="ManageVenueOptions"><ManageVenueOptions /></LayoutWrapper>} />
+      <Route path="/ManageVenues" element={<LayoutWrapper currentPageName="ManageVenues"><ManageVenues /></LayoutWrapper>} />
+      <Route path="/Profile" element={<LayoutWrapper currentPageName="Profile"><Profile /></LayoutWrapper>} />
+      <Route path="/Settings" element={<LayoutWrapper currentPageName="Settings"><Settings /></LayoutWrapper>} />
+      <Route path="/UserProfile" element={<LayoutWrapper currentPageName="UserProfile"><UserProfile /></LayoutWrapper>} />
+      <Route path="/VisitedMap" element={<LayoutWrapper currentPageName="VisitedMap"><VisitedMap /></LayoutWrapper>} />
+
       {/* High-intent category landing pages for SEO */}
       <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />
       <Route path="/bars" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="bars" /></LayoutWrapper>} />

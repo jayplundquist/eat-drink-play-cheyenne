@@ -178,14 +178,6 @@ export default function GreenwayGuide() {
         </h1>
       </div>
 
-      {/* Status badge */}
-      <div className="absolute top-[68px] left-1/2 -translate-x-1/2 z-[1001] bg-white/80 backdrop-blur border border-green-300 text-green-800 text-xs rounded-full px-3 py-1 shadow pointer-events-none flex items-center gap-1.5">
-        {loading
-          ? <><Loader2 className="w-3 h-3 animate-spin" /> Loading trail data…</>
-          : <span>✓ Greater Cheyenne Greenway · 47 miles · {segments.length} trail sections</span>
-        }
-      </div>
-
       {/* Proximity banner */}
       {activeSegment && (
         <div className="absolute top-24 left-1/2 -translate-x-1/2 z-[1001] bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 whitespace-nowrap">

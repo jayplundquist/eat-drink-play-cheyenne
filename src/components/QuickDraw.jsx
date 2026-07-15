@@ -69,12 +69,12 @@ export default function QuickDraw({ venues, userRatings, user, onSignInRequired,
         <Button 
           onClick={handleQuickDraw}
           disabled={spinning || untriedCount === 0}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full bg-amber-600 hover:bg-amber-700 text-white"
         >
           {spinning ? "Drawing..." : "Quick Draw"}
         </Button>
         {untriedCount === 0 && (
-          <p className="text-xs text-blue-600">You've tried them all!</p>
+          <p className="text-xs text-amber-600">You've tried them all!</p>
         )}
       </div>
 

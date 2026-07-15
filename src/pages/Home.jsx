@@ -324,7 +324,7 @@ export default function Home() {
               {!searchQuery && activeTab === 'all' && (
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
                   <Link to={createPageUrl('ActivityFeed')}>
-                    <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 font-semibold">
+                    <Button className="w-full bg-gradient-to-r from-amber-800 to-stone-800 hover:from-amber-900 hover:to-stone-900 text-white text-lg py-6 font-semibold">
                       <MessageCircle className="w-5 h-5 mr-2" />
                       The Hitching Post - Activity Feed
                     </Button>

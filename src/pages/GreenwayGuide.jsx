@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Polygon, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
-import { Navigation, X, Crosshair, Loader2, BookOpen } from 'lucide-react';
+import { Navigation, X, Crosshair, BookOpen } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import GreenwayGuidePanel from '@/components/GreenwayGuidePanel';
+import GreenwayLayerControl, { LAYERS, DEFAULT_VISIBLE } from '@/components/GreenwayLayerControl';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -15,24 +16,9 @@ L.Icon.Default.mergeOptions({
 });
 
 const CHEYENNE_CENTER = [41.1400, -104.7900];
+const BBOX = '41.08,-104.89,41.22,-104.72';
 
-const TRAIL_COLORS = {
-  'Dry Creek Greenway':    '#166534',
-  'Allison Draw Greenway': '#0d9488',
-  'Sun Valley Greenway':   '#d97706',
-  'Crow Creek Greenway':   '#7c3aed',
-  'Cheyenne Greenway':     '#15803d',
-};
-
-const TRAIL_LEGEND = [
-  { name: 'Dry Creek Greenway',     color: '#166534' },
-  { name: 'Cheyenne Greenway',      color: '#15803d' },
-  { name: 'Allison Draw Greenway',  color: '#0d9488' },
-  { name: 'Sun Valley Greenway',    color: '#d97706' },
-  { name: 'Crow Creek Greenway',    color: '#7c3aed' },
-];
-
-// ─── Trailheads ───────────────────────────────────────────────────────────────
+// ─── Trailheads (Activities layer) ────────────────────────────────────────────
 const TRAILHEADS = [
   { id:'lions-park',    name:'Lions Park',                  label:'Central Hub',            lat:41.1712, lng:-104.8315, description:'Central junction for Dry Creek segments with lakeside amenities.',            features:["Botanic Gardens","Sloan's Lake beach","Paddle boats","Dry Creek junction"] },
   { id:'holliday-park', name:'Holliday Park',               label:'Downtown Anchor',        lat:41.1332, lng:-104.8062, description:'Downtown access point near historic landmarks and Lake Minnehaha.',           features:["Big Boy Steam Engine #4004","Lake Minnehaha","Downtown trail connectors"] },
@@ -46,25 +32,54 @@ const TRAILHEADS = [
   { id:'kiwanis',       name:'Kiwanis Park',                label:'Northeast Access',       lat:41.1640, lng:-104.7920, description:'Green space nestled between the Dry Creek and Dell Range connector lines.',    features:["Dry Creek connector","Dell Range access","Quiet green space"] },
 ];
 
-// ─── Parse raw Overpass ways into renderable polylines ────────────────────────
-function parseWaysToSegments(elements) {
-  const segments = [];
+// ─── Overpass fetch + classification into layer buckets ────────────────────────
+const OVERPASS_QUERY = `[out:json][timeout:25];(
+  way["highway"~"cycleway|path"]["surface"~"concrete",i](${BBOX});
+  way["name"~"Greenway",i](${BBOX});
+  way["highway"~"cycleway|path"]["surface"~"asphalt|paving_stones|paved",i](${BBOX});
+  way["highway"~"track|path"]["surface"~"dirt|ground|unpaved|gravel|sand|earth",i](${BBOX});
+  way["cycleway"](${BBOX});
+  way["leisure"="park"](${BBOX});
+  way["natural"="water"](${BBOX});
+  way["waterway"~"stream|creek|river|canal"](${BBOX});
+);out geom qt;`;
+
+function classifyWay(el) {
+  const tags = el.tags || {};
+  const name = tags.name || '';
+  const isGreenwayName = /greenway/i.test(name);
+
+  if (tags.leisure === 'park') return 'parks';
+  if (tags.natural === 'water') return 'lakes';
+  if (tags.waterway) return 'creeks';
+
+  const hw = tags.highway || '';
+  const surf = (tags.surface || '').toLowerCase();
+
+  if ((hw === 'track' || hw === 'path') && /dirt|ground|unpaved|gravel|sand|earth/.test(surf)) return 'dirt';
+  if (tags.cycleway && /residential|tertiary|secondary|primary|unclassified|service/.test(hw)) return 'bikeroute';
+  if (hw === 'cycleway' || hw === 'path') {
+    if (/concrete/.test(surf) || isGreenwayName) return 'greenway';
+    if (/asphalt|paving_stones|paved/.test(surf)) return 'shared';
+    return 'greenway'; // paved trail with no surface tag — assume concrete greenway
+  }
+  if (isGreenwayName) return 'greenway';
+  return null;
+}
+
+function parseOverpass(elements) {
+  const buckets = { greenway: [], shared: [], bikeroute: [], dirt: [], parks: [], creeks: [], lakes: [] };
   for (const el of elements) {
     if (el.type !== 'way' || !el.geometry || el.geometry.length < 2) continue;
-    const name = el.tags?.name || '';
-    let trailName = 'Cheyenne Greenway';
-    if (/allison/i.test(name))          trailName = 'Allison Draw Greenway';
-    else if (/crow/i.test(name))        trailName = 'Crow Creek Greenway';
-    else if (/sun[\s\-_]*valley/i.test(name)) trailName = 'Sun Valley Greenway';
-    else if (/dry[\s\-_]*creek/i.test(name))  trailName = 'Dry Creek Greenway';
-    segments.push({
+    const layerId = classifyWay(el);
+    if (!layerId || !buckets[layerId]) continue;
+    buckets[layerId].push({
       id: el.id,
-      name: trailName,
-      color: TRAIL_COLORS[trailName] || '#15803d',
+      name: el.tags?.name || '',
       path: el.geometry.map(n => [n.lat, n.lon]),
     });
   }
-  return segments;
+  return buckets;
 }
 
 // ─── Proximity helpers ────────────────────────────────────────────────────────
@@ -79,13 +94,13 @@ function pointToSegDist(p,a,b) {
   const t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/lenSq));
   return haversineMeters(p,[a[0]+t*dx,a[1]+t*dy]);
 }
-function nearestTrailSegment(userPos, segments) {
+function nearestTrailSegment(userPos, trailItems) {
   const THRESHOLD = 30;
   let minDist=Infinity, nearest=null;
-  for (const seg of segments) {
-    for (let i=0;i<seg.path.length-1;i++) {
-      const d=pointToSegDist(userPos,seg.path[i],seg.path[i+1]);
-      if(d<minDist){minDist=d;nearest={name:seg.name};}
+  for (const it of trailItems) {
+    for (let i=0;i<it.path.length-1;i++) {
+      const d=pointToSegDist(userPos,it.path[i],it.path[i+1]);
+      if(d<minDist){minDist=d;nearest=it;}
     }
   }
   return minDist<=THRESHOLD ? nearest : null;
@@ -113,7 +128,7 @@ function RecenterControl({ target }) {
 export default function GreenwayGuide() {
   useSEO({
     title: 'Cheyenne Greenway Interactive Map | GPS Trail Guide',
-    description: 'Interactive GPS-enabled map of the Greater Cheyenne Greenway. Find trailheads, parking, nearby restaurants, and plan your walking or biking route across 47 miles of paved trails.',
+    description: 'Interactive GPS-enabled map of the Greater Cheyenne Greenway with toggleable layers for greenway trails, shared-use paths, bike routes, city parks, creeks, and lakes. Plan your walking or biking route across 47 miles of paved trails.',
   });
 
   const [userLocation, setUserLocation]     = useState(null);
@@ -121,26 +136,34 @@ export default function GreenwayGuide() {
   const [selectedTrailhead, setSelectedTrailhead] = useState(null);
   const [locationError, setLocationError]   = useState(false);
   const [activeSegment, setActiveSegment]   = useState(null);
-  const [segments, setSegments]             = useState([]);
-  const [loading, setLoading]               = useState(true);
-  const [guideOpen, setGuideOpen]           = useState(false);
+  const [data, setData]                       = useState({});
+  const [loading, setLoading]                 = useState(true);
+  const [guideOpen, setGuideOpen]             = useState(false);
+  const [visibleLayers, setVisibleLayers]     = useState(new Set(DEFAULT_VISIBLE));
   const watchIdRef = useRef(null);
-  const segmentsRef = useRef([]);
+  const dataRef = useRef({});
 
-  useEffect(() => { segmentsRef.current = segments; }, [segments]);
+  useEffect(() => { dataRef.current = data; }, [data]);
 
-  // Fetch all named greenway ways from Overpass with full geometry
+  const toggleLayer = useCallback((id) => {
+    setVisibleLayers(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }, []);
+
+  // Fetch all greenway-related ways from Overpass, classify into layers
   useEffect(() => {
-    const QUERY = `[out:json][timeout:30];(way["name"~"Greenway",i](41.08,-104.89,41.22,-104.72););out geom qt;`;
-    const url = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=${encodeURIComponent(QUERY)}`;
+    const url = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=${encodeURIComponent(OVERPASS_QUERY)}`;
     fetch(url, { headers: { Accept: 'application/json' } })
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(json => {
-        const parsed = parseWaysToSegments(json.elements || []);
-        setSegments(parsed);
-        segmentsRef.current = parsed;
+        const parsed = parseOverpass(json.elements || []);
+        setData(parsed);
+        dataRef.current = parsed;
       })
-      .catch(() => {}) // silently keep empty; no fallback needed — OSM is the source of truth
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -152,7 +175,9 @@ export default function GreenwayGuide() {
         const loc = [pos.coords.latitude, pos.coords.longitude];
         setUserLocation(loc);
         setLocationError(false);
-        setActiveSegment(nearestTrailSegment(loc, segmentsRef.current));
+        const d = dataRef.current;
+        const trailItems = [...(d.greenway||[]), ...(d.shared||[]), ...(d.dirt||[])];
+        setActiveSegment(nearestTrailSegment(loc, trailItems));
       },
       () => setLocationError(true),
       { enableHighAccuracy: true, maximumAge: 5000 }
@@ -166,6 +191,46 @@ export default function GreenwayGuide() {
 
   const handleNavigate = t => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${t.lat},${t.lng}&travelmode=walking`, '_blank', 'noopener,noreferrer');
+  };
+
+  const counts = {
+    ...Object.fromEntries(Object.keys(data).map(k => [k, data[k].length])),
+    activities: TRAILHEADS.length,
+  };
+
+  const renderLineLayer = (layerId) => {
+    const layer = LAYERS.find(l => l.id === layerId);
+    if (!layer || !visibleLayers.has(layerId)) return null;
+    return (data[layerId] || []).map(it => (
+      <Polyline
+        key={`${layerId}-${it.id}`}
+        positions={it.path}
+        pathOptions={{
+          color: layer.color,
+          weight: layer.weight,
+          opacity: 0.9,
+          dashArray: layer.dashed ? '8 6' : undefined,
+        }}
+      />
+    ));
+  };
+
+  const renderPolygonLayer = (layerId) => {
+    const layer = LAYERS.find(l => l.id === layerId);
+    if (!layer || !visibleLayers.has(layerId)) return null;
+    return (data[layerId] || []).map(it => (
+      <Polygon
+        key={`${layerId}-${it.id}`}
+        positions={it.path}
+        pathOptions={{
+          color: layer.color,
+          weight: 1,
+          fillColor: layer.color,
+          fillOpacity: 0.45,
+          opacity: 0.8,
+        }}
+      />
+    ));
   };
 
   return (
@@ -182,24 +247,29 @@ export default function GreenwayGuide() {
       {activeSegment && (
         <div className="absolute top-24 left-1/2 -translate-x-1/2 z-[1001] bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 whitespace-nowrap">
           <span className="animate-pulse">📍</span>
-          You are on the {activeSegment.name}!
+          You are on the {activeSegment.name || 'Cheyenne Greenway'}!
         </div>
       )}
 
-      {/* Legend */}
-      <div className="absolute top-16 left-3 z-[1000] bg-white/90 backdrop-blur rounded-lg shadow-md border border-amber-200 px-3 py-2 space-y-1">
-        {TRAIL_LEGEND.map(t => (
-          <div key={t.name} className="flex items-center gap-2 text-xs text-stone-700">
-            <div className="w-5 h-1.5 rounded-full flex-shrink-0" style={{ background: t.color }} />
-            <span className="leading-tight">{t.name}</span>
-          </div>
-        ))}
-      </div>
+      {/* Layer control */}
+      <GreenwayLayerControl
+        visible={visibleLayers}
+        onToggle={toggleLayer}
+        counts={counts}
+      />
 
       {/* GPS error */}
       {locationError && (
-        <div className="absolute top-16 right-3 z-[1000] bg-amber-100 border border-amber-400 text-amber-800 text-xs rounded-lg px-3 py-2 shadow max-w-[180px]">
+        <div className="absolute top-16 left-3 z-[1000] bg-amber-100 border border-amber-400 text-amber-800 text-xs rounded-lg px-3 py-2 shadow max-w-[180px]">
           Enable GPS for live location tracking
+        </div>
+      )}
+
+      {/* Loading indicator */}
+      {loading && (
+        <div className="absolute top-16 left-3 z-[1000] bg-white/90 border border-amber-300 text-amber-800 text-xs rounded-lg px-3 py-2 shadow flex items-center gap-2">
+          <span className="w-3 h-3 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+          Loading trail data…
         </div>
       )}
 
@@ -234,17 +304,19 @@ export default function GreenwayGuide() {
           maxZoom={19}
         />
 
-        {/* Real OSM trail ways — each individual way segment rendered with its actual geometry */}
-        {segments.map(seg => (
-          <Polyline
-            key={seg.id}
-            positions={seg.path}
-            pathOptions={{ color: seg.color, weight: 5, opacity: 0.9 }}
-          />
-        ))}
+        {/* Polygon layers (parks, lakes) render beneath trails */}
+        {renderPolygonLayer('parks')}
+        {renderPolygonLayer('lakes')}
 
-        {/* Trailhead pins */}
-        {TRAILHEADS.map(t => (
+        {/* Line layers */}
+        {renderLineLayer('creeks')}
+        {renderLineLayer('bikeroute')}
+        {renderLineLayer('dirt')}
+        {renderLineLayer('shared')}
+        {renderLineLayer('greenway')}
+
+        {/* Trailhead pins (Activities layer) */}
+        {visibleLayers.has('activities') && TRAILHEADS.map(t => (
           <Marker
             key={t.id}
             position={[t.lat, t.lng]}

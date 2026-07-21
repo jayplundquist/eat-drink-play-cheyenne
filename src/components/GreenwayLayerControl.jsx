@@ -26,22 +26,22 @@ export default function GreenwayLayerControl({ visible, onToggle, counts = {} })
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="absolute top-3 right-3 z-[1000] max-w-[240px]">
+    <div className="absolute top-3 right-3 z-[1000] w-[210px]">
       <div className="flex justify-end">
         <button
           onClick={() => setOpen(o => !o)}
-          className="bg-amber-800 hover:bg-amber-900 text-white rounded-lg shadow-lg px-3 py-2 flex items-center gap-2 text-sm font-semibold transition-colors"
+          className="bg-amber-800 hover:bg-amber-900 text-white rounded-lg shadow-lg px-2.5 py-1.5 flex items-center gap-1.5 text-xs font-semibold transition-colors"
         >
-          <Layers className="w-4 h-4" />
-          {open ? <X className="w-4 h-4" /> : <span>Layers</span>}
+          <Layers className="w-3.5 h-3.5" />
+          {open ? <X className="w-3.5 h-3.5" /> : <span>Layers</span>}
         </button>
       </div>
 
       {open && (
-        <div className="mt-2 bg-white/95 backdrop-blur rounded-lg shadow-xl border-2 border-amber-200 overflow-hidden max-h-[calc(100vh-220px)] flex flex-col">
-          <div className="bg-amber-50 px-3 py-2 border-b border-amber-200">
-            <p className="text-xs font-bold text-amber-900 uppercase tracking-wide">Map Layers</p>
-            <p className="text-[11px] text-stone-500">Total items: {Object.values(counts).reduce((a, b) => a + b, 0)}</p>
+        <div className="mt-1.5 bg-white/95 backdrop-blur rounded-lg shadow-xl border-2 border-amber-200 overflow-hidden max-h-[calc(100vh-150px)] flex flex-col">
+          <div className="bg-amber-50 px-2.5 py-1.5 border-b border-amber-200">
+            <p className="text-[11px] font-bold text-amber-900 uppercase tracking-wide">Map Layers</p>
+            <p className="text-[10px] text-stone-500">Total items: {Object.values(counts).reduce((a, b) => a + b, 0)}</p>
           </div>
           <ul className="divide-y divide-stone-100 overflow-y-auto">
             {LAYERS.map((layer, idx) => {
@@ -51,35 +51,35 @@ export default function GreenwayLayerControl({ visible, onToggle, counts = {} })
                 <li key={layer.id}>
                   <button
                     onClick={() => onToggle(layer.id)}
-                    className={`w-full flex items-center gap-2 px-3 py-2 text-left transition-colors ${
+                    className={`w-full flex items-center gap-1.5 px-2.5 py-1.5 text-left transition-colors ${
                       isVisible ? 'bg-white hover:bg-amber-50' : 'bg-stone-100 hover:bg-stone-200 opacity-70'
                     }`}
                   >
-                    <span className="text-[11px] text-stone-400 font-mono w-5 flex-shrink-0">
+                    <span className="text-[10px] text-stone-400 font-mono w-4 flex-shrink-0">
                       {String(idx + 1).padStart(2, '0')}
                     </span>
                     {layer.kind === 'line' && (
                       <span
                         className="flex-shrink-0 rounded-full"
                         style={{
-                          width: 22,
-                          height: layer.weight + 2,
+                          width: 18,
+                          height: layer.weight + 1,
                           background: layer.color,
                           backgroundImage: layer.dashed
-                            ? `repeating-linear-gradient(90deg, ${layer.color} 0 6px, transparent 6px 11px)`
+                            ? `repeating-linear-gradient(90deg, ${layer.color} 0 5px, transparent 5px 9px)`
                             : undefined,
                         }}
                       />
                     )}
                     {layer.kind === 'polygon' && (
-                      <span className="flex-shrink-0 w-4 h-4 rounded-sm border" style={{ background: layer.color, borderColor: layer.color }} />
+                      <span className="flex-shrink-0 w-3.5 h-3.5 rounded-sm border" style={{ background: layer.color, borderColor: layer.color }} />
                     )}
                     {layer.kind === 'marker' && (
-                      <span className="flex-shrink-0 w-4 h-4 rounded-full bg-amber-800 border-2 border-white shadow" />
+                      <span className="flex-shrink-0 w-3.5 h-3.5 rounded-full bg-amber-800 border-2 border-white shadow" />
                     )}
-                    <span className="text-xs text-stone-700 leading-tight flex-1">{layer.label}</span>
-                    <span className="text-[11px] text-stone-400 flex-shrink-0">{count}</span>
-                    <span className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${isVisible ? 'text-amber-700' : 'text-stone-300'}`}>
+                    <span className="text-[11px] text-stone-700 leading-tight flex-1">{layer.label}</span>
+                    <span className="text-[10px] text-stone-400 flex-shrink-0">{count}</span>
+                    <span className={`flex-shrink-0 w-3.5 h-3.5 flex items-center justify-center text-[11px] ${isVisible ? 'text-amber-700' : 'text-stone-300'}`}>
                       {isVisible ? '◉' : '○'}
                     </span>
                   </button>

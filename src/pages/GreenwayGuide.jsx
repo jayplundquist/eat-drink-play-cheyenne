@@ -33,9 +33,14 @@ const TRAILHEADS = [
 ];
 
 // ─── Overpass fetch + classification into layer buckets ────────────────────────
-const OVERPASS_QUERY = `[out:json][timeout:25];(
+// Primary query: only the concrete Greenway trails — small payload, loads fast on mount.
+const PRIMARY_QUERY = `[out:json][timeout:15];(
   way["highway"~"cycleway|path"]["surface"~"concrete",i](${BBOX});
   way["name"~"Greenway",i](${BBOX});
+);out geom qt;`;
+// Secondary query: everything else (shared paths, bike routes, dirt, parks, lakes, creeks).
+// Fetched lazily only when a non-default layer is toggled on.
+const SECONDARY_QUERY = `[out:json][timeout:25];(
   way["highway"~"cycleway|path"]["surface"~"asphalt|paving_stones|paved",i](${BBOX});
   way["highway"~"track|path"]["surface"~"dirt|ground|unpaved|gravel|sand|earth",i](${BBOX});
   way["cycleway"](${BBOX});
@@ -81,6 +86,16 @@ function parseOverpass(elements) {
   }
   return buckets;
 }
+
+function fetchOverpass(query) {
+  const url = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=${encodeURIComponent(query)}`;
+  return fetch(url, { headers: { Accept: 'application/json' } })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(json => parseOverpass(json.elements || []));
+}
+
+// Layers that rely on the secondary (heavy) Overpass fetch
+const SECONDARY_LAYERS = ['shared', 'bikeroute', 'dirt', 'parks', 'creeks', 'lakes'];
 
 // ─── Proximity helpers ────────────────────────────────────────────────────────
 function haversineMeters([lat1,lon1],[lat2,lon2]) {
@@ -138,12 +153,36 @@ export default function GreenwayGuide() {
   const [activeSegment, setActiveSegment]   = useState(null);
   const [data, setData]                       = useState({});
   const [loading, setLoading]                 = useState(true);
+  const [secondaryLoading, setSecondaryLoading] = useState(false);
   const [guideOpen, setGuideOpen]             = useState(false);
   const [visibleLayers, setVisibleLayers]     = useState(new Set(DEFAULT_VISIBLE));
   const watchIdRef = useRef(null);
   const dataRef = useRef({});
+  const secondaryLoadedRef = useRef(false);
 
   useEffect(() => { dataRef.current = data; }, [data]);
+
+  // Lazy-load the heavy secondary layers (parks, lakes, creeks, etc.) once.
+  const ensureSecondary = useCallback(() => {
+    if (secondaryLoadedRef.current || secondaryLoading) return;
+    setSecondaryLoading(true);
+    fetchOverpass(SECONDARY_QUERY)
+      .then(parsed => {
+        setData(prev => {
+          const merged = { ...prev };
+          for (const key of Object.keys(parsed)) {
+            const existing = new Set((merged[key] || []).map(i => i.id));
+            const fresh = (parsed[key] || []).filter(i => !existing.has(i.id));
+            merged[key] = [...(merged[key] || []), ...fresh];
+          }
+          dataRef.current = merged;
+          return merged;
+        });
+        secondaryLoadedRef.current = true;
+      })
+      .catch(() => {})
+      .finally(() => setSecondaryLoading(false));
+  }, [secondaryLoading]);
 
   const toggleLayer = useCallback((id) => {
     setVisibleLayers(prev => {
@@ -151,17 +190,18 @@ export default function GreenwayGuide() {
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
-  }, []);
+    // Enabling a non-default layer triggers the secondary fetch on demand
+    if (!visibleLayers.has(id) && SECONDARY_LAYERS.includes(id)) {
+      ensureSecondary();
+    }
+  }, [ensureSecondary, visibleLayers]);
 
-  // Fetch all greenway-related ways from Overpass, classify into layers
+  // Fetch only the primary Greenway trails on mount — fast initial load
   useEffect(() => {
-    const url = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=${encodeURIComponent(OVERPASS_QUERY)}`;
-    fetch(url, { headers: { Accept: 'application/json' } })
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(json => {
-        const parsed = parseOverpass(json.elements || []);
-        setData(parsed);
-        dataRef.current = parsed;
+    fetchOverpass(PRIMARY_QUERY)
+      .then(parsed => {
+        setData(prev => ({ ...prev, greenway: parsed.greenway }));
+        dataRef.current = { ...dataRef.current, greenway: parsed.greenway };
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -284,6 +324,12 @@ export default function GreenwayGuide() {
         <div className="absolute top-16 left-3 z-[1000] bg-white/90 border border-amber-300 text-amber-800 text-xs rounded-lg px-3 py-2 shadow flex items-center gap-2">
           <span className="w-3 h-3 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
           Loading trail data…
+        </div>
+      )}
+      {secondaryLoading && (
+        <div className="absolute top-28 left-3 z-[1000] bg-white/90 border border-blue-300 text-blue-800 text-xs rounded-lg px-3 py-2 shadow flex items-center gap-2">
+          <span className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          Loading extra layers…
         </div>
       )}
 

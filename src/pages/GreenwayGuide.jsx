@@ -246,14 +246,16 @@ export default function GreenwayGuide() {
   };
 
   return (
-    <div className="relative w-full" style={{ height: 'calc(100vh - 64px)' }}>
-
-      {/* Title */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 backdrop-blur rounded-xl px-5 py-2 shadow-lg border-2 border-amber-200 pointer-events-none">
-        <h1 className="text-lg font-bold text-amber-900 text-center whitespace-nowrap" style={{ fontFamily: 'Rye, serif' }}>
+    <div className="w-full">
+      {/* Title — sits on the page above the map, freeing up the map overlay */}
+      <div className="bg-gradient-to-b from-amber-900 to-amber-800 px-4 py-4 text-center">
+        <h1 className="text-2xl font-bold text-amber-50" style={{ fontFamily: 'Rye, serif' }}>
           🌿 Greater Cheyenne Greenway
         </h1>
+        <p className="text-xs text-amber-200 mt-1">Interactive trail map · 47 miles of paved paths</p>
       </div>
+
+      <div className="relative w-full" style={{ height: 'calc(100vh - 160px)' }}>
 
       {/* Proximity banner */}
       {activeSegment && (
@@ -381,6 +383,7 @@ export default function GreenwayGuide() {
           </Button>
         </div>
       )}
+      </div>
     </div>
   );
 }

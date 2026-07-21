@@ -6,14 +6,14 @@ import { Layers, X } from 'lucide-react';
  * `kind` drives how the page renders each item: line | polygon | marker.
  */
 export const LAYERS = [
-  { id: 'greenway',   label: 'Greenway (10 ft Concrete)',        color: '#1b5e20', kind: 'line',    weight: 6, solid: true },
-  { id: 'shared',     label: 'Shared Use Trail (Asphalt)',      color: '#2e7d32', kind: 'line',    weight: 4, solid: true },
-  { id: 'bikeroute',  label: 'On Street Bike Routes',           color: '#ef6c00', kind: 'line',    weight: 3, dashed: true },
-  { id: 'dirt',       label: 'Dirt Bike Trail',                 color: '#6d4c41', kind: 'line',    weight: 3, dashed: true },
+  { id: 'greenway',   label: 'Greenway (10 ft Concrete)',        color: '#047857', kind: 'line',    weight: 6, solid: true },
+  { id: 'shared',     label: 'Shared Use Trail (Asphalt)',      color: '#65a30d', kind: 'line',    weight: 5, solid: true },
+  { id: 'bikeroute',  label: 'On Street Bike Routes',           color: '#ea580c', kind: 'line',    weight: 4, dashed: true },
+  { id: 'dirt',       label: 'Dirt Bike Trail',                 color: '#92400e', kind: 'line',    weight: 4, dashed: true },
   { id: 'activities', label: 'Trailheads & Activities',        color: '#92400e', kind: 'marker' },
-  { id: 'parks',      label: 'City Parks',                      color: '#a5d6a7', kind: 'polygon' },
-  { id: 'creeks',     label: 'Creeks',                          color: '#4fc3f7', kind: 'line',    weight: 3 },
-  { id: 'lakes',      label: 'Lakes',                           color: '#81d4fa', kind: 'polygon' },
+  { id: 'parks',      label: 'City Parks',                      color: '#4ade80', kind: 'polygon' },
+  { id: 'creeks',     label: 'Creeks',                          color: '#0ea5e9', kind: 'line',    weight: 4 },
+  { id: 'lakes',      label: 'Lakes',                           color: '#38bdf8', kind: 'polygon' },
 ];
 
 export const DEFAULT_VISIBLE = ['greenway', 'shared', 'activities', 'parks', 'creeks', 'lakes'];

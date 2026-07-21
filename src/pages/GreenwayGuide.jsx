@@ -201,18 +201,30 @@ export default function GreenwayGuide() {
   const renderLineLayer = (layerId) => {
     const layer = LAYERS.find(l => l.id === layerId);
     if (!layer || !visibleLayers.has(layerId)) return null;
-    return (data[layerId] || []).map(it => (
-      <Polyline
-        key={`${layerId}-${it.id}`}
-        positions={it.path}
-        pathOptions={{
-          color: layer.color,
-          weight: layer.weight,
-          opacity: 0.9,
-          dashArray: layer.dashed ? '8 6' : undefined,
-        }}
-      />
-    ));
+    const items = data[layerId] || [];
+    const cased = [];
+    for (const it of items) {
+      // White casing under the colored line makes trails pop against the map
+      cased.push(
+        <Polyline
+          key={`${layerId}-case-${it.id}`}
+          positions={it.path}
+          pathOptions={{ color: '#ffffff', weight: layer.weight + 4, opacity: 0.85, lineCap: 'round' }}
+        />,
+        <Polyline
+          key={`${layerId}-${it.id}`}
+          positions={it.path}
+          pathOptions={{
+            color: layer.color,
+            weight: layer.weight,
+            opacity: 1,
+            lineCap: 'round',
+            dashArray: layer.dashed ? '8 7' : undefined,
+          }}
+        />
+      );
+    }
+    return cased;
   };
 
   const renderPolygonLayer = (layerId) => {
@@ -223,11 +235,11 @@ export default function GreenwayGuide() {
         key={`${layerId}-${it.id}`}
         positions={it.path}
         pathOptions={{
-          color: layer.color,
-          weight: 1,
+          color: layer.id === 'parks' ? '#15803d' : '#0284c7',
+          weight: 2,
           fillColor: layer.color,
-          fillOpacity: 0.45,
-          opacity: 0.8,
+          fillOpacity: layer.id === 'lakes' ? 0.7 : 0.5,
+          opacity: 0.95,
         }}
       />
     ));

@@ -16,7 +16,7 @@ export const LAYERS = [
   { id: 'lakes',      label: 'Lakes',                           color: '#38bdf8', kind: 'polygon' },
 ];
 
-export const DEFAULT_VISIBLE = ['greenway', 'shared', 'activities', 'parks', 'creeks', 'lakes'];
+export const DEFAULT_VISIBLE = ['greenway', 'activities'];
 
 /**
  * Collapsible layer list with per-layer visibility toggles and live item counts,
@@ -38,12 +38,12 @@ export default function GreenwayLayerControl({ visible, onToggle, counts = {} })
       </div>
 
       {open && (
-        <div className="mt-2 bg-white/95 backdrop-blur rounded-lg shadow-xl border-2 border-amber-200 overflow-hidden">
+        <div className="mt-2 bg-white/95 backdrop-blur rounded-lg shadow-xl border-2 border-amber-200 overflow-hidden max-h-[calc(100vh-220px)] flex flex-col">
           <div className="bg-amber-50 px-3 py-2 border-b border-amber-200">
             <p className="text-xs font-bold text-amber-900 uppercase tracking-wide">Map Layers</p>
             <p className="text-[11px] text-stone-500">Total items: {Object.values(counts).reduce((a, b) => a + b, 0)}</p>
           </div>
-          <ul className="divide-y divide-stone-100">
+          <ul className="divide-y divide-stone-100 overflow-y-auto">
             {LAYERS.map((layer, idx) => {
               const isVisible = visible.has(layer.id);
               const count = counts[layer.id] ?? 0;

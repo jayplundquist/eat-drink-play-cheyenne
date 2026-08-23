@@ -1,0 +1,225 @@
+{
+  "name": "GarageSale",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Garage sale title"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Auto-generated URL-friendly slug"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the sale"
+    },
+    "address": {
+      "type": "string",
+      "description": "Street address"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude of the sale"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude of the sale"
+    },
+    "sale_dates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "date"
+      },
+      "description": "Dates the sale is active (YYYY-MM-DD)"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Daily start time, HH:MM 24h"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Daily end time, HH:MM 24h"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "furniture",
+          "tools",
+          "kids",
+          "baby",
+          "clothing",
+          "shoes",
+          "electronics",
+          "video_games",
+          "sports",
+          "outdoor",
+          "camping",
+          "automotive",
+          "antiques",
+          "collectibles",
+          "books",
+          "home_decor",
+          "kitchen",
+          "appliances",
+          "crafts",
+          "holiday",
+          "free_stuff",
+          "everything_must_go"
+        ]
+      },
+      "description": "Item categories available at the sale"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photo URLs"
+    },
+    "contact_info": {
+      "type": "string",
+      "description": "Optional contact info (phone/email)"
+    },
+    "special_notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "early_birds_welcome",
+          "no_early_birds",
+          "cash_only",
+          "venmo_accepted",
+          "everything_must_go",
+          "prices_reduced_sunday",
+          "free_items_available",
+          "multi_family_sale",
+          "estate_sale",
+          "moving_sale",
+          "neighborhood_sale"
+        ]
+      },
+      "description": "Predefined special-note tags"
+    },
+    "custom_notes": {
+      "type": "string",
+      "description": "Free-text additional notes"
+    },
+    "address_visibility": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "morning_of"
+      ],
+      "default": "immediate",
+      "description": "When the exact address becomes public"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "garage",
+        "estate",
+        "moving",
+        "neighborhood",
+        "community",
+        "church",
+        "school",
+        "multi_family"
+      ],
+      "default": "garage",
+      "description": "Type of sale event"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Featured listing (future paid placement)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "removed"
+      ],
+      "default": "active",
+      "description": "Listing status"
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email of the seller (for admin view)"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the sale expires (final date + end time)"
+    }
+  },
+  "required": [
+    "title",
+    "address",
+    "city",
+    "state",
+    "zip",
+    "lat",
+    "lng",
+    "sale_dates",
+    "start_time",
+    "end_time"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.status": "active"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

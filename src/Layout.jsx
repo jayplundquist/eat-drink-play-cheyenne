@@ -22,7 +22,8 @@ import {
               LogOut,
               Plus,
               Settings,
-              Flag
+              Flag,
+              Tag
             } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
@@ -67,6 +68,7 @@ export default function Layout({ children, currentPageName }) {
       '/ManageGameSettings', '/ManageBoots', '/ManageBadges', '/ManageReports',
       '/ManageClaimRequests', '/EditVenue', '/Profile',
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
+      '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
     let metaRobots = document.querySelector('meta[name="robots"]');
@@ -84,6 +86,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'ActivityFeed', icon: Plus, label: 'The Hitching Post' },
     { name: 'VisitedMap', icon: MapPin, label: 'My Map' },
     { name: 'GreenwayInfo', icon: MapPin, label: 'Greenway' },
+    { name: 'GarageSales', icon: Tag, label: 'Garage Sales' },
   ];
 
   const isHome = currentPageName === 'Home';

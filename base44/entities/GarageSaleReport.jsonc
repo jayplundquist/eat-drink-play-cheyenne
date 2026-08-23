@@ -1,0 +1,67 @@
+{
+  "name": "GarageSaleReport",
+  "type": "object",
+  "properties": {
+    "garage_sale_id": {
+      "type": "string",
+      "description": "ID of the reported garage sale"
+    },
+    "garage_sale_title": {
+      "type": "string",
+      "description": "Snapshot of the sale title"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of the reporter"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "fake",
+        "incorrect_address",
+        "inappropriate",
+        "duplicate",
+        "not_happening",
+        "other"
+      ],
+      "description": "Reason for the report"
+    },
+    "details": {
+      "type": "string",
+      "description": "Optional extra details"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "resolved"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "garage_sale_id",
+    "reason"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

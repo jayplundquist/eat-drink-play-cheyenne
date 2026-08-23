@@ -1,0 +1,73 @@
+{
+  "name": "GarageSaleRoute",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Route name"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "garage_sale_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          },
+          "close_time": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ]
+      },
+      "description": "Ordered route stops (denormalized so the route survives expired sales)"
+    },
+    "start_label": {
+      "type": "string",
+      "description": "Label for the starting point"
+    },
+    "start_lat": {
+      "type": "number"
+    },
+    "start_lng": {
+      "type": "number"
+    },
+    "return_to_start": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "stops"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

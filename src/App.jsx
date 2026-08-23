@@ -26,6 +26,11 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import VisitedMap from './pages/VisitedMap';
+import GarageSales from './pages/GarageSales';
+import GarageSaleDetail from './pages/GarageSaleDetail';
+import AddGarageSale from './pages/AddGarageSale';
+import MyGarageSales from './pages/MyGarageSales';
+import ManageGarageSales from './pages/ManageGarageSales';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -93,6 +98,13 @@ const AuthenticatedApp = () => {
       <Route path="/Settings" element={<LayoutWrapper currentPageName="Settings"><Settings /></LayoutWrapper>} />
       <Route path="/UserProfile" element={<LayoutWrapper currentPageName="UserProfile"><UserProfile /></LayoutWrapper>} />
       <Route path="/VisitedMap" element={<LayoutWrapper currentPageName="VisitedMap"><VisitedMap /></LayoutWrapper>} />
+
+      {/* Garage Sale Map — public browsing, no login required */}
+      <Route path="/GarageSales" element={<LayoutWrapper currentPageName="GarageSales"><GarageSales /></LayoutWrapper>} />
+      <Route path="/GarageSales/:slug" element={<LayoutWrapper currentPageName="GarageSaleDetail"><GarageSaleDetail /></LayoutWrapper>} />
+      <Route path="/AddGarageSale" element={<LayoutWrapper currentPageName="AddGarageSale"><AddGarageSale /></LayoutWrapper>} />
+      <Route path="/MyGarageSales" element={<LayoutWrapper currentPageName="MyGarageSales"><MyGarageSales /></LayoutWrapper>} />
+      <Route path="/ManageGarageSales" element={<LayoutWrapper currentPageName="ManageGarageSales"><ManageGarageSales /></LayoutWrapper>} />
 
       {/* High-intent category landing pages for SEO */}
       <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />

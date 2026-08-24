@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -90,6 +91,7 @@ export default function GarageSaleMap({
   focusTarget = null,
 }) {
   const [zoom, setZoom] = useState(13);
+  const navigate = useNavigate();
 
   const points = useMemo(() => {
     return sales
@@ -169,7 +171,7 @@ export default function GarageSaleMap({
                 <Button
                   size="sm"
                   className="mt-2 w-full bg-amber-600 hover:bg-amber-700 text-white"
-                  onClick={() => onSelectSale(sale)}
+                  onClick={() => navigate(`/GarageSales/${sale.slug || sale.id}`)}
                 >
                   View Sale
                 </Button>

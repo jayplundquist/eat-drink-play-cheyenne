@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight, LayoutGrid, BookOpen } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight, LayoutGrid, BookOpen, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -360,6 +360,41 @@ export default function Home() {
                   <span className="inline-flex items-center gap-2 bg-amber-400 group-hover:bg-amber-300 transition-colors text-amber-950 font-bold px-6 py-3 rounded-xl text-sm shadow-lg border-2 border-amber-200">
                     <MapPin className="w-4 h-4" />
                     Explore the Trails
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {/* Garage Sales Banner */}
+      {!searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <Link to={createPageUrl('GarageSales')}>
+            <div className="relative bg-gradient-to-r from-orange-700 via-amber-700 to-yellow-700 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer group border-2 border-amber-600">
+              <div className="absolute inset-0 opacity-10 text-[180px] flex items-center justify-end pr-8 pointer-events-none select-none leading-none">
+                🏷️
+              </div>
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 p-6 md:p-8">
+                <div className="flex items-center gap-4 text-white">
+                  <div className="w-14 h-14 bg-amber-700/60 border-2 border-amber-300/40 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">
+                    🏷️
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-amber-200 mb-0.5">New Feature</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-white leading-tight" style={{ fontFamily: 'Rye, serif' }}>
+                      Cheyenne Garage Sales
+                    </h3>
+                    <p className="text-amber-100 text-sm mt-1">
+                      Map local sales · Build a route · Find treasures nearby
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center gap-2 bg-white group-hover:bg-amber-50 transition-colors text-amber-800 font-bold px-6 py-3 rounded-xl text-sm shadow-lg border-2 border-amber-200">
+                    <Tag className="w-4 h-4" />
+                    Browse Sales
                   </span>
                 </div>
               </div>

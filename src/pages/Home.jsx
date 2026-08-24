@@ -270,7 +270,7 @@ export default function Home() {
 
       {/* What'll it be today? — quick discovery lanes right under the hero */}
       {!searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-10 relative z-20 pb-2">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-2">
           <div className="text-center mb-3">
             <h2 className="text-xl sm:text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>What'll it be today?</h2>
             <p className="text-sm text-stone-600 mt-0.5">Pick a lane and we'll point you to the best of Cheyenne.</p>

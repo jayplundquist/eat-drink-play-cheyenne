@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -65,11 +65,21 @@ function getClusterPrecision(zoom) {
   return 1;
 }
 
-function ZoomTracker({ onZoom }) {
+function ZoomTracker({ onZoom, onClosePopup, hasSelection }) {
+  const prevZoomRef = useRef(null);
   const map = useMapEvents({
-    zoomend: () => onZoom(map.getZoom()),
+    zoomend: () => {
+      const z = map.getZoom();
+      if (hasSelection && prevZoomRef.current != null && z < prevZoomRef.current) {
+        map.closePopup();
+        onClosePopup?.();
+      }
+      prevZoomRef.current = z;
+      onZoom(z);
+    },
   });
   useEffect(() => {
+    prevZoomRef.current = map.getZoom();
     onZoom(map.getZoom());
   }, [map, onZoom]);
   return null;
@@ -92,6 +102,7 @@ export default function GarageSaleMap({
   routeStopIds = [],
   routePoints = null,
   focusTarget = null,
+  onCloseSale,
 }) {
   const [zoom, setZoom] = useState(11);
   const navigate = useNavigate();
@@ -129,20 +140,13 @@ export default function GarageSaleMap({
     return { individual, groups };
   }, [points, zoom]);
 
-  const popupScale = zoom >= 14 ? 1 : zoom >= 12 ? 0.85 : zoom >= 10 ? 0.7 : 0.6;
-
   return (
-    <>
-    <style>{`
-      .gs-map .leaflet-popup-content-wrapper,
-      .gs-map .leaflet-popup-content { transform: scale(${popupScale}); transform-origin: bottom center; transition: transform 0.2s ease; }
-    `}</style>
-    <MapContainer center={CHEYENNE_CENTER} zoom={11} scrollWheelZoom className="gs-map w-full h-full z-0" style={{ background: '#e8e0d4' }}>
+    <MapContainer center={CHEYENNE_CENTER} zoom={11} scrollWheelZoom className="w-full h-full z-0" style={{ background: '#e8e0d4' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; OpenStreetMap contributors'
       />
-      <ZoomTracker onZoom={setZoom} />
+      <ZoomTracker onZoom={setZoom} onClosePopup={onCloseSale} hasSelection={!!selectedSale} />
       <FlyTo target={focusTarget} />
 
       {clusters.groups.map((g, i) => (
@@ -199,6 +203,5 @@ export default function GarageSaleMap({
         />
       )}
     </MapContainer>
-    </>
   );
 }

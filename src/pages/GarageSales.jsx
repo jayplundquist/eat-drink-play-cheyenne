@@ -247,6 +247,7 @@ export default function GarageSales() {
                   sales={filtered}
                   selectedSale={selectedSale}
                   onSelectSale={(s) => { setSelectedSale(s); setFocusTarget(getDisplayCoords(s)); }}
+                  onCloseSale={() => { setSelectedSale(null); setFocusTarget(null); }}
                   savedIds={savedIds}
                   routeNumberById={routeNumberById}
                   routeStopIds={routeStops.map((s) => s.id)}

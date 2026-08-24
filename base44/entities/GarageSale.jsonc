@@ -146,6 +146,11 @@
       "default": false,
       "description": "Featured listing (future paid placement)"
     },
+    "demo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Sample/demo listing \u2014 not a real sale, shown for demonstration only"
+    },
     "status": {
       "type": "string",
       "enum": [

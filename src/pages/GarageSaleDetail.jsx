@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  MapPin, Clock, Calendar, Share2, Navigation, Heart, Plus, Flag, Trash2, Pencil,
+  MapPin, Clock, Calendar, Share2, Navigation, Heart, Plus, Flag, Trash2, Pencil, Info,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
@@ -162,6 +162,16 @@ export default function GarageSaleDetail() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 pb-20">
+      {sale.demo && (
+        <div className="bg-amber-100 border-2 border-amber-400 rounded-xl p-3 mb-4 flex items-start gap-2">
+          <Info className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-amber-900 text-sm">Demo Listing — For Demonstration Only</p>
+            <p className="text-amber-800 text-xs mt-0.5">This is a sample sale created to show how the garage sale map works. It is not a real event.</p>
+          </div>
+        </div>
+      )}
+
       {/* Photos */}
       {sale.photos?.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">

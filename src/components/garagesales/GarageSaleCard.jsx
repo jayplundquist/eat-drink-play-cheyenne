@@ -40,6 +40,9 @@ export default function GarageSaleCard({ sale, saved, inRoute, onToggleSave, onA
         <Link to={getSaleUrl(sale)}>
           <h3 className="font-bold text-stone-800 text-base leading-tight hover:text-amber-700">{sale.title}</h3>
         </Link>
+        {sale.demo && (
+          <span className="inline-block text-xs bg-stone-800 text-amber-200 px-2 py-0.5 rounded-full mt-1 font-medium">Demo — not a real sale</span>
+        )}
 
         <div className="flex items-center gap-1 text-xs text-stone-500 mt-1">
           <MapPin className="w-3 h-3 shrink-0" />

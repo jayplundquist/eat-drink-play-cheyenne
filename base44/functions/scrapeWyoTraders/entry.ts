@@ -161,12 +161,12 @@ export default async function(req: Request): Promise<Response> {
         const { start_time, end_time } = parseTimes(timeStr);
         listings.push({
           title: `Garage Sale at ${street}`,
-          description: `Listed on wyotraders.com${note ? '. ' + note : ''}`,
+          description: note || '',
           address: street,
           city, state, zip,
           sale_dates: dates,
           start_time, end_time,
-          custom_notes: quadrant ? `Cheyenne area: ${quadrant}` : '',
+          custom_notes: '',
           firstDate: dates.slice().sort()[0],
         });
       }

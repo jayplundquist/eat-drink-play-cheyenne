@@ -38,9 +38,9 @@ const categoryColors = {
   restaurant: "bg-amber-100 text-amber-800 border-amber-200",
   bar: "bg-rose-100 text-rose-800 border-rose-200",
   brewery: "bg-orange-100 text-orange-800 border-orange-200",
-  music_hall: "bg-violet-100 text-violet-800 border-violet-200",
+  music_hall: "bg-stone-100 text-stone-700 border-stone-300",
   activity: "bg-emerald-100 text-emerald-800 border-emerald-200",
-  recreation: "bg-sky-100 text-sky-800 border-sky-200"
+  recreation: "bg-teal-50 text-teal-800 border-teal-200"
 };
 
 // Fallback for old venues with single category
@@ -181,6 +181,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
                 onToggleFavorite?.(venue.id);
               }}
               className="h-9 w-9 rounded-full hover:bg-rose-50"
+              aria-label={isFavorite ? "Remove from favorites" : "Save to favorites"}
             >
               <Heart 
                 className={cn(
@@ -208,7 +209,7 @@ export default function VenueCard({ venue, isFavorite, onToggleFavorite, showFav
           </p>
         )}
         
-        <div className="flex items-center gap-1 mt-3 text-stone-400 text-xs">
+        <div className="flex items-center gap-1 mt-3 text-stone-500 text-xs">
           <Clock className="w-3 h-3" />
           <span>
             {venue.last_synced_date

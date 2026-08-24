@@ -111,21 +111,39 @@ export default function SeoContent({ featuredVenues = [] }) {
 
       {/* About / Local Guide */}
       <section className="border-t border-amber-200 pt-8">
-        <h2 className="text-2xl font-bold text-amber-900 mb-3" style={{ fontFamily: 'Rye, serif' }}>
+        <h2 className="text-2xl font-bold text-amber-900 mb-4" style={{ fontFamily: 'Rye, serif' }}>
           Your Local Guide to Cheyenne, Wyoming
         </h2>
-        <div className="space-y-4 leading-relaxed">
+        <div className="space-y-5 leading-relaxed">
           <p>
-            Eat, Drink, Play Cheyenne is a community-built discovery platform for the Capital City of Wyoming.
-            Whether you're a local looking for a new dinner spot, a visitor exploring during Cheyenne Frontier Days,
-            or a family planning a Greenway afternoon, we help you find the best restaurants, bars, breweries,
-            activities, and outdoor trails in Cheyenne.
+            Eat, Drink, Play Cheyenne is a community-built guide to the Capital City. We help locals and visitors
+            find the best <strong>restaurants, bars, breweries, activities, and outdoor trails</strong> in Cheyenne —
+            from dinner spots and Frontier Days fun to a quiet Greenway afternoon.
           </p>
-          <p>
-            Every listing includes real details — hours, address, phone, website, price range, food types, and
-            reviews from people who've been there. Save your favorites, rate spots with our boot rating system,
-            collect Big Boot badges around town, and share your discoveries with the community.
+          <div>
+            <h3 className="text-lg font-bold text-amber-800 mb-1.5" style={{ fontFamily: 'Rye, serif' }}>Real info, from real people</h3>
+            <p>
+              Every listing includes hours, address, phone, website, price range, and food types — plus reviews from
+              folks who've actually been there. Save your favorites, rate spots with our boot rating, and share what
+              you find.
           </p>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-amber-800 mb-1.5" style={{ fontFamily: 'Rye, serif' }}>Things to do in Cheyenne</h3>
+            <p>
+              Looking for <strong>things to do in Cheyenne</strong>? Browse local attractions, live music, recreation,
+              and shopping — or let Spin the Spur pick a spot for you. Families, date nights, and Frontier Days
+              visitors all find something here.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-amber-800 mb-1.5" style={{ fontFamily: 'Rye, serif' }}>Eat, drink & explore</h3>
+            <p>
+              Discover Cheyenne restaurants by cuisine, grab a drink at a downtown bar or brewery, hunt for the city's
+              painted Big Boots, and walk the Greater Cheyenne Greenway. It's all local, all in one place — built by
+              people who know and enjoy the Magic City.
+            </p>
+          </div>
         </div>
       </section>
     </div>

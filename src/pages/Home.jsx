@@ -55,7 +55,7 @@ export default function Home() {
   const [suggestion, setSuggestion] = useState('');
   const [currentPage, setCurrentPage] = useState(parseInt(urlParams.get('page') || '1'));
   const [reviewIndex, setReviewIndex] = useState(0);
-  const [viewMode, setViewMode] = useState('rolodex');
+  const [viewMode, setViewMode] = useState('grid');
   const rolodexReturnIndex = parseInt(urlParams.get('rolodex') || '-1');
 
   const { data: customOptions = [] } = useQuery({
@@ -250,9 +250,16 @@ export default function Home() {
   const filteredVenues = allFilteredVenues.slice(startIndex, startIndex + itemsPerPage);
   const totalPages = Math.ceil(allFilteredVenues.length / itemsPerPage);
 
+  const scrollToDirectory = () => {
+    setTimeout(() => document.getElementById('venue-listings')?.scrollIntoView({ behavior: 'smooth' }), 60);
+  };
 
-
-
+  const quickNavItems = [
+    { tab: 'eat', label: 'Eat', emoji: '🍽️', blurb: 'Restaurants & bites' },
+    { tab: 'drink', label: 'Drink', emoji: '🍷', blurb: 'Bars & breweries' },
+    { tab: 'play', label: 'Play', emoji: '🎭', blurb: 'Things to do' },
+    { tab: 'shop', label: 'Shop', emoji: '🛍️', blurb: 'Local stores' },
+  ];
 
   return (
     <div className="min-h-screen bg-amber-50">
@@ -261,11 +268,38 @@ export default function Home() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Games in Grid Under Hero */}
+      {/* What'll it be today? — quick discovery lanes right under the hero */}
       {!searchQuery && activeTab === 'all' && (
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 -mt-24 relative z-10 pb-8">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-10 relative z-20 pb-2">
+          <div className="text-center mb-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>What'll it be today?</h2>
+            <p className="text-sm text-stone-600 mt-0.5">Pick a lane and we'll point you to the best of Cheyenne.</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+            {quickNavItems.map(({ tab, label, emoji, blurb }) => (
+              <button
+                key={tab}
+                onClick={() => { setActiveTab(tab); setCurrentPage(1); scrollToDirectory(); }}
+                className="bg-white rounded-xl p-3 sm:p-4 border-2 border-amber-300 hover:border-amber-600 hover:shadow-md transition-all text-left group"
+              >
+                <div className="text-2xl sm:text-3xl mb-1">{emoji}</div>
+                <div className="font-bold text-amber-900 text-base sm:text-lg" style={{ fontFamily: 'Rye, serif' }}>{label}</div>
+                <div className="text-xs text-stone-600">{blurb}</div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Feeling Lucky? — compact random discovery */}
+      {!searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-4">
+          <div className="text-center mb-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Feeling Lucky?</h2>
+            <p className="text-sm text-stone-600 mt-0.5">Let fate pick your next Cheyenne adventure.</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+            <div className="bg-white rounded-lg p-3 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
               <SpinTheSpur 
                 favorites={userFavorites}
                 venues={venues}
@@ -275,8 +309,7 @@ export default function Home() {
                 quickDrawCategories={quickDrawCategories}
               />
             </div>
-
-            <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+            <div className="bg-white rounded-lg p-3 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
               <QuickDraw 
                 venues={venues}
                 userRatings={userRatings}
@@ -285,8 +318,7 @@ export default function Home() {
                 quickDrawCategories={quickDrawCategories}
               />
             </div>
-
-            <div className="bg-white rounded-lg p-4 md:aspect-square flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
+            <div className="bg-white rounded-lg p-3 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow border border-amber-200">
               <WetYerWhistle 
                 venues={venues}
                 user={user}
@@ -295,49 +327,17 @@ export default function Home() {
               />
             </div>
           </div>
-        </div>
+        </section>
       )}
 
-       {/* Super Bowl Watch Parties */}
-       {!searchQuery && activeTab === 'all' && (
-         <SuperBowlVenues 
-           venues={venues}
-           favorites={favorites}
-           user={user}
-           onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
-         />
-       )}
 
-       {/* Hat Tip Section - Trending Venues */}
-       {!searchQuery && activeTab === 'all' && (
-         <section className="max-w-6xl mx-auto px-4 sm:px-6 -mt-4 py-0">
-           <HatTip 
-             venues={venues}
-             favorites={favorites}
-             user={user}
-             onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
-           />
-         </section>
-       )}
 
-        {/* The Hitching Post */}
-              {!searchQuery && activeTab === 'all' && (
-                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-                  <Link to={createPageUrl('ActivityFeed')}>
-                    <Button className="w-full bg-gradient-to-r from-amber-800 to-stone-800 hover:from-amber-900 hover:to-stone-900 text-white text-lg py-6 font-semibold">
-                      <MessageCircle className="w-5 h-5 mr-2" />
-                      The Hitching Post - Activity Feed
-                    </Button>
-                  </Link>
-                </section>
-              )}
-
-      {/* Greenway Trail Banner */}
+      {/* Major interactive experiences */}
       {!searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 space-y-4">
+          {/* Greenway Trail Banner */}
           <Link to={createPageUrl('GreenwayInfo')}>
             <div className="relative bg-gradient-to-r from-green-900 via-green-800 to-teal-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer group border-2 border-green-700">
-              {/* Subtle texture */}
               <div className="absolute inset-0 opacity-10 text-[180px] flex items-center justify-end pr-8 pointer-events-none select-none leading-none">
                 🌿
               </div>
@@ -365,12 +365,8 @@ export default function Home() {
               </div>
             </div>
           </Link>
-        </section>
-      )}
 
-      {/* Garage Sales Banner */}
-      {!searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          {/* Garage Sales Banner */}
           <Link to={createPageUrl('GarageSales')}>
             <div className="relative bg-gradient-to-r from-orange-700 via-amber-700 to-yellow-700 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer group border-2 border-amber-600">
               <div className="absolute inset-0 opacity-10 text-[180px] flex items-center justify-end pr-8 pointer-events-none select-none leading-none">
@@ -400,98 +396,26 @@ export default function Home() {
               </div>
             </div>
           </Link>
-        </section>
-      )}
 
-      {/* Just Blew In Section - Recent Reviews */}
-       {recentReviews.length > 0 && !searchQuery && activeTab === 'all' && (
-         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center gap-2 mb-6">
-            <Sparkles className="w-5 h-5 text-amber-800" />
-            <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setReviewIndex(prev => (prev - 1 + recentReviews.length) % recentReviews.length)}
-              className="border-amber-700 text-amber-700 hover:bg-amber-50"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-
-            <motion.div
-              key={reviewIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="w-full max-w-sm"
-            >
-              {(() => {
-                const review = recentReviews[reviewIndex];
-                const venue = venues.find(v => v.id === review.venue_id);
-                return (
-                  <Link to={createPageUrl(`VenueDetails?id=${review.venue_id}`)}>
-                    <div className="bg-white rounded-lg border border-amber-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
-                      <h3 className="font-semibold text-amber-900 text-lg mb-3">{venue?.name || 'Venue'}</h3>
-                      <div className="flex gap-1 mb-3">
-                        {[...Array(5)].map((_, idx) => (
-                          <div key={idx} className="w-6 h-6">
-                            <CowboyBoot filled={idx < review.boots} size="sm" />
-                          </div>
-                        ))}
-                      </div>
-                      {review.comment && (
-                        <p className="text-stone-600 text-sm line-clamp-3">{review.comment}</p>
-                      )}
-                      <p className="text-sm text-stone-400 mt-4">
-                        by {review.user_email?.split('@')[0]}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })()}
-            </motion.div>
-
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setReviewIndex(prev => (prev + 1) % recentReviews.length)}
-              className="border-amber-700 text-amber-700 hover:bg-amber-50"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
-          </div>
-        </section>
-      )}
-
-
-
-      {/* Big Boots Challenge Section */}
-      {!searchQuery && activeTab === 'all' && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-          <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-8 text-white overflow-hidden relative">
+          {/* Big Boots Challenge */}
+          <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-6 md:p-8 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>
-
             <div className="relative z-10">
               <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
                 <div className="flex-1">
-                  <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: 'Rye, serif' }}>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: 'Rye, serif' }}>
                     Hunt for the Big Boots
                   </h2>
-                  <p className="text-amber-50 mb-4 text-lg">
+                  <p className="text-amber-50 mb-4 text-base md:text-lg">
                     Cheyenne is home to {boots.length} iconic painted boots scattered throughout the city. Visit them all and collect proof with photos!
                   </p>
-                  <div className="flex gap-6 items-start mb-6">
+                  <div className="flex gap-6 items-start mb-4">
                     <ul className="text-amber-100 flex flex-wrap gap-x-4 gap-y-2 text-sm flex-1">
                       <li>✓ {boots.length} boots to discover</li>
                       <li>✓ Upload photos as proof</li>
                       <li>✓ Track your progress</li>
                       <li>✓ Complete the challenge</li>
                     </ul>
-
-                    {/* Earn Badges Badge */}
                     <div className="transform rotate-12 flex-shrink-0">
                       <div className="relative">
                         <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 text-amber-900 px-4 py-3 rounded-lg shadow-2xl border-4 border-yellow-300 animate-pulse">
@@ -518,6 +442,100 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
+      )}
+
+      {/* Fresh / community content */}
+      {!searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-2 space-y-6">
+          {/* Hat Tip - Trending Venues */}
+          <HatTip 
+            venues={venues}
+            favorites={favorites}
+            user={user}
+            onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+          />
+
+          {/* Just Blew In - Recent Reviews */}
+          {recentReviews.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-amber-800" />
+                <h2 className="text-2xl font-bold text-amber-900" style={{ fontFamily: 'Rye, serif' }}>Just Blew In</h2>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setReviewIndex(prev => (prev - 1 + recentReviews.length) % recentReviews.length)}
+                  className="border-amber-700 text-amber-700 hover:bg-amber-50"
+                  aria-label="Previous review"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+
+                <motion.div
+                  key={reviewIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full max-w-sm"
+                >
+                  {(() => {
+                    const review = recentReviews[reviewIndex];
+                    const venue = venues.find(v => v.id === review.venue_id);
+                    return (
+                      <Link to={createPageUrl(`VenueDetails?id=${review.venue_id}`)}>
+                        <div className="bg-white rounded-lg border border-amber-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
+                          <h3 className="font-semibold text-amber-900 text-lg mb-3">{venue?.name || 'Venue'}</h3>
+                          <div className="flex gap-1 mb-3">
+                            {[...Array(5)].map((_, idx) => (
+                              <div key={idx} className="w-6 h-6">
+                                <CowboyBoot filled={idx < review.boots} size="sm" />
+                              </div>
+                            ))}
+                          </div>
+                          {review.comment && (
+                            <p className="text-stone-600 text-sm line-clamp-3">{review.comment}</p>
+                          )}
+                          <p className="text-sm text-stone-500 mt-4">
+                            by {review.user_email?.split('@')[0]}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })()}
+                </motion.div>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setReviewIndex(prev => (prev + 1) % recentReviews.length)}
+                  className="border-amber-700 text-amber-700 hover:bg-amber-50"
+                  aria-label="Next review"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* The Hitching Post */}
+          <Link to={createPageUrl('ActivityFeed')}>
+            <Button className="w-full bg-gradient-to-r from-amber-800 to-stone-800 hover:from-amber-900 hover:to-stone-900 text-white text-lg py-6 font-semibold">
+              <MessageCircle className="w-5 h-5 mr-2" />
+              The Hitching Post — Activity Feed
+            </Button>
+          </Link>
+
+          {/* Super Bowl Watch Parties */}
+          <SuperBowlVenues 
+            venues={venues}
+            favorites={favorites}
+            user={user}
+            onToggleFavorite={(venueId) => user ? toggleFavoriteMutation.mutate(venueId) : base44.auth.redirectToLogin()}
+          />
         </section>
       )}
 
@@ -571,20 +589,22 @@ export default function Home() {
             {/* View mode toggle */}
             <div className="flex items-center border-2 border-amber-700 rounded-md overflow-hidden">
               <button
-                onClick={() => setViewMode('rolodex')}
-                className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors ${viewMode === 'rolodex' ? 'bg-amber-700 text-white' : 'text-amber-700 hover:bg-amber-50'}`}
-                title="Rolodex View"
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                Rolodex
-              </button>
-              <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors border-l-2 border-amber-700 ${viewMode === 'grid' ? 'bg-amber-700 text-white' : 'text-amber-700 hover:bg-amber-50'}`}
+                className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors ${viewMode === 'grid' ? 'bg-amber-700 text-white' : 'text-amber-700 hover:bg-amber-50'}`}
                 title="Grid View"
+                aria-label="Grid view"
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
                 Grid
+              </button>
+              <button
+                onClick={() => setViewMode('rolodex')}
+                className={`px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors border-l-2 border-amber-700 ${viewMode === 'rolodex' ? 'bg-amber-700 text-white' : 'text-amber-700 hover:bg-amber-50'}`}
+                title="Rolodex View"
+                aria-label="Rolodex view"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                Rolodex
               </button>
             </div>
 
@@ -597,6 +617,20 @@ export default function Home() {
               Filters
               {showFilters ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
             </Button>
+
+            {/* Admin-only export utility */}
+            {user?.role === 'admin' && (
+              <Button
+                onClick={exportVenuesToExcel}
+                variant="outline"
+                size="icon"
+                className="border-amber-700 text-amber-700 hover:bg-amber-50"
+                aria-label="Export venues to Excel"
+                title="Export to Excel"
+              >
+                <Download className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </div>
 
@@ -773,16 +807,8 @@ export default function Home() {
                 )}
                 </section>
 
-                {/* Export & Suggestions */}
-                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex gap-3 justify-center">
-                <Button 
-                onClick={exportVenuesToExcel}
-                variant="outline" 
-                className="border-2 border-amber-800 text-amber-800 hover:bg-amber-50"
-                >
-                <Download className="w-5 h-5 mr-2" />
-                Export Venues to Excel
-                </Button>
+                {/* Suggestions */}
+                <section className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-center">
                 <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
                 <DialogTrigger asChild>
                 <Button 

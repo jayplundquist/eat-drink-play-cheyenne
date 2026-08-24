@@ -156,44 +156,37 @@ export default function SpinTheSpur({ favorites, venues, user, onSignInRequired 
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 z-10 bg-white/90 hover:bg-white"
+                onClick={() => setShowResult(false)}
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+
+              <div className="p-6 pt-5 space-y-3">
+                <h3 className="text-2xl font-bold text-stone-800 text-center leading-tight">
+                  {result.name}
+                </h3>
+
                 {result.image_url && (
-                  <img 
-                    src={result.image_url} 
+                  <img
+                    src={result.image_url}
                     alt={result.name}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-44 object-cover rounded-lg"
                   />
                 )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 bg-white/90 hover:bg-white"
-                  onClick={() => setShowResult(false)}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              <div className="p-6 text-center space-y-4">
-                <div className="space-y-3">
-                  <div className="text-4xl">🎯</div>
-                  <h3 className="text-2xl font-bold text-stone-800">
-                    {result.name}
-                  </h3>
-                  {result.description && (
-                    <p className="text-stone-600 text-sm">
-                      {result.description.length > 250 ? result.description.substring(0, 250) + '...' : result.description}
-                    </p>
-                  )}
-                  <div className="flex justify-center">
-                    <BootRating rating={Math.round(result.rating_count > 0 ? result.rating_sum / result.rating_count : 0)} showCount count={result.rating_count || 0} />
-                  </div>
+
+                <div className="flex justify-center">
+                  <BootRating rating={Math.round(result.rating_count > 0 ? result.rating_sum / result.rating_count : 0)} showCount count={result.rating_count || 0} />
                 </div>
-                
-                <div className="flex gap-3">
+
+                <div className="flex gap-3 pt-1">
                   <Button
                     onClick={() => {
                       setShowResult(false);
@@ -211,6 +204,12 @@ export default function SpinTheSpur({ favorites, venues, user, onSignInRequired 
                     Try Again
                   </Button>
                 </div>
+
+                {result.description && (
+                  <p className="text-stone-500 text-xs text-center pt-1">
+                    {result.description.length > 180 ? result.description.substring(0, 180) + '...' : result.description}
+                  </p>
+                )}
               </div>
             </motion.div>
           </motion.div>

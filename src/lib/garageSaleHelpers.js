@@ -151,6 +151,37 @@ export function formatDateShort(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+export function localDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+// Human-friendly multi-day schedule. Sales use a single start/end time across
+// all dates, so multi-day ranges show "daily".
+export function formatSaleSchedule(sale) {
+  const dates = (sale.sale_dates || []).slice().sort();
+  const time = sale.start_time && sale.end_time ? `${formatTime(sale.start_time)}–${formatTime(sale.end_time)}` : '';
+  if (dates.length === 0) return time;
+  if (dates.length === 1) return `${formatDateShort(dates[0])}${time ? ' · ' + time : ''}`;
+  const parsed = dates.map((d) => new Date(d + 'T00:00:00'));
+  let consecutive = true;
+  for (let i = 1; i < parsed.length; i++) {
+    if ((parsed[i] - parsed[i - 1]) / 86400000 !== 1) { consecutive = false; break; }
+  }
+  const suffix = time ? ` · ${time} daily` : ' daily';
+  if (consecutive) {
+    const first = parsed[0];
+    const last = parsed[parsed.length - 1];
+    const sameMonth = first.getMonth() === last.getMonth() && first.getFullYear() === last.getFullYear();
+    return sameMonth
+      ? `${formatDateShort(dates[0])}–${last.getDate()}${suffix}`
+      : `${formatDateShort(dates[0])} – ${formatDateShort(dates[dates.length - 1])}${suffix}`;
+  }
+  return `${dates.map(formatDateShort).join(' · ')}${suffix}`;
+}
+
 export function saleActiveOnDate(sale, dateStr) {
   return !!sale?.sale_dates?.includes(dateStr);
 }

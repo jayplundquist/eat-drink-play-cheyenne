@@ -66,6 +66,7 @@ export function optimizeRoute({ start, stops, returnToStart = false, startTimeMi
     let bestScore = Infinity;
     let bestTravel = 0;
     let bestArrival = 0;
+    let bestLegMi = 0;
 
     for (let i = 0; i < remaining.length; i++) {
       const s = remaining[i];
@@ -83,6 +84,7 @@ export function optimizeRoute({ start, stops, returnToStart = false, startTimeMi
         bestIdx = i;
         bestTravel = travel;
         bestArrival = arrival;
+        bestLegMi = mi;
       }
     }
 
@@ -95,7 +97,7 @@ export function optimizeRoute({ start, stops, returnToStart = false, startTimeMi
         `This route may reach ${chosen.title} after its ${minutesToTime(close)} closing time.`
       );
     }
-    ordered.push({ ...chosen, order: ordered.length + 1, arrival: bestArrival, close });
+    ordered.push({ ...chosen, order: ordered.length + 1, arrival: bestArrival, close, legTravelMin: Math.round(bestTravel), legMi: Math.round(bestLegMi * 10) / 10 });
     cursor = bestArrival + VISIT_MINUTES;
     pos = [chosen.lat, chosen.lng];
     remaining.splice(bestIdx, 1);

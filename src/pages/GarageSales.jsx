@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Plus, Map as MapIcon, List, Route as RouteIcon, Heart } from 'lucide-react';
+import { Plus, Map as MapIcon, List, Route as RouteIcon, Heart, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
 import GarageSaleMap from '@/components/garagesales/GarageSaleMap';
@@ -125,6 +125,14 @@ export default function GarageSales() {
   };
   const removeFromRoute = (id) => setRouteStops((prev) => prev.filter((s) => s.id !== id));
 
+  const openRouteBuilder = () => {
+    if (routeStops.length === 0) {
+      toast.info('Add the garage sales you want to visit and we\'ll arrange them into the most efficient order.');
+      return;
+    }
+    setRouteOpen(true);
+  };
+
   const routeNumberById = useMemo(() => {
     if (!optimizedOrder) return {};
     const map = {};
@@ -157,6 +165,12 @@ export default function GarageSales() {
           <p className="text-sm text-amber-200 mt-1">
             Find yard sales, estate sales & moving sales around town — then build a smart route to hit them all.
           </p>
+          <button
+            onClick={openRouteBuilder}
+            className="mt-3 inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-amber-950 font-semibold rounded-lg px-4 py-2 text-sm shadow"
+          >
+            <RouteIcon className="w-4 h-4" /> Build My Garage Sale Route
+          </button>
         </div>
       </div>
 
@@ -215,6 +229,7 @@ export default function GarageSales() {
                   onSelectSale={(s) => { setSelectedSale(s); setFocusTarget(getDisplayCoords(s)); }}
                   savedIds={savedIds}
                   routeNumberById={routeNumberById}
+                  routeStopIds={routeStops.map((s) => s.id)}
                   routePoints={routePoints}
                   focusTarget={focusTarget}
                 />
@@ -239,7 +254,7 @@ export default function GarageSales() {
                     inRoute={routeStops.some((s) => s.id === sale.id)}
                     onToggleSave={toggleSave}
                     onAddToRoute={addToRoute}
-                    onRemoveFromRoute={removeFromRoute}
+                    onRemoveFromRoute={(sale) => removeFromRoute(sale.id)}
                   />
                 ))}
               </div>
@@ -248,18 +263,23 @@ export default function GarageSales() {
         </div>
       </div>
 
-      {/* Floating route button */}
+      {/* Persistent My Route bar */}
       {routeStops.length > 0 && (
-        <button
-          onClick={() => setRouteOpen(true)}
-          className="fixed bottom-5 right-4 z-40 bg-amber-700 hover:bg-amber-800 text-white rounded-full shadow-lg px-5 py-3 flex items-center gap-2 font-semibold"
-        >
-          <RouteIcon className="w-5 h-5" />
-          Build My Route
-          <span className="bg-white text-amber-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-            {routeStops.length}
-          </span>
-        </button>
+        <div className="fixed bottom-0 inset-x-0 z-40 px-3 pb-3 pt-6 bg-gradient-to-t from-amber-50/95 to-transparent pointer-events-none">
+          <div className="max-w-6xl mx-auto pointer-events-auto bg-amber-800 text-white rounded-xl shadow-lg flex items-center gap-3 px-4 py-2.5">
+            <RouteIcon className="w-5 h-5 text-amber-200 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="font-semibold text-sm leading-tight">My Route</div>
+              <div className="text-xs text-amber-200 leading-tight">{routeStops.length} stop{routeStops.length !== 1 ? 's' : ''} selected</div>
+            </div>
+            <button
+              onClick={openRouteBuilder}
+              className="bg-amber-500 hover:bg-amber-400 text-amber-950 font-semibold rounded-lg px-3 py-2 text-sm flex items-center gap-1 whitespace-nowrap"
+            >
+              {optimizedOrder ? 'View Route' : 'Optimize My Route'} <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       )}
 
       <RouteBuilder

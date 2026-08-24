@@ -188,7 +188,7 @@ export default function RouteBuilder({
         <div className="space-y-2">
           <Label>Stops ({stops.length})</Label>
           {stops.length === 0 ? (
-            <p className="text-sm text-stone-500">No sales added yet. Tap “+” on a sale to add it to your route.</p>
+            <p className="text-sm text-stone-500">No sales added yet. Tap “Add to Route” on a sale to add it to your route.</p>
           ) : (
             <div className="space-y-1.5 max-h-48 overflow-y-auto">
               {stops.map((s) => (
@@ -212,21 +212,25 @@ export default function RouteBuilder({
         {/* Optimized result */}
         {optimized && (
           <div className="space-y-3 border-t-2 border-amber-200 pt-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-semibold text-stone-700">Your Garage Sale Route</span>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-stone-800">Your Best Route</span>
               <Button size="sm" variant="ghost" onClick={handleOptimize}>
                 <RefreshCw className="w-3 h-3 mr-1" /> Re-Optimize
               </Button>
             </div>
-            <div className="flex gap-3 text-sm text-stone-600">
-              <span className="flex items-center gap-1"><Navigation className="w-3 h-3" /> {optimized.totalDistanceMi} mi</span>
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> ~{optimized.totalTimeMin} min</span>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-md p-2.5 space-y-1">
+              <div className="text-xs text-stone-500">Start: {startLabel || 'Current Location'}</div>
+              <div className="flex gap-3 text-sm text-stone-700">
+                <span className="flex items-center gap-1"><Navigation className="w-3 h-3 text-amber-700" /> ~{optimized.travelTimeMin} min drive</span>
+                <span className="flex items-center gap-1"><RouteIcon className="w-3 h-3 text-amber-700" /> {optimized.totalDistanceMi} mi</span>
+              </div>
             </div>
 
             {optimized.warnings.length > 0 && (
-              <div className="bg-amber-50 border border-amber-300 rounded-md p-2 space-y-1">
+              <div className="bg-rose-50 border border-rose-300 rounded-md p-2 space-y-1">
                 {optimized.warnings.map((w, i) => (
-                  <p key={i} className="text-xs text-amber-800 flex items-start gap-1">
+                  <p key={i} className="text-xs text-rose-800 flex items-start gap-1">
                     <AlertTriangle className="w-3 h-3 mt-0.5 shrink-0" /> {w}
                   </p>
                 ))}
@@ -242,16 +246,17 @@ export default function RouteBuilder({
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-stone-800 truncate">{s.title}</div>
                     <div className="text-xs text-stone-500">
-                      Arrive ~{formatArrival(s.arrival)} · closes {formatTime(s.closeTime)}
+                      {s.legTravelMin} min drive · {s.legMi} mi · arrive ~{formatArrival(s.arrival)}
                     </div>
+                    <div className="text-xs text-stone-400">closes {formatTime(s.closeTime)}</div>
                   </div>
-                  <button onClick={() => move(idx, -1)} disabled={idx === 0} className="text-stone-400 hover:text-stone-700 disabled:opacity-30">
+                  <button onClick={() => move(idx, -1)} disabled={idx === 0} className="text-stone-400 hover:text-stone-700 disabled:opacity-30 p-1" aria-label="Move up">
                     <ArrowUp className="w-4 h-4" />
                   </button>
-                  <button onClick={() => move(idx, 1)} disabled={idx === optimized.order.length - 1} className="text-stone-400 hover:text-stone-700 disabled:opacity-30">
+                  <button onClick={() => move(idx, 1)} disabled={idx === optimized.order.length - 1} className="text-stone-400 hover:text-stone-700 disabled:opacity-30 p-1" aria-label="Move down">
                     <ArrowDown className="w-4 h-4" />
                   </button>
-                  <button onClick={() => removeStop(s.id)} className="text-rose-500 hover:text-rose-700">
+                  <button onClick={() => removeStop(s.id)} className="text-rose-500 hover:text-rose-700 p-1" aria-label="Remove stop">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>

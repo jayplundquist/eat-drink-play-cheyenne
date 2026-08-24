@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Heart, Plus, MapPin, Clock, Star, Tag } from 'lucide-react';
+import { Heart, Plus, MapPin, Clock, Star, Check } from 'lucide-react';
 import {
   formatDateShort,
   formatTime,
@@ -11,6 +11,7 @@ import {
   shouldRevealExactAddress,
   isLiveNow,
   getSaleUrl,
+  formatSaleSchedule,
 } from '@/lib/garageSaleHelpers';
 
 export default function GarageSaleCard({ sale, saved, inRoute, onToggleSave, onAddToRoute, onRemoveFromRoute, compact = false }) {
@@ -18,7 +19,7 @@ export default function GarageSaleCard({ sale, saved, inRoute, onToggleSave, onA
   const live = isLiveNow(sale);
 
   return (
-    <div className={`bg-white rounded-xl border-2 ${sale.featured ? 'border-amber-400' : 'border-stone-200'} shadow-sm overflow-hidden flex flex-col`}>
+    <div className={`bg-white rounded-xl border-2 ${inRoute ? 'border-amber-500 bg-amber-50/40' : sale.featured ? 'border-amber-400' : 'border-stone-200'} shadow-sm overflow-hidden flex flex-col`}>
       {sale.photos?.[0] && (
         <Link to={getSaleUrl(sale)} className="block relative">
           <img src={sale.photos[0]} alt={sale.title} className="w-full h-32 object-cover" />
@@ -47,7 +48,7 @@ export default function GarageSaleCard({ sale, saved, inRoute, onToggleSave, onA
 
         <div className="flex items-center gap-1 text-xs text-stone-500 mt-1">
           <Clock className="w-3 h-3 shrink-0" />
-          <span>{(sale.sale_dates || []).map(formatDateShort).join(' · ')} · {formatTime(sale.start_time)}–{formatTime(sale.end_time)}</span>
+          <span>{formatSaleSchedule(sale)}</span>
         </div>
 
         {sale.categories?.length > 0 && (
@@ -74,29 +75,32 @@ export default function GarageSaleCard({ sale, saved, inRoute, onToggleSave, onA
           <p className="text-xs text-stone-600 mt-2 line-clamp-2">{sale.description}</p>
         )}
 
-        <div className="flex flex-wrap gap-1.5 mt-3 mt-auto pt-2">
-          <Link to={getSaleUrl(sale)} className="flex-1">
-            <Button size="sm" className="w-full bg-amber-600 hover:bg-amber-700 text-white">View Sale</Button>
-          </Link>
-          {onToggleSave && (
-            <Button
-              size="sm"
-              variant={saved ? 'default' : 'outline'}
-              onClick={() => onToggleSave(sale)}
-              className={saved ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-stone-300'}
-              title={saved ? 'Saved' : 'Save sale'}
-            >
-              <Heart className={`w-4 h-4 ${saved ? 'fill-current' : ''}`} />
-            </Button>
-          )}
+        <div className="mt-3 pt-2 mt-auto space-y-2">
+          <div className="flex gap-1.5">
+            <Link to={getSaleUrl(sale)} className="flex-1">
+              <Button size="sm" variant="outline" className="w-full border-stone-300 text-stone-700 hover:text-amber-700">View Details</Button>
+            </Link>
+            {onToggleSave && (
+              <Button
+                size="sm"
+                variant={saved ? 'default' : 'outline'}
+                onClick={() => onToggleSave(sale)}
+                className={saved ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-stone-300'}
+                title={saved ? 'Saved — tap to remove' : 'Save sale'}
+                aria-label={saved ? 'Saved' : 'Save sale'}
+              >
+                <Heart className={`w-4 h-4 ${saved ? 'fill-current' : ''}`} />
+              </Button>
+            )}
+          </div>
           {onAddToRoute && !inRoute && (
-            <Button size="sm" variant="outline" onClick={() => onAddToRoute(sale)} className="border-stone-300" title="Add to route">
-              <Plus className="w-4 h-4" />
+            <Button size="sm" onClick={() => onAddToRoute(sale)} className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+              <Plus className="w-4 h-4 mr-1" /> Add to Route
             </Button>
           )}
           {onRemoveFromRoute && inRoute && (
-            <Button size="sm" variant="outline" onClick={() => onRemoveFromRoute(sale)} className="border-amber-300 text-amber-700" title="Remove from route">
-              <Tag className="w-4 h-4" />
+            <Button size="sm" onClick={() => onRemoveFromRoute(sale)} className="w-full bg-amber-800 hover:bg-amber-900 text-white">
+              <Check className="w-4 h-4 mr-1" /> In My Route
             </Button>
           )}
         </div>

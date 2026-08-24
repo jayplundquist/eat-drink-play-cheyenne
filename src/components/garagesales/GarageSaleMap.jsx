@@ -11,13 +11,15 @@ import {
   formatTime,
   getCategoryLabel,
   shouldRevealExactAddress,
+  formatSaleSchedule,
 } from '@/lib/garageSaleHelpers';
 
 const CHEYENNE_CENTER = [41.14, -104.79];
 
-function saleIcon({ featured, saved, routeNumber, live }) {
+function saleIcon({ featured, saved, routeNumber, inRoute, live }) {
   let bg = '#b45309'; // amber-700 normal
-  if (routeNumber != null) bg = '#7c2d12'; // deep brown for route stops
+  if (routeNumber != null) bg = '#7c2d12'; // deep brown for numbered route stops
+  else if (inRoute) bg = '#7c2d12'; // deep brown for selected (pre-optimization)
   else if (saved) bg = '#15803d'; // green-700
   else if (featured) bg = '#d97706'; // gold
 
@@ -87,6 +89,7 @@ export default function GarageSaleMap({
   onSelectSale,
   savedIds = [],
   routeNumberById = {},
+  routeStopIds = [],
   routePoints = null,
   focusTarget = null,
 }) {
@@ -147,11 +150,12 @@ export default function GarageSaleMap({
         const sale = p.sale;
         const routeNumber = routeNumberById[sale.id];
         const saved = savedIds.includes(sale.id);
+        const inRoute = routeStopIds.includes(sale.id);
         return (
           <Marker
             key={sale.id}
             position={[p.lat, p.lng]}
-            icon={saleIcon({ featured: sale.featured, saved, routeNumber, live: sale._live })}
+            icon={saleIcon({ featured: sale.featured, saved, routeNumber, inRoute, live: sale._live })}
             eventHandlers={{ click: () => onSelectSale(sale) }}
           >
             <Popup>
@@ -161,7 +165,7 @@ export default function GarageSaleMap({
                   {p.approximate ? 'Approximate location' : sale.address}
                 </div>
                 <div className="text-xs text-stone-500 mt-0.5">
-                  {(sale.sale_dates || []).map(formatDateShort).join(' · ')} · {formatTime(sale.start_time)}–{formatTime(sale.end_time)}
+                  {formatSaleSchedule(sale)}
                 </div>
                 {sale.categories?.length > 0 && (
                   <div className="text-xs text-amber-700 mt-0.5">

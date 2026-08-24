@@ -93,7 +93,7 @@ export default function GarageSaleMap({
   routePoints = null,
   focusTarget = null,
 }) {
-  const [zoom, setZoom] = useState(13);
+  const [zoom, setZoom] = useState(11);
   const navigate = useNavigate();
 
   const points = useMemo(() => {
@@ -130,7 +130,7 @@ export default function GarageSaleMap({
   }, [points, zoom]);
 
   return (
-    <MapContainer center={CHEYENNE_CENTER} zoom={13} scrollWheelZoom className="w-full h-full z-0" style={{ background: '#e8e0d4' }}>
+    <MapContainer center={CHEYENNE_CENTER} zoom={11} scrollWheelZoom className="w-full h-full z-0" style={{ background: '#e8e0d4' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; OpenStreetMap contributors'

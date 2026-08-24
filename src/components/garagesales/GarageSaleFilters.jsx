@@ -13,11 +13,27 @@ const DATE_OPTIONS = [
 ];
 
 const calendarClassNames = {
-  day_selected: 'bg-amber-600 text-white hover:bg-amber-700 hover:text-white focus:bg-amber-600 focus:text-white',
+  months: 'text-stone-800',
+  month: 'space-y-3',
+  caption: 'flex justify-center pt-1 relative items-center',
+  caption_label: 'text-stone-800 font-semibold text-sm',
+  nav: 'space-x-1 flex items-center',
+  nav_button:
+    'inline-flex items-center justify-center h-7 w-7 bg-transparent border border-amber-300 rounded-md text-amber-700 hover:bg-amber-100',
+  nav_button_previous: 'absolute left-1',
+  nav_button_next: 'absolute right-1',
+  table: 'w-full border-collapse',
+  head_row: 'flex',
+  head_cell: 'text-stone-500 rounded-md w-8 font-normal text-xs',
+  row: 'flex w-full mt-1',
+  cell: 'relative p-0 text-center text-sm',
+  day: 'inline-flex items-center justify-center text-stone-700 h-8 w-8 p-0 font-normal rounded-md hover:bg-amber-100 aria-selected:opacity-100',
+  day_selected:
+    'bg-amber-600 text-white hover:bg-amber-700 hover:text-white focus:bg-amber-600 focus:text-white',
   day_today: 'bg-amber-100 text-amber-800 font-semibold',
-  caption_label: 'text-stone-800 font-semibold',
-  head_cell: 'text-stone-500',
-  day: 'text-stone-700',
+  day_outside: 'text-stone-300',
+  day_disabled: 'text-stone-300 opacity-50',
+  day_hidden: 'invisible',
 };
 
 export default function GarageSaleFilters({
@@ -62,9 +78,10 @@ export default function GarageSaleFilters({
                 {specificDate ? formatDateShort(specificDate) : 'Pick a Date'}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-amber-50 border-amber-200" align="start">
+            <PopoverContent className="w-[19rem] p-0 bg-amber-50 border-amber-300 shadow-lg" align="start">
               <Calendar
                 mode="single"
+                fixedWeeks
                 selected={specificDate ? new Date(specificDate + 'T00:00:00') : undefined}
                 onSelect={(d) => {
                   if (d) {

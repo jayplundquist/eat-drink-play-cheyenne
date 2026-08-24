@@ -129,8 +129,15 @@ export default function GarageSaleMap({
     return { individual, groups };
   }, [points, zoom]);
 
+  const popupScale = zoom >= 14 ? 1 : zoom >= 12 ? 0.85 : zoom >= 10 ? 0.7 : 0.6;
+
   return (
-    <MapContainer center={CHEYENNE_CENTER} zoom={11} scrollWheelZoom className="w-full h-full z-0" style={{ background: '#e8e0d4' }}>
+    <>
+    <style>{`
+      .gs-map .leaflet-popup-content-wrapper,
+      .gs-map .leaflet-popup-content { transform: scale(${popupScale}); transform-origin: bottom center; transition: transform 0.2s ease; }
+    `}</style>
+    <MapContainer center={CHEYENNE_CENTER} zoom={11} scrollWheelZoom className="gs-map w-full h-full z-0" style={{ background: '#e8e0d4' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; OpenStreetMap contributors'
@@ -192,5 +199,6 @@ export default function GarageSaleMap({
         />
       )}
     </MapContainer>
+    </>
   );
 }

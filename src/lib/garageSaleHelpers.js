@@ -91,6 +91,7 @@ export function getExpiresAt(sale) {
 }
 
 export function isExpired(sale) {
+  if (sale?.demo) return false;
   if (sale?.status === 'expired' || sale?.status === 'removed') return true;
   const exp = sale?.expires_at || getExpiresAt(sale);
   if (!exp) return false;
@@ -206,6 +207,7 @@ export function getDateFilterRange(filter) {
 }
 
 export function isUpcoming(sale) {
+  if (sale?.demo) return true;
   if (isExpired(sale)) return false;
   const today = todayStr();
   return !!sale?.sale_dates?.some((d) => d >= today);

@@ -32,6 +32,7 @@ import MyGarageSales from './pages/MyGarageSales';
 import ManageGarageSales from './pages/ManageGarageSales';
 import ImportGarageSale from './pages/ImportGarageSale';
 import GarageSaleDrafts from './pages/GarageSaleDrafts';
+import About from './pages/About';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -107,6 +108,9 @@ const AuthenticatedApp = () => {
       <Route path="/ManageGarageSales" element={<LayoutWrapper currentPageName="ManageGarageSales"><ManageGarageSales /></LayoutWrapper>} />
       <Route path="/ImportGarageSale" element={<LayoutWrapper currentPageName="ImportGarageSale"><ImportGarageSale /></LayoutWrapper>} />
       <Route path="/GarageSaleDrafts" element={<LayoutWrapper currentPageName="GarageSaleDrafts"><GarageSaleDrafts /></LayoutWrapper>} />
+
+      {/* About / Magic City story page */}
+      <Route path="/about" element={<LayoutWrapper currentPageName="About"><About /></LayoutWrapper>} />
 
       {/* High-intent category landing pages for SEO */}
       <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />

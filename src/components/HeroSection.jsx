@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -37,12 +38,14 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6" style={{ fontFamily: 'Rye, serif', textShadow: '3px 3px 6px rgba(0,0,0,0.5)', letterSpacing: '0.05em' }}>
-            Discover the<br />
-            <span className="text-amber-300" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
-              Magic City
-            </span>
-          </h1>
+          <Link to="/about" className="inline-block group mb-6" title="Learn why Cheyenne is the Magic City">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold" style={{ fontFamily: 'Rye, serif', textShadow: '3px 3px 6px rgba(0,0,0,0.5)', letterSpacing: '0.05em' }}>
+              Discover the<br />
+              <span className="text-amber-300 underline decoration-amber-400/60 decoration-2 underline-offset-8 group-hover:decoration-amber-300 transition-colors" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
+                Magic City
+              </span>
+            </h1>
+          </Link>
           
           <p className="text-amber-100 text-lg sm:text-xl max-w-2xl mx-auto mb-8" style={{ fontFamily: 'Merriweather, serif', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
             Explore the best restaurants, bars, breweries, and entertainment 

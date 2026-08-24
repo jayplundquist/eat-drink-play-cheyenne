@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  MapPin, Clock, Calendar, Share2, Navigation, Heart, Plus, Flag, Trash2, Pencil, Info,
+  MapPin, Clock, Calendar, Share2, Navigation, Heart, Plus, Flag, Trash2, Pencil, Info, ArrowLeft,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
@@ -162,6 +162,10 @@ export default function GarageSaleDetail() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 pb-20">
+      <Link to="/GarageSales" className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 hover:text-amber-900 hover:underline mb-4">
+        <ArrowLeft className="w-4 h-4" />
+        Back to Garage Sale Map
+      </Link>
       {sale.demo && (
         <div className="bg-amber-100 border-2 border-amber-400 rounded-xl p-3 mb-4 flex items-start gap-2">
           <Info className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />

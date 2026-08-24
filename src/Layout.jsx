@@ -36,13 +36,17 @@ export default function Layout({ children, currentPageName }) {
   const [shared, setShared] = useState(false);
 
   const handleShare = async () => {
-    const url = window.location.origin;
-    
+    const url = window.location.href;
+    const pageTitle = document.title || 'Eat, Drink, Play Cheyenne';
+    const shareText = pageTitle.includes('Eat, Drink, Play')
+      ? pageTitle
+      : `${pageTitle} — Eat, Drink, Play Cheyenne`;
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Eat, Drink, Play Cheyenne',
-          text: 'Discover the best restaurants, bars, and entertainment in Cheyenne!',
+          title: pageTitle,
+          text: shareText,
           url: url
         });
       } catch (err) {
@@ -51,7 +55,7 @@ export default function Layout({ children, currentPageName }) {
     } else {
       navigator.clipboard.writeText(url);
       setShared(true);
-      toast.success('Link copied to clipboard!');
+      toast.success('Link to this page copied!');
       setTimeout(() => setShared(false), 2000);
     }
   };

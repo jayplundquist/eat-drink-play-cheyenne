@@ -72,9 +72,10 @@ Rules:
 }
 
 export default function ImportGarageSale() {
-  useSEO({ title: 'Import Garage Sale — Admin | Eat, Drink, Play Cheyenne', noindex: true });
+  useSEO({ title: 'Submit a Garage Sale | Eat, Drink, Play Cheyenne', noindex: true });
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = user?.role === 'admin';
 
   const [mode, setMode] = useState('text');
   const [postText, setPostText] = useState('');
@@ -91,16 +92,10 @@ export default function ImportGarageSale() {
   if (!user) {
     return (
       <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <p className="text-stone-700 mb-3">Sign in to access the importer.</p>
-        <Button onClick={() => base44.auth.redirectToLogin(window.location.href)} className="bg-amber-600 hover:bg-amber-700 text-white">Sign In</Button>
-      </div>
-    );
-  }
-  if (user.role !== 'admin') {
-    return (
-      <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <AlertTriangle className="w-10 h-10 text-amber-600 mx-auto mb-3" />
-        <p className="text-stone-700">Admin access required.</p>
+        <Sparkles className="w-10 h-10 text-amber-600 mx-auto mb-3" />
+        <h1 className="text-xl font-bold text-stone-800 mb-2">Spot a sale that's not on the map?</h1>
+        <p className="text-stone-600 mb-6">Paste the post or upload a screenshot and we'll take care of adding it.</p>
+        <Button onClick={() => base44.auth.redirectToLogin(window.location.href)} className="bg-amber-600 hover:bg-amber-700 text-white">Sign In to Submit</Button>
       </div>
     );
   }
@@ -207,7 +202,7 @@ export default function ImportGarageSale() {
         toast.success('Published live!');
         navigate(`/GarageSales/${saved.slug || saved.id}`);
       } else {
-        toast.success('Saved as draft — review it in Garage Sale Drafts');
+        toast.success(isAdmin ? 'Saved as draft — review it in Garage Sale Drafts' : 'Thanks! Our team will review your submission before it goes live.');
         reset();
       }
     } catch (err) {
@@ -223,8 +218,12 @@ export default function ImportGarageSale() {
       <div className="flex items-center gap-3 mb-4">
         <Sparkles className="w-6 h-6 text-amber-600" />
         <div>
-          <h1 className="text-2xl font-bold text-stone-800">Import Garage Sale</h1>
-          <p className="text-sm text-stone-500">Paste a Facebook post or upload a screenshot — AI fills the form.</p>
+          <h1 className="text-2xl font-bold text-stone-800">{isAdmin ? 'Import Garage Sale' : 'Submit a Garage Sale'}</h1>
+          <p className="text-sm text-stone-500">
+            {isAdmin
+              ? 'Paste a Facebook post or upload a screenshot — AI fills the form.'
+              : "Know of a garage sale that's not on the map? Paste the post or upload a screenshot and we'll take care of adding it."}
+          </p>
         </div>
       </div>
 
@@ -296,13 +295,27 @@ export default function ImportGarageSale() {
             <GarageSaleFormFields form={form} set={set} />
 
             <div className="flex flex-col gap-2">
-              <Button disabled={saving} onClick={() => saveSale('active')} className={`w-full ${canPublishDirectly ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-600 hover:bg-amber-700'} text-white`}>
-                {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Rocket className="w-4 h-4 mr-2" />}
-                Publish Live
-              </Button>
-              <Button disabled={saving} onClick={() => saveSale('draft')} variant="outline" className="w-full border-stone-300">
-                <Save className="w-4 h-4 mr-2" /> Save as Draft
-              </Button>
+              {isAdmin ? (
+                <>
+                  <Button disabled={saving} onClick={() => saveSale('active')} className={`w-full ${canPublishDirectly ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-600 hover:bg-amber-700'} text-white`}>
+                    {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Rocket className="w-4 h-4 mr-2" />}
+                    Publish Live
+                  </Button>
+                  <Button disabled={saving} onClick={() => saveSale('draft')} variant="outline" className="w-full border-stone-300">
+                    <Save className="w-4 h-4 mr-2" /> Save as Draft
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button disabled={saving} onClick={() => saveSale('draft')} className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                    {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                    Submit for Review
+                  </Button>
+                  <p className="text-xs text-stone-500 text-center">
+                    Our team reviews submissions before they appear on the map.
+                  </p>
+                </>
+              )}
               <Button onClick={reset} variant="ghost" className="w-full text-stone-500">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Start Over
               </Button>

@@ -3,7 +3,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Plus, Map as MapIcon, List, Route as RouteIcon, Heart, ArrowRight } from 'lucide-react';
+import { Plus, Map as MapIcon, List, Route as RouteIcon, Heart, ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
 import GarageSaleMap from '@/components/garagesales/GarageSaleMap';
@@ -190,10 +191,29 @@ export default function GarageSales() {
           <span className="font-semibold text-stone-800">{filtered.length}</span> sale{filtered.length !== 1 ? 's' : ''}
         </div>
         <div className="flex gap-2">
+          <Link to="/ImportGarageSale">
+            <Button variant="outline" className="border-amber-300 text-amber-800 hover:bg-amber-50">
+              <Sparkles className="w-4 h-4 mr-1" /> Submit a Tip
+            </Button>
+          </Link>
           <Button onClick={handleAddSale} className="bg-amber-600 hover:bg-amber-700 text-white">
             <Plus className="w-4 h-4 mr-1" /> Add My Sale
           </Button>
         </div>
+      </div>
+
+      {/* Community submission pitch */}
+      <div className="max-w-6xl mx-auto px-3 pb-2">
+        <Link to="/ImportGarageSale" className="block">
+          <div className="rounded-xl border-2 border-dashed border-amber-300 bg-amber-50/70 px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors">
+            <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+            <div className="text-sm">
+              <span className="font-semibold text-amber-900">Know of a garage sale that's not on the map?</span>
+              <span className="text-amber-700"> Paste the post or upload a screenshot and we'll take care of adding it.</span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-amber-600 ml-auto shrink-0" />
+          </div>
+        </Link>
       </div>
 
       {/* View toggle (mobile) */}

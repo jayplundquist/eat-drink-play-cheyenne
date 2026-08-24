@@ -3,15 +3,17 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Heart, ArrowLeft } from "lucide-react";
+import { Heart, ArrowLeft, Map as MapIcon, List } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import VenueCard from "../components/VenueCard";
+import FavoritesMap from "../components/FavoritesMap";
 
 export default function Favorites() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState('list');
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -105,6 +107,22 @@ export default function Favorites() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* View toggle */}
+        <div className="flex bg-stone-200 rounded-lg p-1 mb-6 max-w-xs">
+          <button
+            onClick={() => setView('list')}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-sm ${view === 'list' ? 'bg-white text-amber-800 font-semibold shadow' : 'text-stone-600'}`}
+          >
+            <List className="w-4 h-4" /> List
+          </button>
+          <button
+            onClick={() => setView('map')}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-sm ${view === 'map' ? 'bg-white text-amber-800 font-semibold shadow' : 'text-stone-600'}`}
+          >
+            <MapIcon className="w-4 h-4" /> Map
+          </button>
+        </div>
+
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
@@ -130,6 +148,8 @@ export default function Favorites() {
               </Button>
             </Link>
           </div>
+        ) : view === 'map' ? (
+          <FavoritesMap user={user} favoriteVenues={favoriteVenues} />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {favoriteVenues.map((venue, i) => (

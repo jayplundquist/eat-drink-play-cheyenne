@@ -25,7 +25,6 @@ import ManageVenues from './pages/ManageVenues';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
-import VisitedMap from './pages/VisitedMap';
 import GarageSales from './pages/GarageSales';
 import GarageSaleDetail from './pages/GarageSaleDetail';
 import AddGarageSale from './pages/AddGarageSale';
@@ -99,7 +98,6 @@ const AuthenticatedApp = () => {
       <Route path="/Profile" element={<LayoutWrapper currentPageName="Profile"><Profile /></LayoutWrapper>} />
       <Route path="/Settings" element={<LayoutWrapper currentPageName="Settings"><Settings /></LayoutWrapper>} />
       <Route path="/UserProfile" element={<LayoutWrapper currentPageName="UserProfile"><UserProfile /></LayoutWrapper>} />
-      <Route path="/VisitedMap" element={<LayoutWrapper currentPageName="VisitedMap"><VisitedMap /></LayoutWrapper>} />
 
       {/* Garage Sale Map — public browsing, no login required */}
       <Route path="/GarageSales" element={<LayoutWrapper currentPageName="GarageSales"><GarageSales /></LayoutWrapper>} />

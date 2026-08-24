@@ -89,7 +89,6 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', icon: MapPin, label: 'Explore' },
     { name: 'Favorites', icon: Heart, label: 'Favorites' },
     { name: 'ActivityFeed', icon: Plus, label: 'The Hitching Post' },
-    { name: 'VisitedMap', icon: MapPin, label: 'My Map' },
     { name: 'GreenwayInfo', icon: MapPin, label: 'Greenway' },
     { name: 'GarageSales', icon: Tag, label: 'Garage Sales' },
   ];

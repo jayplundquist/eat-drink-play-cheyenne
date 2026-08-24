@@ -155,11 +155,12 @@
       "type": "string",
       "enum": [
         "active",
+        "draft",
         "expired",
         "removed"
       ],
       "default": "active",
-      "description": "Listing status"
+      "description": "Listing status \u2014 'draft' hides the sale from the public map until an admin publishes it"
     },
     "created_by_email": {
       "type": "string",

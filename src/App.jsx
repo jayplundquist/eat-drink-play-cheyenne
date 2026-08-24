@@ -31,6 +31,8 @@ import GarageSaleDetail from './pages/GarageSaleDetail';
 import AddGarageSale from './pages/AddGarageSale';
 import MyGarageSales from './pages/MyGarageSales';
 import ManageGarageSales from './pages/ManageGarageSales';
+import ImportGarageSale from './pages/ImportGarageSale';
+import GarageSaleDrafts from './pages/GarageSaleDrafts';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -105,6 +107,8 @@ const AuthenticatedApp = () => {
       <Route path="/AddGarageSale" element={<LayoutWrapper currentPageName="AddGarageSale"><AddGarageSale /></LayoutWrapper>} />
       <Route path="/MyGarageSales" element={<LayoutWrapper currentPageName="MyGarageSales"><MyGarageSales /></LayoutWrapper>} />
       <Route path="/ManageGarageSales" element={<LayoutWrapper currentPageName="ManageGarageSales"><ManageGarageSales /></LayoutWrapper>} />
+      <Route path="/ImportGarageSale" element={<LayoutWrapper currentPageName="ImportGarageSale"><ImportGarageSale /></LayoutWrapper>} />
+      <Route path="/GarageSaleDrafts" element={<LayoutWrapper currentPageName="GarageSaleDrafts"><GarageSaleDrafts /></LayoutWrapper>} />
 
       {/* High-intent category landing pages for SEO */}
       <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />

@@ -73,6 +73,7 @@ export default function Layout({ children, currentPageName }) {
       '/ManageClaimRequests', '/EditVenue', '/Profile',
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
       '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
+      '/ImportGarageSale', '/GarageSaleDrafts',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
     let metaRobots = document.querySelector('meta[name="robots"]');
@@ -228,6 +229,19 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Analytics')} className="cursor-pointer">
                         <Settings className="w-4 h-4 mr-2" />
                         Stats
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ImportGarageSale')} className="cursor-pointer">
+                        <Tag className="w-4 h-4 mr-2" />
+                        Import Garage Sale
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('GarageSaleDrafts')} className="cursor-pointer">
+                        <Tag className="w-4 h-4 mr-2" />
+                        Garage Sale Drafts
                       </Link>
                     </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -388,6 +402,21 @@ export default function Layout({ children, currentPageName }) {
                         Stats
                       </Button>
                     </Link>
+                    <div className="border-t border-amber-200 pt-2 mt-2">
+                      <p className="text-xs font-semibold text-amber-700 uppercase px-3 py-2">Garage Sale Admin</p>
+                      <Link to={createPageUrl('ImportGarageSale')} onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start text-stone-600">
+                          <Tag className="w-5 h-5 mr-3" />
+                          Import Garage Sale
+                        </Button>
+                      </Link>
+                      <Link to={createPageUrl('GarageSaleDrafts')} onClick={() => setMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start text-stone-600">
+                          <Tag className="w-5 h-5 mr-3" />
+                          Garage Sale Drafts
+                        </Button>
+                      </Link>
+                    </div>
                     </div>
                 </>
               )}

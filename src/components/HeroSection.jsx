@@ -30,7 +30,7 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
         backgroundSize: '40px 8px'
       }} />
       
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-32 sm:py-40">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-40 pb-32 sm:pt-52 sm:pb-40">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -51,7 +51,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
         <Button 
           onClick={handleWetYerWhistle}
           disabled={spinning || drinkVenueCount === 0}
-          className="w-full bg-red-800 hover:bg-red-900 text-white"
+          className="w-full bg-amber-600 hover:bg-amber-700 text-white"
         >
           {spinning ? "Pouring..." : "Wet Yer Whistle"}
         </Button>
@@ -307,7 +307,7 @@ export default function WetYerWhistle({ venues, user, onSignInRequired, wetYerWh
                       setShowResult(false);
                       navigate(createPageUrl(`VenueDetails?id=${result.id}`));
                     }}
-                    className="flex-1 bg-rose-600 hover:bg-rose-700 text-white"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-white"
                   >
                     View Details
                   </Button>

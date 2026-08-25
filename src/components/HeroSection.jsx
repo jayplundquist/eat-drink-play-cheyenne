@@ -38,13 +38,17 @@ export default function HeroSection({ searchQuery, onSearchChange, onSearch }) {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <Link to="/about" className="inline-block group mb-6" title="Learn why Cheyenne is the Magic City">
+          <Link to="/about" className="inline-block group mb-2" title="Learn why Cheyenne is the Magic City">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold" style={{ fontFamily: 'Rye, serif', textShadow: '3px 3px 6px rgba(0,0,0,0.5)', letterSpacing: '0.05em' }}>
               Discover the<br />
               <span className="text-amber-300 underline decoration-amber-400/60 decoration-2 underline-offset-8 group-hover:decoration-amber-300 transition-colors" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
                 Magic City
               </span>
             </h1>
+          </Link>
+          <Link to="/about" className="inline-flex items-center gap-1.5 text-amber-200/90 hover:text-amber-100 text-sm mb-8 transition-colors group/link">
+            <span>Why is Cheyenne called the Magic City?</span>
+            <span className="transition-transform group-hover/link:translate-x-0.5" aria-hidden="true">&rarr;</span>
           </Link>
           
           <p className="text-amber-100 text-lg sm:text-xl max-w-2xl mx-auto mb-8" style={{ fontFamily: 'Merriweather, serif', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>

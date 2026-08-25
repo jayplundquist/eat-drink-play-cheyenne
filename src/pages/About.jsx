@@ -99,7 +99,7 @@ export default function About() {
       </div>
 
       {/* Body */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-[15px] sm:text-base">
         {/* Intro */}
         <section className="prose-custom">
           <p className="text-xl text-amber-900 font-semibold mb-6" style={{ fontFamily: 'Merriweather, serif' }}>
@@ -182,12 +182,6 @@ export default function About() {
             <p className="text-stone-700 leading-relaxed">People are still gathering around food and drinks.</p>
             <p className="text-stone-700 leading-relaxed">People are still looking for something fun to do.</p>
             <p className="text-stone-700 leading-relaxed">And sometimes the best parts of Cheyenne are the places you didn&rsquo;t know were there.</p>
-            <p className="text-stone-700 leading-relaxed">That&rsquo;s what Eat Drink Play Cheyenne is built around.</p>
-            <p className="text-stone-700 leading-relaxed">Not just a directory.</p>
-            <p className="text-stone-700 leading-relaxed">Not just another tourism website.</p>
-            <p className="text-stone-700 leading-relaxed">
-              A way to discover the restaurants, watering holes, trails, shops, attractions, events, oddities, local favorites, and hidden corners that make Cheyenne worth exploring.
-            </p>
           </div>
 
           <div className="mt-12 p-8 rounded-lg bg-gradient-to-br from-amber-900 to-stone-900 text-center">

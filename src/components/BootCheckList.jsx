@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -11,8 +11,10 @@ import BootMap from "./BootMap";
 
 export default function BootCheckList({ user }) {
   const [uploadingBoot, setUploadingBoot] = useState(null);
+  const [pendingBoot, setPendingBoot] = useState(null);
   const [bootsWithCoords, setBootsWithCoords] = useState([]);
   const [geocodingLoading, setGeocodingLoading] = useState(true);
+  const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
 
   const { data: boots = [] } = useQuery({
@@ -52,11 +54,33 @@ export default function BootCheckList({ user }) {
     },
   });
 
-  const handlePhotoUpload = async (e, boot) => {
+  const moveBootMutation = useMutation({
+    mutationFn: async ({ id, lat, lng }) => {
+      await base44.entities.Boot.update(id, { lat, lng });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boots'] });
+      toast.success('Boot location updated');
+    },
+    onError: () => {
+      toast.error('Failed to update boot location');
+    },
+  });
+
+  const startPhotoUpload = (boot) => {
+    setPendingBoot(boot);
+    fileInputRef.current?.click();
+  };
+
+  const handlePhotoUpload = async (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    const boot = pendingBoot;
+    // reset input so the same file can be selected again later
+    e.target.value = '';
+    if (!file || !boot) return;
 
     setUploadingBoot(boot.name);
+    setPendingBoot(null);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       await visitMutation.mutateAsync({ 
@@ -76,6 +100,10 @@ export default function BootCheckList({ user }) {
     } finally {
       setUploadingBoot(null);
     }
+  };
+
+  const handleBootMove = (boot, lat, lng) => {
+    moveBootMutation.mutate({ id: boot.id, lat, lng });
   };
 
   const shareToActivityFeed = async (bootName, photoUrl) => {
@@ -107,6 +135,14 @@ export default function BootCheckList({ user }) {
 
   return (
     <div className="space-y-6">
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        ref={fileInputRef}
+        onChange={handlePhotoUpload}
+        className="hidden"
+      />
       <div className="bg-gradient-to-r from-amber-50 to-stone-50 rounded-lg p-6">
         <h3 className="text-2xl font-bold text-amber-900 mb-2">Big Boots Challenge</h3>
         <div className="flex items-center gap-2">
@@ -125,7 +161,13 @@ export default function BootCheckList({ user }) {
       {!geocodingLoading && bootsWithCoords.length > 0 && (
         <div>
           <h3 className="text-xl font-bold text-stone-800 mb-3">Find the Nearest Boot</h3>
-          <BootMap boots={bootsWithCoords} />
+          <BootMap
+            boots={bootsWithCoords}
+            user={user}
+            onRecordVisit={startPhotoUpload}
+            onBootMove={handleBootMove}
+            movingBoot={moveBootMutation.isPending ? moveBootMutation.variables?.id : null}
+          />
         </div>
       )}
       
@@ -183,36 +225,25 @@ export default function BootCheckList({ user }) {
 
                       <div className="flex gap-2 mt-3">
                         {!visited && (
-                          <label className="flex-1">
-                            <Button
-                              asChild
-                              size="sm"
-                              variant="outline"
-                              className="w-full border-amber-300 text-amber-700 hover:bg-amber-50 cursor-pointer"
-                              disabled={uploadingBoot === boot.name}
-                            >
-                              <span>
-                                {uploadingBoot === boot.name ? (
-                                  <>
-                                    <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                                    Uploading...
-                                  </>
-                                ) : (
-                                  <>
-                                    <Camera className="w-3 h-3 mr-1" />
-                                    Add Photo
-                                  </>
-                                )}
-                              </span>
-                            </Button>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => handlePhotoUpload(e, boot)}
-                              disabled={uploadingBoot === boot.name}
-                              className="hidden"
-                            />
-                          </label>
+                          <Button
+                            onClick={() => startPhotoUpload(boot)}
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 border-amber-300 text-amber-700 hover:bg-amber-50 cursor-pointer"
+                            disabled={uploadingBoot === boot.name}
+                          >
+                            {uploadingBoot === boot.name ? (
+                              <>
+                                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Camera className="w-3 h-3 mr-1" />
+                                Add Photo
+                              </>
+                            )}
+                          </Button>
                         )}
                         {visited && (
                           <Button

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { Card } from "@/components/ui/card";
-import { Loader2, MapPin } from "lucide-react";
+import { Loader2, MapPin, Camera } from "lucide-react";
 import { motion } from 'framer-motion';
 
 // Fix leaflet default marker icons
@@ -29,11 +29,13 @@ const bouncingBootIcon = new L.Icon({
   popupAnchor: [0, -20],
 });
 
-export default function BootMap({ boots = [] }) {
+export default function BootMap({ boots = [], user, onRecordVisit, onBootMove, movingBoot }) {
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [nearestBoot, setNearestBoot] = useState(null);
   const [error, setError] = useState(null);
+  const [movedCoords, setMovedCoords] = useState({});
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     // Get user's geolocation
@@ -156,28 +158,62 @@ export default function BootMap({ boots = [] }) {
           </Marker>
 
           {/* Boot markers */}
-          {boots.filter(boot => boot.lat && boot.lng).map((boot) => (
-            <Marker 
-              key={boot.name} 
-              position={[parseFloat(boot.lat), parseFloat(boot.lng)]} 
-              icon={nearestBoot?.boot.name === boot.name ? bouncingBootIcon : bootIcon}
-            >
-              <Popup>
-                <div className="text-sm">
-                  <div className="font-semibold">{boot.name}</div>
-                  <button
-                    onClick={() => {
-                      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(boot.address)}`;
-                      window.open(url, '_blank', 'noopener,noreferrer');
-                    }}
-                    className="text-xs text-amber-700 hover:text-amber-900 hover:underline mt-1 transition-colors cursor-pointer"
-                  >
-                    {boot.address}
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {boots.filter(boot => boot.lat && boot.lng).map((boot) => {
+            const override = movedCoords[boot.id];
+            const lat = override ? override.lat : parseFloat(boot.lat);
+            const lng = override ? override.lng : parseFloat(boot.lng);
+            return (
+              <Marker
+                key={boot.id || boot.name}
+                position={[lat, lng]}
+                icon={nearestBoot?.boot.name === boot.name ? bouncingBootIcon : bootIcon}
+                draggable={isAdmin}
+                eventHandlers={{
+                  dragend: (e) => {
+                    const m = e.target;
+                    const { lat: nLat, lng: nLng } = m.getLatLng();
+                    setMovedCoords((prev) => ({ ...prev, [boot.id]: { lat: nLat, lng: nLng } }));
+                    onBootMove?.(boot, nLat, nLng);
+                  },
+                }}
+              >
+                <Popup>
+                  <div className="text-sm min-w-[160px]">
+                    <button
+                      onClick={() => onRecordVisit?.(boot)}
+                      className="font-semibold text-left hover:text-amber-700 transition-colors cursor-pointer"
+                    >
+                      {boot.name}
+                    </button>
+                    <div className="text-xs text-stone-500 mt-1">{boot.address}</div>
+                    <div className="flex flex-col gap-1.5 mt-2">
+                      <button
+                        onClick={() => onRecordVisit?.(boot)}
+                        className="text-xs text-amber-700 hover:text-amber-900 hover:underline flex items-center gap-1 transition-colors cursor-pointer"
+                      >
+                        <Camera className="w-3 h-3" />
+                        Upload / Take Photo
+                      </button>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(boot.address)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-stone-500 hover:text-stone-700 hover:underline flex items-center gap-1 transition-colors"
+                      >
+                        <MapPin className="w-3 h-3" />
+                        Directions
+                      </a>
+                      {isAdmin && (
+                        <div className="text-[10px] text-amber-600 mt-1 pt-1 border-t border-stone-200">
+                          {movingBoot === boot.id ? 'Saving location…' : 'Drag pin to reposition'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
         </MapContainer>
       </Card>
     </div>

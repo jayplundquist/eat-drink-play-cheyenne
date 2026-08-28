@@ -12,6 +12,7 @@ import {
   getCategoryLabel,
   shouldRevealExactAddress,
   formatSaleSchedule,
+  isUngeocoded,
 } from '@/lib/garageSaleHelpers';
 
 const CHEYENNE_CENTER = [41.14, -104.79];
@@ -109,7 +110,7 @@ export default function GarageSaleMap({
 
   const points = useMemo(() => {
     return sales
-      .filter((s) => s.lat != null && s.lng != null)
+      .filter((s) => s.lat != null && s.lng != null && !isUngeocoded(s))
       .map((s) => {
         const c = getDisplayCoords(s);
         return { sale: s, ...c };

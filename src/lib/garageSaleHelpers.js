@@ -116,6 +116,16 @@ export function shouldRevealExactAddress(sale) {
   return new Date() >= reveal;
 }
 
+// Coordinates returned by the geocoder when an address can't be placed.
+// Sales sitting on this exact point are "un-geocoded": their address text
+// still shows in list views, but they are excluded from the map so they
+// don't pile up at the city center as a misleading cluster.
+export const CHEYENNE_FALLBACK_COORD = { lat: 41.14, lng: -104.79 };
+
+export function isUngeocoded(sale) {
+  return sale?.lat === CHEYENNE_FALLBACK_COORD.lat && sale?.lng === CHEYENNE_FALLBACK_COORD.lng;
+}
+
 export function getDisplayCoords(sale) {
   if (shouldRevealExactAddress(sale)) {
     return { lat: sale.lat, lng: sale.lng, approximate: false };

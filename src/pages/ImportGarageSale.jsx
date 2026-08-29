@@ -10,7 +10,7 @@ import { Loader2, Sparkles, Upload, FileText, Image as ImageIcon, AlertTriangle,
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
 import GarageSaleFormFields from '@/components/garagesales/GarageSaleFormFields';
-import { GARAGE_SALE_CATEGORIES, SPECIAL_NOTES, slugify, getExpiresAt } from '@/lib/garageSaleHelpers';
+import { GARAGE_SALE_CATEGORIES, SPECIAL_NOTES, slugify, getExpiresAt, normalizeAddress } from '@/lib/garageSaleHelpers';
 
 const DEFAULT_FORM = {
   title: '', description: '', address: '', city: 'Cheyenne', state: 'WY', zip: '',
@@ -212,6 +212,19 @@ export default function ImportGarageSale() {
 
       const slug = slugify(form.title) + '-cheyenne';
       const expires_at = getExpiresAt({ sale_dates: form.sale_dates, end_time: form.end_time });
+
+      // Block duplicate addresses — same street + city already has a listing.
+      const norm = normalizeAddress(form.address, form.city);
+      const existingSales = await base44.entities.GarageSale.list('-created_date', 500);
+      const dup = existingSales.find(
+        (s) => s.status !== 'removed' && normalizeAddress(s.address, s.city) === norm
+      );
+      if (dup) {
+        toast.error('A garage sale at this address already exists.', { description: 'Open the existing listing instead of creating a duplicate.' });
+        navigate(`/GarageSales/${dup.slug || dup.id}`);
+        return;
+      }
+
       const payload = { ...form, lat, lng, slug, expires_at, status, created_by_email: user?.email };
       const saved = await base44.entities.GarageSale.create(payload);
 

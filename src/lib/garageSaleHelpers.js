@@ -59,6 +59,17 @@ export const REPORT_REASONS = [
   { value: 'other', label: 'Other' },
 ];
 
+// Normalize an address + city for duplicate comparison: lowercase, strip
+// punctuation, collapse whitespace. "123 Main St." and "123 main st" match.
+export function normalizeAddress(address, city) {
+  return [address, city].filter(Boolean).join(', ')
+    .toLowerCase()
+    .replace(/[#.]/g, ' ')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function slugify(text) {
   return (text || '')
     .toLowerCase()

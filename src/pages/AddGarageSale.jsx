@@ -15,7 +15,7 @@ import { X, Plus, Upload, Loader2, Save, MapPin, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
 import {
-  GARAGE_SALE_CATEGORIES, SPECIAL_NOTES, EVENT_TYPES, slugify, getExpiresAt, normalizeAddress,
+  GARAGE_SALE_CATEGORIES, SPECIAL_NOTES, EVENT_TYPES, slugify, getExpiresAt, normalizeAddress, isUpcoming,
 } from '@/lib/garageSaleHelpers';
 
 const draggableIcon = L.divIcon({
@@ -139,15 +139,16 @@ export default function AddGarageSale() {
         saved = await base44.entities.GarageSale.update(editId, payload);
         toast.success('Listing updated!');
       } else {
-        // Block duplicate addresses — same street + city already has a listing.
+        // Block duplicate addresses — only an upcoming/live sale at the same
+        // street + city counts; an expired past sale shouldn't block a new one.
         const norm = normalizeAddress(form.address, form.city);
         const existingSales = await base44.entities.GarageSale.list('-created_date', 500);
         const dup = existingSales.find(
-          (s) => s.status !== 'removed' && normalizeAddress(s.address, s.city) === norm
+          (s) => s.status !== 'removed' && isUpcoming(s) && normalizeAddress(s.address, s.city) === norm
         );
         if (dup) {
-          toast.error('A garage sale at this address already exists.', { description: 'View it or edit that listing instead.' });
-          navigate(`/GarageSales/${dup.slug || dup.id}`);
+          toast.error('An upcoming garage sale at this address already exists.', { description: 'View it or edit that listing instead.' });
+          navigate(`/GarageSales/${dup.id}`);
           return;
         }
         saved = await base44.entities.GarageSale.create(payload);

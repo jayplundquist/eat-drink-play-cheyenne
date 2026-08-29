@@ -47,6 +47,7 @@ export default async function(req: Request): Promise<Response> {
       lat: parseFloat(hit.lat),
       lng: parseFloat(hit.lon),
       display_name: hit.display_name,
+      postcode: hit.address?.postcode || '',
     });
   } catch (error) {
     console.error('geocodeGarageSale error', error);

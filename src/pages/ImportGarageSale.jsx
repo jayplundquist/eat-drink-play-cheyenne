@@ -150,9 +150,26 @@ export default function ImportGarageSale() {
         contact_info: result.contact_info || '',
         photos: imageUrl && mode === 'image' ? [imageUrl] : [],
       });
+      const extractedZip = result.zip || '';
+      const extractedAddress = result.address || '';
       setExtraction({ confidence: result.confidence || 0, missing_fields: result.missing_fields || [] });
       setShowForm(true);
       toast.success('Extracted! Review the fields below.');
+
+      // If the post didn't include a ZIP, look it up from the street address via the geocoder
+      if (!extractedZip && extractedAddress) {
+        try {
+          const res = await base44.functions.invoke('geocodeGarageSale', {
+            street: extractedAddress, city: result.city || 'Cheyenne', state: result.state || 'WY', zip: '',
+          });
+          const data = res?.data || res;
+          if (data?.postcode) {
+            setForm((p) => ({ ...p, zip: data.postcode }));
+            setExtraction((p) => p ? { ...p, missing_fields: (p.missing_fields || []).filter((f) => f !== 'zip') } : p);
+            toast.success(`ZIP ${data.postcode} looked up from address`);
+          }
+        } catch { /* non-fatal — admin can fill manually */ }
+      }
     } catch (err) {
       console.error(err);
       toast.error('Could not extract — try again or fill manually');

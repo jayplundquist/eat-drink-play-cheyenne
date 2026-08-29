@@ -15,13 +15,11 @@ import { createPageUrl } from "@/utils";
 import VenueCard from "../components/VenueCard";
 import BootRating from "../components/BootRating";
 import BadgeCollection from "../components/BadgeCollection";
-import BootCheckList from "../components/BootCheckList";
+
 
 export default function Profile() {
   const urlParams = new URLSearchParams(window.location.search);
-  const sectionParam = urlParams.get('section');
-  const defaultTab = sectionParam === 'boots' ? 'bigboots' : urlParams.get('defaultValue') || 'favorites';
-  const tabsRef = React.useRef(null);
+  const defaultTab = urlParams.get('defaultValue') || 'favorites';
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,14 +28,6 @@ export default function Profile() {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (defaultTab === 'bigboots' && tabsRef.current) {
-      setTimeout(() => {
-        tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
-  }, [defaultTab, loading]);
 
   useEffect(() => {
     base44.auth.me()
@@ -343,7 +333,7 @@ export default function Profile() {
          />
 
         {/* Tabs Section */}
-        <div ref={tabsRef}>
+        <div>
           <Tabs defaultValue={defaultTab} className="w-full">
           <TabsList className="bg-stone-100 p-1 rounded-full mb-6 flex flex-wrap h-auto gap-1">
             <TabsTrigger 
@@ -361,13 +351,6 @@ export default function Profile() {
               <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">My Reviews</span>
               <span className="sm:hidden">Rev</span> ({userRatings.length})
-            </TabsTrigger>
-            <TabsTrigger 
-              value="bigboots"
-              className="rounded-full px-3 sm:px-6 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-amber-700"
-            >
-              👢
-              <span className="hidden sm:inline ml-1">Big Boots</span>
             </TabsTrigger>
           </TabsList>
 
@@ -465,10 +448,6 @@ export default function Profile() {
             )}
           </TabsContent>
 
-          {/* Big Boots Tab */}
-          <TabsContent value="bigboots" className="mt-0">
-            <BootCheckList user={user} />
-          </TabsContent>
           </Tabs>
           </div>
           </div>

@@ -73,7 +73,7 @@ export default function Layout({ children, currentPageName }) {
       '/ManageClaimRequests', '/EditVenue', '/Profile',
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
       '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
-      '/ImportGarageSale', '/GarageSaleDrafts',
+      '/ImportGarageSale', '/GarageSaleDrafts', '/BootFinder',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
     let metaRobots = document.querySelector('meta[name="robots"]');
@@ -285,9 +285,9 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('Profile') + '?section=boots'} className="cursor-pointer">
+                      <Link to={createPageUrl('BootFinder')} className="cursor-pointer">
                         <MapPin className="w-4 h-4 mr-2" />
-                        Found Boots
+                        Boot Finder
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

@@ -33,6 +33,7 @@ import ManageGarageSales from './pages/ManageGarageSales';
 import ImportGarageSale from './pages/ImportGarageSale';
 import GarageSaleDrafts from './pages/GarageSaleDrafts';
 import About from './pages/About';
+import BootFinder from './pages/BootFinder';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -111,6 +112,9 @@ const AuthenticatedApp = () => {
 
       {/* About / Magic City story page */}
       <Route path="/about" element={<LayoutWrapper currentPageName="About"><About /></LayoutWrapper>} />
+
+      {/* Big Boot Finder — standalone map + checklist, separated from Profile */}
+      <Route path="/BootFinder" element={<LayoutWrapper currentPageName="BootFinder"><BootFinder /></LayoutWrapper>} />
 
       {/* High-intent category landing pages for SEO */}
       <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />

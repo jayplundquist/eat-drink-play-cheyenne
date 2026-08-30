@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from "@/components/ui/skeleton";
 import BootCheckList from "@/components/BootCheckList";
 
 export default function BootFinder() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const { data: boots = [] } = useQuery({
+    queryKey: ['boots'],
+    queryFn: () => base44.entities.Boot.list(),
+  });
 
   useEffect(() => {
     base44.auth.me()
@@ -37,7 +43,7 @@ export default function BootFinder() {
             Big Boot Finder
           </h1>
           <p className="text-stone-600">
-            Track down all 29 iconic Cheyenne Big Boots. Drop a photo at each one to add it to your collection.
+            Track down all {boots.length} iconic Cheyenne Big Boots. Drop a photo at each one to add it to your collection.
           </p>
         </div>
 

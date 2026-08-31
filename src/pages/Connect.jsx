@@ -29,9 +29,10 @@ export default function Connect() {
       key: 'claude',
       label: 'Claude',
       icon: Bot,
+      planNote: 'Connect via the Claude web app at claude.ai — custom connectors aren\'t available in the desktop app.',
       steps: [
-        'Open your profile menu (top-right) and choose Settings.',
-        'Go to Connectors and click "Add custom connector".',
+        'On claude.ai, open your profile menu (top-right) and choose Settings.',
+        'Go to the Connectors tab and click "Add custom connector".',
         'Give it a name (e.g. "Cheyenne Guide") and paste the server URL below.',
         'Click Add. Claude will open our sign-in page — approve access and you\'re connected.',
       ],

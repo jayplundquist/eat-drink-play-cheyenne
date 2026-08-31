@@ -23,7 +23,8 @@ import {
               Plus,
               Settings,
               Flag,
-              Tag
+              Tag,
+              Trophy
             } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';

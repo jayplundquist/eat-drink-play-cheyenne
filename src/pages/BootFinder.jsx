@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from "@/components/ui/skeleton";
 import BootCheckList from "@/components/BootCheckList";
+import RecentBootPhotos from "@/components/RecentBootPhotos";
 
 export default function BootFinder() {
   const [user, setUser] = useState(null);
@@ -46,6 +47,8 @@ export default function BootFinder() {
             Track down all {boots.length} iconic Cheyenne Big Boots. Drop a photo at each one to add it to your collection.
           </p>
         </div>
+
+        <RecentBootPhotos />
 
         <BootCheckList user={user} />
       </div>

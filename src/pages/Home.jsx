@@ -456,11 +456,16 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <Link to={createPageUrl('BootFinder')} className="flex-shrink-0">
-                  <Button className="bg-white text-amber-700 hover:bg-amber-50 font-semibold text-lg px-8 py-6">
-                    Start the Hunt
-                  </Button>
-                </Link>
+                <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                  <Link to={createPageUrl('BootFinder')}>
+                    <Button className="bg-white text-amber-700 hover:bg-amber-50 font-semibold text-lg px-8 py-6">
+                      Start the Hunt
+                    </Button>
+                  </Link>
+                  <Link to={createPageUrl('BootHighScores')} className="text-amber-100 text-sm underline hover:text-white transition-colors">
+                    See High Scores 🏆
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import { ArrowLeft, Crown } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useSEO } from '@/hooks/useSEO';
+import RecentBootPhotos from '@/components/RecentBootPhotos';
 
 export default function BootHighScores() {
   useSEO({
@@ -95,6 +96,8 @@ export default function BootHighScores() {
             {totalBoots} Big Boots hidden around Cheyenne — who's found the most?
           </p>
         </div>
+
+        <RecentBootPhotos />
 
         {/* Boot Legends — cleared the top badge tier, so we show their exact count instead */}
         {legendsList.length > 0 && (

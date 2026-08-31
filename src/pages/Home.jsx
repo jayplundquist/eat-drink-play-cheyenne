@@ -291,6 +291,28 @@ export default function Home() {
         </section>
       )}
 
+      {/* Connect your AI — notice linking to /connect */}
+      {!searchQuery && activeTab === 'all' && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-2">
+          <Link to="/connect" className="block">
+            <div className="rounded-xl border-2 border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-4 sm:p-5 flex items-center gap-4 hover:border-amber-600 hover:shadow-md transition-all">
+              <div className="flex-shrink-0 w-11 h-11 rounded-full bg-amber-700 text-amber-50 flex items-center justify-center">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-amber-900 text-base sm:text-lg" style={{ fontFamily: 'Rye, serif' }}>Connect Your AI Assistant</h3>
+                <p className="text-xs sm:text-sm text-stone-600">
+                  Let Claude, ChatGPT, or Cursor search venues, find garage sales, and manage your favorites — just by asking.
+                </p>
+              </div>
+              <span className="hidden sm:inline-flex items-center text-amber-800 font-semibold text-sm whitespace-nowrap">
+                Learn how →
+              </span>
+            </div>
+          </Link>
+        </section>
+      )}
+
       {/* Feeling Lucky? — compact random discovery */}
       {!searchQuery && activeTab === 'all' && (
         <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-4">

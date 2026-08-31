@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import VenueDetailsSlug from './pages/VenueDetailsSlug';
 import CategoryLanding from './pages/CategoryLanding';
+import OAuthConsent from './pages/OAuthConsent';
 // Internal / admin / app-user pages — kept out of pages.config so the platform's
 // public page directory never lists them. Wired here as explicit routes.
 import ActivityFeed from './pages/ActivityFeed';
@@ -142,6 +143,11 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
+          {/* OAuth consent for the app's MCP server — mounted outside the auth
+              guard so the page can handle the signed-out case and preserve ctx. */}
+          <Routes>
+            <Route path="/oauth/consent" element={<OAuthConsent />} />
+          </Routes>
           <AuthenticatedApp />
         </Router>
         <Toaster />

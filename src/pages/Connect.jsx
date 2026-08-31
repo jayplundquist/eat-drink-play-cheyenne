@@ -40,6 +40,7 @@ export default function Connect() {
       key: 'chatgpt',
       label: 'ChatGPT',
       icon: MessageSquare,
+      planNote: 'Requires a ChatGPT Pro plan — custom connectors (MCP) are not available on Plus.',
       steps: [
         'Open Apps and enable Developer mode (confirm the risk ChatGPT warns about).',
         'Click "Create app", name it, and paste the server URL below.',
@@ -142,8 +143,14 @@ export default function Connect() {
                 </TabsTrigger>
               ))}
             </TabsList>
-            {clients.map(({ key, label, steps }) => (
+            {clients.map(({ key, label, planNote, steps }) => (
               <TabsContent key={key} value={key} className="mt-2">
+                {planNote && (
+                  <p className="mb-3 text-xs rounded-md bg-amber-100 border border-amber-300 px-3 py-2 text-amber-800 flex items-start gap-1.5">
+                    <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0" />
+                    <span>{planNote}</span>
+                  </p>
+                )}
                 <ol className="space-y-3">
                   {steps.map((step, i) => (
                     <li key={i} className="flex gap-3">

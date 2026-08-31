@@ -290,6 +290,12 @@ export default function Layout({ children, currentPageName }) {
                         Boot Finder
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('BootHighScores')} className="cursor-pointer">
+                        <Trophy className="w-4 h-4 mr-2" />
+                        Boot High Scores
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={() => base44.auth.logout()}

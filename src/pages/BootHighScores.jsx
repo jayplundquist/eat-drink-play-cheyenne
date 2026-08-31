@@ -83,7 +83,7 @@ export default function BootHighScores() {
   const hasAnyFinders = leaderboard.length > 0;
 
   return (
-    <div className="min-h-screen bg-stone-50 py-8">
+    <div className="min-h-screen bg-amber-50 py-8">
       <div className="max-w-2xl mx-auto px-4">
         <Link to={createPageUrl('Home')} className="inline-block mb-6">
           <Button variant="outline" size="sm">

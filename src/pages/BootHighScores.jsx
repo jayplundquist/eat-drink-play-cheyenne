@@ -40,11 +40,7 @@ export default function BootHighScores() {
     [allBadges]
   );
 
-  // The highest badge tier (e.g. Trail Boss at 25+) — once a user clears this,
-  // there's no further badge to show, so they graduate to the Legends list instead.
-  const legendThreshold = bootBadges.length
-    ? bootBadges[bootBadges.length - 1].min_count
-    : 25;
+  const topTierId = bootBadges.length ? bootBadges[bootBadges.length - 1].id : null;
 
   const leaderboard = React.useMemo(() => {
     const byUser = new Map();
@@ -67,15 +63,24 @@ export default function BootHighScores() {
         badge: highestBadge,
       };
     });
-    rows.sort((a, b) => b.count - a.count);
     return rows;
   }, [visits, users, bootBadges]);
 
-  const mainList = leaderboard.filter(r => r.count < legendThreshold);
-  const legendsList = leaderboard.filter(r => r.count >= legendThreshold);
-  const totalBoots = boots.length;
+  // Group everyone into the list for their CURRENT badge tier — climb the badge
+  // ladder and you move up to the next list as you find more boots.
+  const tierGroups = React.useMemo(() => {
+    const tiersHighestFirst = [...bootBadges].sort((a, b) => b.min_count - a.min_count);
+    return tiersHighestFirst.map(badge => {
+      const members = leaderboard
+        .filter(r => r.badge?.id === badge.id)
+        .sort((a, b) => b.count - a.count);
+      return { badge, isTopTier: badge.id === topTierId, members };
+    });
+  }, [bootBadges, leaderboard, topTierId]);
 
+  const totalBoots = boots.length;
   const medal = (rank) => (rank === 0 ? '🥇' : rank === 1 ? '🥈' : rank === 2 ? '🥉' : null);
+  const hasAnyFinders = leaderboard.length > 0;
 
   return (
     <div className="min-h-screen bg-stone-50 py-8">
@@ -99,85 +104,66 @@ export default function BootHighScores() {
 
         <RecentBootPhotos />
 
-        {/* Boot Legends — cleared the top badge tier, so we show their exact count instead */}
-        {legendsList.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-3">
-              <Crown className="w-5 h-5 text-amber-600" />
-              <h2 className="text-lg font-bold text-stone-800">Boot Legends</h2>
-              <span className="text-xs text-stone-400">({legendThreshold}+ boots found)</span>
-            </div>
-            <div className="space-y-2">
-              {legendsList.map((row, i) => (
-                <Card
-                  key={row.email}
-                  className="p-4 bg-gradient-to-r from-amber-100 to-yellow-50 border-amber-300 flex items-center gap-3"
-                >
-                  <div className="text-lg font-bold text-amber-700 w-6 text-center shrink-0">
-                    {medal(i) || i + 1}
-                  </div>
-                  {row.profilePicture ? (
-                    <img src={row.profilePicture} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
+        {visitsLoading ? (
+          <Card className="p-6 text-center bg-white border-stone-200">
+            <p className="text-stone-500">Loading...</p>
+          </Card>
+        ) : !hasAnyFinders ? (
+          <Card className="p-6 text-center bg-white border-stone-200">
+            <p className="text-stone-500">No boots found yet — be the first!</p>
+          </Card>
+        ) : (
+          tierGroups.map(({ badge, isTopTier, members }) => {
+            if (members.length === 0) return null;
+            return (
+              <div key={badge.id} className="mb-8">
+                <div className="flex items-center gap-2 mb-3">
+                  {isTopTier ? (
+                    <Crown className="w-5 h-5 text-amber-600" />
+                  ) : badge.icon_url ? (
+                    <img src={badge.icon_url} alt="" className="w-5 h-5" />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-semibold shrink-0">
-                      {row.displayName[0]?.toUpperCase()}
-                    </div>
+                    <span className="text-lg">🎖️</span>
                   )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-stone-800 truncate">{row.displayName}</p>
-                    <p className="text-xs text-amber-700">{row.badge?.name || 'Trail Boss'}</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-xl font-bold text-amber-800">{row.count}</p>
-                    <p className="text-[10px] text-stone-400">of {totalBoots}</p>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Main leaderboard — ranked by boots found, badge shown next to each name */}
-        <div className="space-y-2">
-          {visitsLoading ? (
-            <Card className="p-6 text-center bg-white border-stone-200">
-              <p className="text-stone-500">Loading...</p>
-            </Card>
-          ) : mainList.length === 0 ? (
-            <Card className="p-6 text-center bg-white border-stone-200">
-              <p className="text-stone-500">No boots found yet — be the first!</p>
-            </Card>
-          ) : (
-            mainList.map((row, i) => (
-              <Card key={row.email} className="p-4 bg-white border-stone-200 flex items-center gap-3">
-                <div className="text-sm font-bold text-stone-400 w-6 text-center shrink-0">{i + 1}</div>
-                {row.profilePicture ? (
-                  <img src={row.profilePicture} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
-                ) : (
-                  <div className="w-9 h-9 rounded-full bg-stone-200 flex items-center justify-center text-stone-600 font-semibold shrink-0">
-                    {row.displayName[0]?.toUpperCase()}
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-stone-800 truncate">{row.displayName}</p>
-                  {row.badge ? (
-                    <div className="flex items-center gap-1 text-xs text-amber-700">
-                      {row.badge.icon_url ? (
-                        <img src={row.badge.icon_url} alt="" className="w-3.5 h-3.5" />
-                      ) : (
-                        <span>🎖️</span>
-                      )}
-                      <span>{row.badge.name}</span>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-stone-400">No badge yet</p>
-                  )}
+                  <h2 className="text-lg font-bold text-stone-800">{badge.name}</h2>
+                  <span className="text-xs text-stone-400">
+                    ({badge.min_count}+ boots found)
+                  </span>
                 </div>
-                <div className="text-lg font-bold text-stone-700 shrink-0">{row.count}</div>
-              </Card>
-            ))
-          )}
-        </div>
+                <div className="space-y-2">
+                  {members.map((row, i) => (
+                    <Card
+                      key={row.email}
+                      className={
+                        isTopTier
+                          ? "p-4 bg-gradient-to-r from-amber-100 to-yellow-50 border-amber-300 flex items-center gap-3"
+                          : "p-4 bg-white border-stone-200 flex items-center gap-3"
+                      }
+                    >
+                      <div className={`text-lg font-bold w-6 text-center shrink-0 ${isTopTier ? 'text-amber-700' : 'text-stone-400'}`}>
+                        {medal(i) || i + 1}
+                      </div>
+                      {row.profilePicture ? (
+                        <img src={row.profilePicture} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
+                      ) : (
+                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-semibold shrink-0 ${isTopTier ? 'bg-amber-200 text-amber-800' : 'bg-stone-200 text-stone-600'}`}>
+                          {row.displayName[0]?.toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-stone-800 truncate">{row.displayName}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className={`text-xl font-bold ${isTopTier ? 'text-amber-800' : 'text-stone-700'}`}>{row.count}</p>
+                        {isTopTier && <p className="text-[10px] text-stone-400">of {totalBoots}</p>}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

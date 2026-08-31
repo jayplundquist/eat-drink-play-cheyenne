@@ -117,17 +117,26 @@ export default function BootHighScores() {
             if (members.length === 0) return null;
             return (
               <div key={badge.id} className="mb-8">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex flex-col items-center text-center mb-4">
                   {isTopTier ? (
-                    <Crown className="w-5 h-5 text-amber-600" />
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-200 to-yellow-100 border-4 border-amber-300 flex items-center justify-center shadow-md">
+                      <Crown className="w-10 h-10 text-amber-600" />
+                    </div>
                   ) : badge.icon_url ? (
-                    <img src={badge.icon_url} alt="" className="w-5 h-5" />
+                    <img src={badge.icon_url} alt={badge.name} className="w-20 h-20 object-contain drop-shadow" />
                   ) : (
-                    <span className="text-lg">🎖️</span>
+                    <div className="w-20 h-20 rounded-full bg-stone-200 flex items-center justify-center text-4xl">
+                      🎖️
+                    </div>
                   )}
-                  <h2 className="text-lg font-bold text-stone-800">{badge.name}</h2>
-                  <span className="text-xs text-stone-400">
-                    ({badge.min_count}+ boots found)
+                  <h2 className="text-xl font-bold text-stone-800 mt-2" style={{ fontFamily: 'Rye, serif' }}>
+                    {badge.name}
+                  </h2>
+                  {badge.description && (
+                    <p className="text-sm text-stone-500 mt-0.5">{badge.description}</p>
+                  )}
+                  <span className="text-xs text-stone-400 mt-0.5">
+                    {badge.min_count}+ boots found
                   </span>
                 </div>
                 <div className="space-y-2">

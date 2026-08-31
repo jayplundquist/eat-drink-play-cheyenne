@@ -35,6 +35,7 @@ import ImportGarageSale from './pages/ImportGarageSale';
 import GarageSaleDrafts from './pages/GarageSaleDrafts';
 import About from './pages/About';
 import BootFinder from './pages/BootFinder';
+import BootHighScores from './pages/BootHighScores';
 import Connect from './pages/Connect';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -117,6 +118,7 @@ const AuthenticatedApp = () => {
 
       {/* Big Boot Finder — standalone map + checklist, separated from Profile */}
       <Route path="/BootFinder" element={<LayoutWrapper currentPageName="BootFinder"><BootFinder /></LayoutWrapper>} />
+      <Route path="/BootHighScores" element={<LayoutWrapper currentPageName="BootHighScores"><BootHighScores /></LayoutWrapper>} />
 
       {/* Connect AI assistant — MCP setup instructions for end users */}
       <Route path="/connect" element={<LayoutWrapper currentPageName="Connect"><Connect /></LayoutWrapper>} />

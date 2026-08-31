@@ -135,9 +135,6 @@ export default function BootHighScores() {
                   {badge.description && (
                     <p className="text-sm text-stone-500 mt-0.5">{badge.description}</p>
                   )}
-                  <span className="text-xs text-stone-400 mt-0.5">
-                    {badge.min_count}+ boots found
-                  </span>
                 </div>
                 <div className="space-y-2">
                   {members.map((row, i) => (

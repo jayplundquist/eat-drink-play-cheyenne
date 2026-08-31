@@ -283,7 +283,9 @@ export default function Profile() {
                 </div>
                 <div className="text-center p-4 bg-stone-50 rounded-lg">
                    <User className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-                   <div className="text-2xl font-bold text-stone-800">{user.is_premium ? 'Premium' : 'Regular'}</div>
+                   <div className="text-2xl font-bold text-stone-800 capitalize">
+                     {user.role === 'admin' ? 'Admin' : user.is_premium ? 'Premium' : 'Member'}
+                   </div>
                    <div className="text-sm text-stone-600">Account Type</div>
                  </div>
               </div>

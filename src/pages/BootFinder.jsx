@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BootCheckList from "@/components/BootCheckList";
 
 export default function BootFinder() {
-  // approval-test
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

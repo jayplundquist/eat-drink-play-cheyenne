@@ -87,11 +87,31 @@ function parseOverpass(elements) {
   return buckets;
 }
 
-function fetchOverpass(query) {
-  const url = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=${encodeURIComponent(query)}`;
+const OVERPASS_ENDPOINTS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+];
+
+function fetchFromEndpoint(endpoint, query) {
+  const url = `${endpoint}?data=${encodeURIComponent(query)}`;
   return fetch(url, { headers: { Accept: 'application/json' } })
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(json => parseOverpass(json.elements || []));
+    .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); });
+}
+
+// Try the official Overpass API first, falling back to mirrors if it's
+// rate-limited or unreachable, so trail data stays complete and current.
+async function fetchOverpass(query) {
+  let lastErr;
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const json = await fetchFromEndpoint(endpoint, query);
+      return parseOverpass(json.elements || []);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
 }
 
 // Layers that rely on the secondary (heavy) Overpass fetch

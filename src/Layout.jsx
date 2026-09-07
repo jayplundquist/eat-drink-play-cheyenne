@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import NotificationManager from '@/components/NotificationManager';
 import InstallPrompt from '@/components/InstallPrompt';
+import InstallButton from '@/components/InstallButton';
 import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
 import { 
@@ -251,6 +252,7 @@ export default function Layout({ children, currentPageName }) {
 
             {/* User Menu */}
             <div className="flex items-center gap-2">
+              <InstallButton isHome={isHome} />
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

@@ -2,62 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { usePwaInstall } from '@/hooks/usePwaInstall';
 
 export default function InstallPrompt() {
+  const { canInstall, isInstalled, promptInstall } = usePwaInstall();
   const [showPrompt, setShowPrompt] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
-    // Check if app is already installed
-    const isInstalled = () => {
-      return window.matchMedia('(display-mode: standalone)').matches ||
-             window.navigator.standalone === true;
-    };
-
-    // Check if user has dismissed the prompt
-    const isDismissed = localStorage.getItem('install-prompt-dismissed') === 'true';
-
-    // If app is installed, clear the dismissed flag
-    if (isInstalled()) {
+    // Clear dismissed flag if the app is already installed
+    if (isInstalled) {
       localStorage.removeItem('install-prompt-dismissed');
+      setShowPrompt(false);
       return;
     }
 
-    // If not dismissed and not installed, show the prompt
+    const isDismissed = localStorage.getItem('install-prompt-dismissed') === 'true';
     if (!isDismissed) {
       setShowPrompt(true);
     }
-
-    // Listen for the beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    // Listen for app install completion
-    const handleAppInstalled = () => {
-      setShowPrompt(false);
-      localStorage.removeItem('install-prompt-dismissed');
-      toast.success('App installed! You can now access it from your home screen');
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, []);
+  }, [isInstalled]);
 
   const handleInstall = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setDeferredPrompt(null);
-        setShowPrompt(false);
-      }
+    const outcome = await promptInstall();
+    if (outcome === 'accepted') {
+      setShowPrompt(false);
     }
   };
 
@@ -66,7 +34,9 @@ export default function InstallPrompt() {
     localStorage.setItem('install-prompt-dismissed', 'true');
   };
 
-  if (!showPrompt) return null;
+  // Don't show the popup if already installed or if the native prompt
+  // isn't available (iOS users get the nav button + instructions instead).
+  if (!showPrompt || isInstalled || !canInstall) return null;
 
   return (
     <div className="fixed bottom-4 right-4 z-40 max-w-sm">

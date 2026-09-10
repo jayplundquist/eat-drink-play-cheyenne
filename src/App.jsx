@@ -37,6 +37,8 @@ import About from './pages/About';
 import BootFinder from './pages/BootFinder';
 import BootHighScores from './pages/BootHighScores';
 import Connect from './pages/Connect';
+import ManageNotifications from './pages/ManageNotifications';
+import Unsubscribe from './pages/Unsubscribe';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -122,6 +124,12 @@ const AuthenticatedApp = () => {
 
       {/* Connect AI assistant — MCP setup instructions for end users */}
       <Route path="/connect" element={<LayoutWrapper currentPageName="Connect"><Connect /></LayoutWrapper>} />
+
+      {/* Notification campaign admin — review/edit/approve weekly campaigns */}
+      <Route path="/ManageNotifications" element={<LayoutWrapper currentPageName="ManageNotifications"><ManageNotifications /></LayoutWrapper>} />
+
+      {/* Public unsubscribe page — linked from campaign emails, no login required */}
+      <Route path="/unsubscribe" element={<Unsubscribe />} />
 
       {/* High-intent category landing pages for SEO */}
       <Route path="/breakfast" element={<LayoutWrapper currentPageName="CategoryLanding"><CategoryLanding pageKey="breakfast" /></LayoutWrapper>} />

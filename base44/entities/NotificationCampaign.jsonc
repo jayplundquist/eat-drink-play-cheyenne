@@ -1,0 +1,98 @@
+{
+  "name": "NotificationCampaign",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Campaign name (e.g. 'Friday Recommendation \u2014 Sept 12')"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "weekly_recommendation",
+        "weekly_digest"
+      ],
+      "description": "Campaign type"
+    },
+    "email_subject": {
+      "type": "string",
+      "description": "Email subject line"
+    },
+    "email_html": {
+      "type": "string",
+      "description": "Full HTML body of the campaign email"
+    },
+    "notification_title": {
+      "type": "string",
+      "description": "In-app notification title"
+    },
+    "notification_message": {
+      "type": "string",
+      "description": "In-app notification message text"
+    },
+    "related_venue_id": {
+      "type": "string",
+      "description": "Featured venue ID (Friday recommendation only)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_approval",
+        "approved",
+        "sent",
+        "rejected"
+      ],
+      "default": "pending_approval",
+      "description": "Campaign lifecycle status"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Admin notes or edits log"
+    },
+    "scheduled_for": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the campaign was scheduled to run"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the campaign was sent to users"
+    },
+    "recipient_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of users who received the campaign"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "email_subject",
+    "email_html",
+    "notification_title",
+    "notification_message"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

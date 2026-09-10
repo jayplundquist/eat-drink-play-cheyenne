@@ -1,0 +1,45 @@
+{
+  "name": "Weekly Digest",
+  "description": "Drafts a weekly 'New This Week' digest campaign (new venues, garage sales, reviews, boot shares) for admin approval every Monday at 9 AM MT.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 9 * * 1",
+      "one_time_date": null,
+      "timezone": "America/Denver",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "weekly_digest",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "prepare_digest": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "prepareWeeklyDigest",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Draft weekly digest",
+            "description": "Gathers the week's new content and creates a pending campaign for admin review"
+          }
+        }
+      }
+    ]
+  }
+}

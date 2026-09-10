@@ -1,0 +1,45 @@
+{
+  "name": "Friday Recommendation",
+  "description": "Drafts a Friday 'Try Something New' venue recommendation campaign for admin approval every Friday at 11 AM MT.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 11 * * 5",
+      "one_time_date": null,
+      "timezone": "America/Denver",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "friday_recommendation",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "prepare_campaign": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "prepareFridayRecommendation",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Draft Friday campaign",
+            "description": "Picks a venue and creates a pending campaign for admin review"
+          }
+        }
+      }
+    ]
+  }
+}

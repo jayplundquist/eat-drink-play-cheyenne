@@ -15,17 +15,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { 
-              MapPin, 
-              Heart, 
-              Menu, 
-              X, 
+              MapPin,
+              Heart,
+              Menu,
+              X,
               User,
               LogOut,
               Plus,
               Settings,
               Flag,
               Tag,
-              Trophy
+              Trophy,
+              Bell
             } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
@@ -76,6 +77,7 @@ export default function Layout({ children, currentPageName }) {
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
       '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
       '/ImportGarageSale', '/GarageSaleDrafts', '/BootFinder', '/BootHighScores',
+      '/ManageNotifications',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
     let metaRobots = document.querySelector('meta[name="robots"]');
@@ -224,6 +226,12 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('ManageReports')} className="cursor-pointer">
                         <Flag className="w-4 h-4 mr-2" />
                         User Reports
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageNotifications')} className="cursor-pointer">
+                        <Bell className="w-4 h-4 mr-2" />
+                        Notification Campaigns
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

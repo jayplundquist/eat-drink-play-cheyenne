@@ -18,6 +18,11 @@
     "display_name": {
       "type": "string",
       "description": "Custom display name for the user"
+    },
+    "email_opt_out": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has opted out of campaign emails (in-app notifications still sent)"
     }
   },
   "required": [

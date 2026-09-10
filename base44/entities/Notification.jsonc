@@ -10,7 +10,9 @@
       "type": "string",
       "enum": [
         "review_reaction",
-        "new_review_on_venue"
+        "new_review_on_venue",
+        "weekly_recommendation",
+        "weekly_digest"
       ],
       "description": "Type of notification"
     },

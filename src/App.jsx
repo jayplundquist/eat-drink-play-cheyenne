@@ -20,6 +20,7 @@ import ManageBadges from './pages/ManageBadges';
 import ManageBoots from './pages/ManageBoots';
 import ManageClaimRequests from './pages/ManageClaimRequests';
 import MyChuckWagon from './pages/MyChuckWagon';
+import ChuckWagons from './pages/ChuckWagons';
 import ManageChuckWagonStops from './pages/ManageChuckWagonStops';
 import ManageGameSettings from './pages/ManageGameSettings';
 import ManageReports from './pages/ManageReports';
@@ -108,7 +109,8 @@ const AuthenticatedApp = () => {
       <Route path="/Settings" element={<LayoutWrapper currentPageName="Settings"><Settings /></LayoutWrapper>} />
       <Route path="/UserProfile" element={<LayoutWrapper currentPageName="UserProfile"><UserProfile /></LayoutWrapper>} />
 
-      {/* Chuck wagons — vendor dashboard and admin review of submitted stops */}
+      {/* Chuck wagons — public map, vendor dashboard, admin review of submitted stops */}
+      <Route path="/ChuckWagons" element={<LayoutWrapper currentPageName="ChuckWagons"><ChuckWagons /></LayoutWrapper>} />
       <Route path="/MyChuckWagon" element={<LayoutWrapper currentPageName="MyChuckWagon"><MyChuckWagon /></LayoutWrapper>} />
       <Route path="/ManageChuckWagonStops" element={<LayoutWrapper currentPageName="ManageChuckWagonStops"><ManageChuckWagonStops /></LayoutWrapper>} />
 

@@ -93,6 +93,54 @@
       "type": "string",
       "description": "Email of the user who claimed this venue"
     },
+    "lat": {
+      "type": "number",
+      "description": "Latitude of the venue (for map display)"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude of the venue (for map display)"
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": false,
+      "description": "Chuck wagons only: vendor has tapped 'We're serving' and is open right now"
+    },
+    "live_updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the live pin was last refreshed. The public map treats anything older than 6 hours as stale, regardless of is_live"
+    },
+    "live_lat": {
+      "type": "number",
+      "description": "Chuck wagons only: current location latitude, separate from lat so a home base is not overwritten"
+    },
+    "live_lng": {
+      "type": "number",
+      "description": "Chuck wagons only: current location longitude"
+    },
+    "live_location_label": {
+      "type": "string",
+      "description": "Chuck wagons only: friendly place name for the current stop, e.g. 'Depot Plaza'"
+    },
+    "live_note": {
+      "type": "string",
+      "description": "Chuck wagons only: short note for today, e.g. 'Cash only' or 'Out of brisket'"
+    },
+    "live_open_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Chuck wagons only: optional closing time for the current stop"
+    },
+    "pin_logo_url": {
+      "type": "string",
+      "description": "Logo image used as the map pin when has_branded_pin is true"
+    },
+    "has_branded_pin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Paid upgrade: render pin_logo_url as the map pin instead of the default letter pin"
+    },
     "total_ratings": {
       "type": "number",
       "default": 0

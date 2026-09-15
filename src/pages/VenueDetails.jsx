@@ -426,7 +426,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
             </Button>
           </Link>
 
-          {user && (user.role === 'admin' || (user.is_premium && venue.claimed_by === user.email)) && (
+          {user && (user.role === 'admin' || venue.claimed_by === user.email) && (
             <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
               <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white">
                 <Pencil className="w-4 h-4 mr-2" />
@@ -466,7 +466,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
                     Back
                   </Button>
                 </Link>
-            {user && (user.role === 'admin' || (user.is_premium && venue.claimed_by === user.email)) && (
+            {user && (user.role === 'admin' || venue.claimed_by === user.email) && (
               <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
                 <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white ml-2 mb-4">
                   <Pencil className="w-4 h-4 mr-2" />
@@ -1088,6 +1088,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
             onOpenChange={setClaimModalOpen}
             venueName={venue.name}
             venueId={venueId}
+            venueCategories={getCategories(venue)}
             user={user}
           />
           )}

@@ -37,11 +37,10 @@ export default function ManageClaimRequests() {
         claimed_by: request.user_email,
       });
 
-      // Update user to premium
-      const users = await base44.entities.User.filter({ email: request.user_email });
-      if (users[0]) {
-        await base44.entities.User.update(users[0].id, { is_premium: true });
-      }
+      // Deliberately NOT setting is_premium here. is_premium is a site-wide flag
+      // covering paid features, and chuck wagons claim for free — granting it on
+      // approval would hand every free claimant the paid tier. Premium is set by
+      // the Stripe webhook when someone actually pays.
     },
     onSuccess: () => {
       toast.success('Claim approved!');

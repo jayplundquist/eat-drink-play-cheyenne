@@ -69,6 +69,23 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  // Only surface the chuck wagon dashboard to people who actually run one,
+  // so the menu stays clean for everyone else.
+  const [ownsChuckWagon, setOwnsChuckWagon] = useState(false);
+  useEffect(() => {
+    if (!user?.email) {
+      setOwnsChuckWagon(false);
+      return;
+    }
+    base44.entities.Venue.filter({ claimed_by: user.email })
+      .then((venues) =>
+        setOwnsChuckWagon(
+          (venues || []).some((v) => (v.categories || []).includes('food_trucks'))
+        )
+      )
+      .catch(() => setOwnsChuckWagon(false));
+  }, [user?.email]);
+
   // Auto-apply noindex to admin/internal routes so crawlers never index them
   const location = useLocation();
   useEffect(() => {
@@ -304,6 +321,14 @@ export default function Layout({ children, currentPageName }) {
                         My Profile
                       </Link>
                     </DropdownMenuItem>
+                    {ownsChuckWagon && (
+                      <DropdownMenuItem asChild>
+                        <Link to={createPageUrl('MyChuckWagon')} className="cursor-pointer">
+                          <Truck className="w-4 h-4 mr-2" />
+                          My Chuck Wagon
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem asChild>
                       <Link to={createPageUrl('Favorites')} className="cursor-pointer">
                         <Heart className="w-4 h-4 mr-2" />

@@ -97,6 +97,7 @@ export default function Layout({ children, currentPageName }) {
       '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
       '/ImportGarageSale', '/GarageSaleDrafts', '/BootFinder', '/BootHighScores',
       '/ManageNotifications', '/MyChuckWagon', '/ManageChuckWagonStops',
+      '/BackfillVenueCoords',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
     let metaRobots = document.querySelector('meta[name="robots"]');
@@ -258,6 +259,12 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Analytics')} className="cursor-pointer">
                         <Settings className="w-4 h-4 mr-2" />
                         Stats
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('BackfillVenueCoords')} className="cursor-pointer">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Venue Coordinates
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -425,6 +432,12 @@ export default function Layout({ children, currentPageName }) {
                 <>
                   <div className="border-t border-amber-200 pt-2 mt-2">
                     <p className="text-xs font-semibold text-amber-700 uppercase px-3 py-2">Admin</p>
+                    <Link to={createPageUrl('BackfillVenueCoords')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <MapPin className="w-5 h-5 mr-3" />
+                        Venue Coordinates
+                      </Button>
+                    </Link>
                     <Link to={createPageUrl('ManageChuckWagonStops')} onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="ghost" className="w-full justify-start text-stone-600">
                         <Truck className="w-5 h-5 mr-3" />

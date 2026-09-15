@@ -56,10 +56,12 @@ Deno.serve(async (req) => {
       const locationHint = venue.address ? `${venue.address}, Cheyenne, WY` : 'Cheyenne, Wyoming';
       // Give the LLM the info already on file so it can verify/enrich instead of
       // searching blind — this is what makes venues with generic names findable.
+      const needsImage = !venue.image_url;
       const onFile = [
         venue.website && `Existing website on file: ${venue.website}`,
         venue.phone && `Existing phone on file: ${venue.phone}`,
         venue.description && `Current description: ${venue.description}`,
+        needsImage ? 'No image on file yet — please find one.' : 'An image is already set; no image needed.',
       ].filter(Boolean).join('\n');
       const MAX_ATTEMPTS = 3;
       let llmRes = null;
@@ -77,7 +79,8 @@ Deno.serve(async (req) => {
               properties: {
                 description: { type: 'string' },
                 website: { type: 'string' },
-                phone: { type: 'string' }
+                phone: { type: 'string' },
+                image_url: { type: 'string' }
               }
             }
           });
@@ -110,6 +113,11 @@ Deno.serve(async (req) => {
         if (newPhone && newPhone !== (venue.phone || '').trim()) {
           update.phone = newPhone;
           changes.push('phone');
+        }
+        const newImage = llmRes.image_url?.trim() || '';
+        if (needsImage && newImage && /^https?:\/\//.test(newImage) && newImage !== (venue.image_url || '').trim()) {
+          update.image_url = newImage;
+          changes.push('image_url');
         }
         update.last_sync_changes = changes;
 

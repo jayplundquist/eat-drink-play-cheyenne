@@ -1,0 +1,151 @@
+{
+  "name": "ChuckWagonStop",
+  "type": "object",
+  "properties": {
+    "venue_id": {
+      "type": "string",
+      "description": "ID of the chuck wagon Venue this stop belongs to"
+    },
+    "venue_name": {
+      "type": "string",
+      "description": "Denormalized wagon name, so the map can render a pin without a second lookup"
+    },
+    "location_label": {
+      "type": "string",
+      "description": "Friendly place name, e.g. 'Accomplice Brewing' or 'Depot Plaza'"
+    },
+    "address": {
+      "type": "string",
+      "description": "Street address of the stop"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude of the stop"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude of the stop"
+    },
+    "stop_dates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "date"
+      },
+      "description": "Dates the wagon will be at this location (YYYY-MM-DD)"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Daily start time, HH:MM 24h"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Daily end time, HH:MM 24h"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text note for this stop, e.g. 'Full menu' or 'Limited breakfast only'"
+    },
+    "special_notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "cash_only",
+          "card_accepted",
+          "venmo_accepted",
+          "limited_menu",
+          "full_menu",
+          "new_special",
+          "pre_order_available",
+          "kid_friendly",
+          "dog_friendly",
+          "indoor_seating",
+          "first_come_first_served"
+        ]
+      },
+      "description": "Predefined tags shown on the stop listing"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "False for private caterings the vendor wants on their own calendar but not on the public map"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft",
+        "cancelled",
+        "expired",
+        "removed"
+      ],
+      "default": "draft",
+      "description": "Listing status. 'draft' hides the stop from the public map until an admin publishes it. 'cancelled' keeps the listing visible but struck through, so anyone who already saw it learns it is off rather than finding it silently gone"
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email of the vendor who created the stop (for admin view)"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the stop expires (final date + end time)"
+    }
+  },
+  "required": [
+    "venue_id",
+    "venue_name",
+    "location_label",
+    "lat",
+    "lng",
+    "stop_dates",
+    "start_time",
+    "end_time"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.status": "active",
+          "data.is_public": true
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

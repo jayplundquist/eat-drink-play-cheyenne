@@ -88,7 +88,8 @@ export default function FavoritesMap({ user, favoriteVenues }) {
         const boot = boots.find(b => b.name === visit.boot_name);
         if (boot && boot.address) {
           try {
-            const coords = await geocodeAddress(boot.address);
+            const coords = await resolveCoords(boot);
+            if (!coords) continue;
             newMarkers.push({
               id: `boot-${visit.id}`,
               type: 'boot',

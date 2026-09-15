@@ -19,6 +19,8 @@ import Favorites from './pages/Favorites';
 import ManageBadges from './pages/ManageBadges';
 import ManageBoots from './pages/ManageBoots';
 import ManageClaimRequests from './pages/ManageClaimRequests';
+import MyChuckWagon from './pages/MyChuckWagon';
+import ManageChuckWagonStops from './pages/ManageChuckWagonStops';
 import ManageGameSettings from './pages/ManageGameSettings';
 import ManageReports from './pages/ManageReports';
 import ManageVenueOptions from './pages/ManageVenueOptions';
@@ -105,6 +107,10 @@ const AuthenticatedApp = () => {
       <Route path="/Profile" element={<LayoutWrapper currentPageName="Profile"><Profile /></LayoutWrapper>} />
       <Route path="/Settings" element={<LayoutWrapper currentPageName="Settings"><Settings /></LayoutWrapper>} />
       <Route path="/UserProfile" element={<LayoutWrapper currentPageName="UserProfile"><UserProfile /></LayoutWrapper>} />
+
+      {/* Chuck wagons — vendor dashboard and admin review of submitted stops */}
+      <Route path="/MyChuckWagon" element={<LayoutWrapper currentPageName="MyChuckWagon"><MyChuckWagon /></LayoutWrapper>} />
+      <Route path="/ManageChuckWagonStops" element={<LayoutWrapper currentPageName="ManageChuckWagonStops"><ManageChuckWagonStops /></LayoutWrapper>} />
 
       {/* Garage Sale Map — public browsing, no login required */}
       <Route path="/GarageSales" element={<LayoutWrapper currentPageName="GarageSales"><GarageSales /></LayoutWrapper>} />

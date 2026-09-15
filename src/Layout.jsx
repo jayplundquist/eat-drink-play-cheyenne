@@ -114,6 +114,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'ActivityFeed', icon: Plus, label: 'The Hitching Post' },
     { name: 'GreenwayInfo', icon: MapPin, label: 'Greenway' },
     { name: 'GarageSales', icon: Tag, label: 'Garage Sales' },
+    { name: 'ChuckWagons', icon: Truck, label: 'Chuck Wagons' },
   ];
 
   const isHome = currentPageName === 'Home';

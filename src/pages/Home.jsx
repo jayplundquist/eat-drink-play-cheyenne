@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { utils, writeFile } from 'xlsx';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight, LayoutGrid, BookOpen, Tag } from "lucide-react";
+import { MapPin, Sparkles, Lightbulb, MessageCircle, Filter, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, LayoutGrid, BookOpen, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -179,19 +178,6 @@ export default function Home() {
   });
 
   const isFavorite = (venueId) => userFavorites.some(f => f.venue_id === venueId);
-
-  const exportVenuesToExcel = () => {
-    const data = venues.map(venue => ({
-      'Venue Name': venue.name,
-      'Categories': (venue.categories || []).join(', '),
-      'Food Types': (venue.food_types || []).join(', ')
-    }));
-
-    const ws = utils.json_to_sheet(data);
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, 'Venues');
-    writeFile(wb, 'cheyenne-venues.xlsx');
-  };
 
   const submitSuggestionMutation = useMutation({
     mutationFn: async () => {
@@ -645,19 +631,6 @@ export default function Home() {
               {showFilters ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
             </Button>
 
-            {/* Admin-only export utility */}
-            {user?.role === 'admin' && (
-              <Button
-                onClick={exportVenuesToExcel}
-                variant="outline"
-                size="icon"
-                className="border-amber-700 text-amber-700 hover:bg-amber-50"
-                aria-label="Export venues to Excel"
-                title="Export to Excel"
-              >
-                <Download className="w-4 h-4" />
-              </Button>
-            )}
           </div>
         </div>
 

@@ -99,7 +99,8 @@ export default function VisitedMap() {
         if (venue.address) {
           const rating = userRatings.find(r => r.venue_id === venue.id);
           try {
-            const coords = await geocodeAddress(venue.address);
+            const coords = await resolveCoords(venue);
+            if (!coords) continue;
             newMarkers.push({
               id: `venue-${venue.id}`,
               type: 'venue',
@@ -121,7 +122,8 @@ export default function VisitedMap() {
         const boot = boots.find(b => b.name === visit.boot_name);
         if (boot && boot.address) {
           try {
-            const coords = await geocodeAddress(boot.address);
+            const coords = await resolveCoords(boot);
+            if (!coords) continue;
             newMarkers.push({
               id: `boot-${visit.id}`,
               type: 'boot',

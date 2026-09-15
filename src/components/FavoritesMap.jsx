@@ -20,16 +20,19 @@ const spikeIcon = L.icon({
 
 const CHEYENNE_CENTER = [41.1400, -104.8202];
 
-const geocodeAddress = async (address) => {
-  if (!address) return CHEYENNE_CENTER;
+// Prefer coordinates stored on the record. Fall back to geocoding only when a
+// record has no pin yet, and return null when we genuinely don't know where
+// something is — a missing marker beats a marker in the wrong place.
+const resolveCoords = async (record) => {
+  if (typeof record?.lat === 'number' && typeof record?.lng === 'number') {
+    return [record.lat, record.lng];
+  }
+  if (!record?.address) return null;
   try {
-    const response = await base44.functions.invoke('geocodeAddress', { address });
-    return response.data.coordinates || CHEYENNE_CENTER;
+    const response = await base44.functions.invoke('geocodeAddress', { address: record.address });
+    return response.data.coordinates || null;
   } catch {
-    return [
-      CHEYENNE_CENTER[0] + (Math.random() - 0.5) * 0.1,
-      CHEYENNE_CENTER[1] + (Math.random() - 0.5) * 0.1,
-    ];
+    return null;
   }
 };
 
@@ -63,7 +66,8 @@ export default function FavoritesMap({ user, favoriteVenues }) {
         if (venue.address) {
           const rating = userRatings.find(r => r.venue_id === venue.id);
           try {
-            const coords = await geocodeAddress(venue.address);
+            const coords = await resolveCoords(venue);
+            if (!coords) continue;
             newMarkers.push({
               id: `venue-${venue.id}`,
               type: 'venue',

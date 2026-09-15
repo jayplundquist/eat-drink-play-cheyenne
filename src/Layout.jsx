@@ -412,10 +412,30 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </Link>
               ))}
+              {ownsChuckWagon && (
+                <Link to={createPageUrl('MyChuckWagon')} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start text-stone-600">
+                    <Truck className="w-5 h-5 mr-3" />
+                    My Chuck Wagon
+                  </Button>
+                </Link>
+              )}
               {user?.role === 'admin' && (
                 <>
                   <div className="border-t border-amber-200 pt-2 mt-2">
                     <p className="text-xs font-semibold text-amber-700 uppercase px-3 py-2">Admin</p>
+                    <Link to={createPageUrl('ManageChuckWagonStops')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Truck className="w-5 h-5 mr-3" />
+                        Chuck Wagon Stops
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('ManageClaimRequests')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Crown className="w-5 h-5 mr-3" />
+                        Venue Claims
+                      </Button>
+                    </Link>
                     <Link to={createPageUrl('ManageVenues')} onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="ghost" className="w-full justify-start text-stone-600">
                         <Plus className="w-5 h-5 mr-3" />

@@ -77,7 +77,7 @@ export default function Layout({ children, currentPageName }) {
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
       '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
       '/ImportGarageSale', '/GarageSaleDrafts', '/BootFinder', '/BootHighScores',
-      '/ManageNotifications',
+      '/ManageNotifications', '/MyChuckWagon', '/ManageChuckWagonStops',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
     let metaRobots = document.querySelector('meta[name="robots"]');

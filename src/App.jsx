@@ -22,6 +22,7 @@ import ManageClaimRequests from './pages/ManageClaimRequests';
 import MyChuckWagon from './pages/MyChuckWagon';
 import ChuckWagons from './pages/ChuckWagons';
 import ManageChuckWagonStops from './pages/ManageChuckWagonStops';
+import BackfillVenueCoords from './pages/BackfillVenueCoords';
 import ManageGameSettings from './pages/ManageGameSettings';
 import ManageReports from './pages/ManageReports';
 import ManageVenueOptions from './pages/ManageVenueOptions';
@@ -113,6 +114,7 @@ const AuthenticatedApp = () => {
       <Route path="/ChuckWagons" element={<LayoutWrapper currentPageName="ChuckWagons"><ChuckWagons /></LayoutWrapper>} />
       <Route path="/MyChuckWagon" element={<LayoutWrapper currentPageName="MyChuckWagon"><MyChuckWagon /></LayoutWrapper>} />
       <Route path="/ManageChuckWagonStops" element={<LayoutWrapper currentPageName="ManageChuckWagonStops"><ManageChuckWagonStops /></LayoutWrapper>} />
+      <Route path="/BackfillVenueCoords" element={<LayoutWrapper currentPageName="BackfillVenueCoords"><BackfillVenueCoords /></LayoutWrapper>} />
 
       {/* Garage Sale Map — public browsing, no login required */}
       <Route path="/GarageSales" element={<LayoutWrapper currentPageName="GarageSales"><GarageSales /></LayoutWrapper>} />

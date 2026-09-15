@@ -26,7 +26,9 @@ import {
               Flag,
               Tag,
               Trophy,
-              Bell
+              Bell,
+              Truck,
+              Crown
             } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
@@ -238,6 +240,19 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Analytics')} className="cursor-pointer">
                         <Settings className="w-4 h-4 mr-2" />
                         Stats
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageChuckWagonStops')} className="cursor-pointer">
+                        <Truck className="w-4 h-4 mr-2" />
+                        Chuck Wagon Stops
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageClaimRequests')} className="cursor-pointer">
+                        <Crown className="w-4 h-4 mr-2" />
+                        Venue Claims
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

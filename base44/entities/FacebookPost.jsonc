@@ -1,0 +1,95 @@
+{
+  "name": "FacebookPost",
+  "type": "object",
+  "properties": {
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "friday_recommendation",
+        "weekly_digest",
+        "custom_prompt",
+        "manual"
+      ],
+      "description": "What created this post"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The natural-language prompt used for custom_prompt posts"
+    },
+    "post_text": {
+      "type": "string",
+      "description": "The text body of the Facebook post"
+    },
+    "image_mode": {
+      "type": "string",
+      "enum": [
+        "none",
+        "venue_photo",
+        "ai_generated",
+        "uploaded"
+      ],
+      "default": "none",
+      "description": "How the attached image was sourced"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Public URL of the attached image (venue photo, AI image, or uploaded screenshot)"
+    },
+    "related_venue_id": {
+      "type": "string",
+      "description": "ID of the featured venue, when applicable"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "published",
+        "rejected",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Lifecycle status of the post"
+    },
+    "facebook_post_id": {
+      "type": "string",
+      "description": "ID returned by Facebook after a successful publish"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the post was published to Facebook"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message from the last failed publish attempt (cleared on success)"
+    }
+  },
+  "required": [
+    "source_type",
+    "post_text",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

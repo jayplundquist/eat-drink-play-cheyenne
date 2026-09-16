@@ -181,13 +181,14 @@ export default function Home() {
 
   const submitSuggestionMutation = useMutation({
     mutationFn: async () => {
-      await base44.entities.Suggestion.create({
-        user_email: user?.email || 'anonymous',
-        suggestion_text: suggestion
+      const res = await base44.functions.invoke('processSuggestion', {
+        suggestion_text: suggestion,
+        user_email: user?.email || 'anonymous'
       });
+      return res.data;
     },
-    onSuccess: () => {
-      toast.success('Thank you for your suggestion!');
+    onSuccess: (data) => {
+      toast.success(data?.message || 'Thank you for your suggestion!');
       setSuggestionOpen(false);
       setSuggestion('');
     },

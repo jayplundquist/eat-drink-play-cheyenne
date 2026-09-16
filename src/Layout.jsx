@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -28,7 +28,9 @@ import {
               Trophy,
               Bell,
               Truck,
-              Crown
+              Crown,
+              ChevronLeft,
+              ChevronRight
             } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdBanner from '@/components/AdBanner';
@@ -39,6 +41,23 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shared, setShared] = useState(false);
+
+  const navScrollRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateNavScrollState = () => {
+    const el = navScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    updateNavScrollState();
+    window.addEventListener('resize', updateNavScrollState);
+    return () => window.removeEventListener('resize', updateNavScrollState);
+  }, [user]);
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -174,7 +193,22 @@ export default function Layout({ children, currentPageName }) {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-1 min-w-0 overflow-x-auto [&>*]:shrink-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="hidden md:flex items-center gap-1 min-w-0 relative">
+              {canScrollLeft && (
+                <button
+                  type="button"
+                  onClick={() => navScrollRef.current?.scrollBy({ left: -220, behavior: 'smooth' })}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gradient-to-r from-amber-50 to-transparent pl-0.5 pr-1 py-0.5 rounded-full text-amber-800 hover:text-amber-900"
+                  aria-label="Scroll nav left"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+              )}
+              <div
+                ref={navScrollRef}
+                onScroll={updateNavScrollState}
+                className="flex items-center gap-1 min-w-0 overflow-x-auto [&>*]:shrink-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
               {navItems.map(({ name, icon: Icon, label }) => (
                 <Link key={name} to={createPageUrl(name)}>
                   <Button 
@@ -296,6 +330,17 @@ export default function Layout({ children, currentPageName }) {
                     </DropdownMenuContent>
                     </DropdownMenu>
                     )}
+                </div>
+              {canScrollRight && (
+                <button
+                  type="button"
+                  onClick={() => navScrollRef.current?.scrollBy({ left: 220, behavior: 'smooth' })}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gradient-to-l from-amber-50 to-transparent pl-1 pr-0.5 py-0.5 rounded-full text-amber-800 hover:text-amber-900"
+                  aria-label="Scroll nav right"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
             {/* User Menu */}

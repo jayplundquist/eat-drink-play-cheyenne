@@ -590,13 +590,14 @@ export default function Home() {
           >
             🛍️ Shop
           </Button>
-          <Button
-            variant={activeTab === 'chuck_wagons' ? 'default' : 'outline'}
-            onClick={() => { setActiveTab('chuck_wagons'); setCurrentPage(1); }}
-            className={activeTab === 'chuck_wagons' ? 'bg-amber-600 hover:bg-amber-700' : 'border-amber-300 text-amber-700 hover:bg-amber-50'}
-          >
-            🚚 Chuck Wagons
-          </Button>
+          <Link to={createPageUrl('ChuckWagons')}>
+            <Button
+              variant="outline"
+              className="border-amber-300 text-amber-700 hover:bg-amber-50"
+            >
+              🚚 Chuck Wagons
+            </Button>
+          </Link>
 
           <div className="ml-auto flex items-center gap-2">
             {/* View mode toggle */}

@@ -92,6 +92,15 @@ export default function ChuckWagons() {
     return map;
   }, [allWagons, stops]);
 
+  // Live stats for the header counter
+  const stats = useMemo(() => {
+    const servingNow = liveWagons.length;
+    const outToday = allWagons.filter(
+      (w) => todayStopByWagon[w.id] || (w.is_live && !isStale(w.live_updated_at))
+    ).length;
+    return { total: allWagons.length, outToday, servingNow };
+  }, [allWagons, liveWagons, todayStopByWagon]);
+
   // SEO: food-truck-specific metadata + JSON-LD ItemList of FoodTruck entries
   const seoTitle = 'Cheyenne Food Trucks & Chuck Wagons — Live Food Truck Tracker';
   const seoDescription =
@@ -190,6 +199,33 @@ export default function ChuckWagons() {
             Find your listing
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
+        </div>
+      </div>
+
+      {/* Live counter */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
+        <div className="bg-white border-2 border-amber-200 rounded-xl p-4 sm:p-5 flex flex-wrap items-center justify-center sm:justify-start gap-4 sm:gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🚚</span>
+            <div>
+              <div className="text-2xl font-bold text-amber-900 leading-none" style={{ fontFamily: 'Rye, serif' }}>
+                {isLoading ? '—' : stats.total}
+              </div>
+              <div className="text-xs text-stone-600 mt-1">Chuck Wagons</div>
+            </div>
+          </div>
+          <div className="hidden sm:block w-px h-10 bg-amber-200" />
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-green-500 shrink-0" />
+            <div>
+              <div className="text-lg font-bold text-stone-900 leading-none">
+                {isLoading ? '—' : `${stats.outToday} out today`}
+              </div>
+              <div className="text-xs text-stone-600 mt-1">
+                {isLoading ? '' : `${stats.servingNow} serving now`}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

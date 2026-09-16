@@ -165,7 +165,7 @@ export default function Layout({ children, currentPageName }) {
               className="flex items-center gap-2"
             >
               <div className={cn(
-                "font-bold text-2xl",
+                "font-bold whitespace-nowrap shrink-0 text-lg md:text-xl xl:text-2xl",
                 isHome ? "text-white" : "text-amber-900"
               )} style={{ fontFamily: 'Rye, serif', textShadow: isHome ? '2px 2px 4px rgba(0,0,0,0.3)' : 'none' }}>
                 <span className={isHome ? "text-amber-300" : "text-amber-700"}>EAT</span>
@@ -174,7 +174,7 @@ export default function Layout({ children, currentPageName }) {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-1">
               {navItems.map(({ name, icon: Icon, label }) => (
                 <Link key={name} to={createPageUrl(name)}>
                   <Button 
@@ -385,7 +385,7 @@ export default function Layout({ children, currentPageName }) {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "md:hidden",
+                  "lg:hidden",
                   isHome ? "text-white hover:bg-white/10" : "text-stone-600"
                 )}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -398,7 +398,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-amber-900 py-4">
+          <div className="lg:hidden bg-gradient-to-r from-amber-50 to-orange-50 border-t-4 border-amber-900 py-4">
             <div className="max-w-6xl mx-auto px-4 space-y-2">
               {navItems.map(({ name, icon: Icon, label }) => (
                 <Link 

@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import {
   buildFridayContent,
+  buildFridayFacebookText,
   SITE_URL,
 } from '../../shared/campaignEmails.ts';
 
@@ -63,6 +64,22 @@ export default async function(req: Request): Promise<Response> {
       scheduled_for: now,
     });
     console.log(`Created campaign ${campaign.id}`);
+
+    // 4b. Create a pending Facebook post alongside the campaign
+    try {
+      const fbText = buildFridayFacebookText(venue);
+      await base44.asServiceRole.entities.FacebookPost.create({
+        source_type: 'friday_recommendation',
+        post_text: fbText,
+        image_mode: venue.image_url ? 'venue_photo' : 'none',
+        image_url: venue.image_url || '',
+        related_venue_id: venue.id,
+        status: 'pending',
+      });
+      console.log('Created pending Facebook post for Friday recommendation');
+    } catch (err) {
+      console.error('Failed to create Facebook post:', err.message);
+    }
 
     // 5. Alert admins via in-app notification + email
     const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });

@@ -115,7 +115,7 @@ export default function Layout({ children, currentPageName }) {
       '/Favorites', '/ActivityFeed', '/VisitedMap', '/UserProfile',
       '/AddGarageSale', '/MyGarageSales', '/ManageGarageSales',
       '/ImportGarageSale', '/GarageSaleDrafts', '/BootFinder', '/BootHighScores',
-      '/ManageNotifications', '/MyChuckWagon', '/ManageChuckWagonStops',
+      '/ManageNotifications', '/ManageFacebookPosts', '/MyChuckWagon', '/ManageChuckWagonStops',
       '/BackfillVenueCoords',
     ];
     const isInternal = internalPrefixes.some(p => location.pathname.startsWith(p));
@@ -287,6 +287,12 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('ManageNotifications')} className="cursor-pointer">
                         <Bell className="w-4 h-4 mr-2" />
                         Notification Campaigns
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ManageFacebookPosts')} className="cursor-pointer">
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Facebook Posts
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -529,6 +535,12 @@ export default function Layout({ children, currentPageName }) {
                       <Button variant="ghost" className="w-full justify-start text-stone-600">
                         <Flag className="w-5 h-5 mr-3" />
                         User Reports
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl('ManageFacebookPosts')} onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-stone-600">
+                        <Share2 className="w-5 h-5 mr-3" />
+                        Facebook Posts
                       </Button>
                     </Link>
                     <Link to={createPageUrl('Analytics')} onClick={() => setMobileMenuOpen(false)}>

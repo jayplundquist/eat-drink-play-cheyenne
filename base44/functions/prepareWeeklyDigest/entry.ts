@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import {
   buildDigestContent,
+  buildDigestFacebookText,
   SITE_URL,
 } from '../../shared/campaignEmails.ts';
 
@@ -63,6 +64,25 @@ export default async function(req: Request): Promise<Response> {
       scheduled_for: now,
     });
     console.log(`Created campaign ${campaign.id}`);
+
+    // 3b. Create a pending Facebook post alongside the campaign
+    try {
+      const fbText = buildDigestFacebookText({
+        newVenues,
+        garageSales: activeNewSales,
+        topReviews: recentReviews,
+        bootShares: recentBootShares,
+      });
+      await base44.asServiceRole.entities.FacebookPost.create({
+        source_type: 'weekly_digest',
+        post_text: fbText,
+        image_mode: 'none',
+        status: 'pending',
+      });
+      console.log('Created pending Facebook post for weekly digest');
+    } catch (err) {
+      console.error('Failed to create Facebook post:', err.message);
+    }
 
     // 4. Alert admins
     const admins = await base44.asServiceRole.entities.User.filter({ role: 'admin' });

@@ -242,3 +242,52 @@ export function buildDigestContent(data: {
       : "A quiet week in Cheyenne — explore what's already on the site!",
   };
 }
+
+// --- Facebook post text builders (plain text, not HTML) ---
+export function buildFridayFacebookText(venue: any): string {
+  const url = venueUrl(venue);
+  const lines = [
+    `🤠 This Friday, try ${venue.name}!`,
+    ``,
+    venue.description || "A local gem worth discovering in Cheyenne.",
+  ];
+  if (venue.address) lines.push("", `📍 ${venue.address}`);
+  lines.push("", `Check it out: ${url}`, "", "#EatDrinkPlayCheyenne #CheyenneWY");
+  return lines.join("\n");
+}
+
+export function buildDigestFacebookText(data: {
+  newVenues: any[];
+  garageSales: any[];
+  topReviews: any[];
+  bootShares: any[];
+}): string {
+  const { newVenues, garageSales, topReviews, bootShares } = data;
+  const lines: string[] = ["📬 New This Week in Cheyenne!", ""];
+
+  if (newVenues.length > 0) {
+    lines.push(`🏠 New This Week (${newVenues.length}):`);
+    newVenues.slice(0, 5).forEach((v) => lines.push(`  • ${v.name}`));
+    lines.push("");
+  }
+  if (garageSales.length > 0) {
+    lines.push(`🏷️ Upcoming Garage Sales (${garageSales.length}):`);
+    garageSales.slice(0, 5).forEach((s) => lines.push(`  • ${s.title}`));
+    lines.push("");
+  }
+  if (topReviews.length > 0) {
+    lines.push("⭐ Top Reviews This Week:");
+    topReviews.slice(0, 3).forEach((r) =>
+      lines.push(`  • "${(r.comment || "").slice(0, 100)}"`)
+    );
+    lines.push("");
+  }
+  if (bootShares.length > 0) {
+    lines.push(`🥾 ${bootShares.length} Boot Sightings this week!`, "");
+  }
+  if (lines.length <= 2) {
+    lines.push("A quiet week in Cheyenne — but there's always more to explore!", "");
+  }
+  lines.push(`See everything: ${SITE_URL}`, "", "#EatDrinkPlayCheyenne #CheyenneWY");
+  return lines.join("\n");
+}

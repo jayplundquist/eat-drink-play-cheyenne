@@ -42,6 +42,7 @@ import BootFinder from './pages/BootFinder';
 import BootHighScores from './pages/BootHighScores';
 import Connect from './pages/Connect';
 import ManageNotifications from './pages/ManageNotifications';
+import ManageFacebookPosts from './pages/ManageFacebookPosts';
 import Unsubscribe from './pages/Unsubscribe';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -137,6 +138,9 @@ const AuthenticatedApp = () => {
 
       {/* Notification campaign admin — review/edit/approve weekly campaigns */}
       <Route path="/ManageNotifications" element={<LayoutWrapper currentPageName="ManageNotifications"><ManageNotifications /></LayoutWrapper>} />
+
+      {/* Facebook post admin — review auto-composed posts, compose from prompts, publish manually */}
+      <Route path="/ManageFacebookPosts" element={<LayoutWrapper currentPageName="ManageFacebookPosts"><ManageFacebookPosts /></LayoutWrapper>} />
 
       {/* Public unsubscribe page — linked from campaign emails, no login required */}
       <Route path="/unsubscribe" element={<Unsubscribe />} />

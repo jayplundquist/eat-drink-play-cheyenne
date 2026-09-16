@@ -383,47 +383,6 @@ export default function ChuckWagons() {
           )}
         </section>
 
-        {/* Crawlable SEO text section — participating trucks for search engines */}
-        <section className="bg-white border border-stone-200 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-stone-900 mb-3" style={{ fontFamily: 'Rye, serif' }}>
-            Cheyenne Food Trucks & Chuck Wagons
-          </h2>
-          <p className="text-stone-700 mb-4">
-            Cheyenne's food trucks and chuck wagons roll across the city all week long — from
-            downtown Depot Plaza to the Frontier Park events and neighborhood stops in between.
-            Use this tracker to find food trucks open today, see who's serving right now, and
-            plan around the weekly Cheyenne food truck schedule. Below are the participating
-            trucks and where you can find them today.
-          </p>
-          {allWagons.length > 0 ? (
-            <ul className="space-y-2 text-stone-700">
-              {allWagons.map((w) => {
-                const stop = todayStopByWagon[w.id];
-                const cuisine = cuisineLabel(w);
-                const live = w.is_live && !isStale(w.live_updated_at);
-                return (
-                  <li key={w.id} className="text-sm sm:text-base">
-                    <span className="font-semibold">{w.name}</span>
-                    {cuisine && <span> — {cuisine}</span>}
-                    {live && w.live_location_label && (
-                      <span> · serving now at {w.live_location_label}</span>
-                    )}
-                    {stop && (
-                      <span> · scheduled today at {stop.location_label}{stop.start_time ? ` (${stop.start_time}–${stop.end_time})` : ''}</span>
-                    )}
-                    {!live && !stop && <span> · check back for today's location</span>}
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="text-stone-600 text-sm">
-              Chuck wagon listings are being added. If you run a food truck in Cheyenne, claim
-              your wagon above to get on the map.
-            </p>
-          )}
-        </section>
-
         {/* Vendor call to action — bottom */}
         <Card className="p-6 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">

@@ -405,6 +405,37 @@ export default function Home() {
             </div>
           </Link>
 
+          {/* Chuck Wagons Banner */}
+          <Link to={createPageUrl('ChuckWagons')}>
+            <div className="relative bg-gradient-to-r from-red-800 via-red-700 to-amber-700 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer group border-2 border-red-600">
+              <div className="absolute inset-0 opacity-10 text-[180px] flex items-center justify-end pr-8 pointer-events-none select-none leading-none">
+                🚚
+              </div>
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 p-6 md:p-8">
+                <div className="flex items-center gap-4 text-white">
+                  <div className="w-14 h-14 bg-red-700/60 border-2 border-amber-300/40 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">
+                    🚚
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-amber-200 mb-0.5">Live Food Truck Map</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-white leading-tight" style={{ fontFamily: 'Rye, serif' }}>
+                      Cheyenne Chuck Wagons
+                    </h3>
+                    <p className="text-amber-100 text-sm mt-1">
+                      Track live food trucks · See who's serving now · Find your next meal on wheels
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center gap-2 bg-amber-400 group-hover:bg-amber-300 transition-colors text-amber-950 font-bold px-6 py-3 rounded-xl text-sm shadow-lg border-2 border-amber-200">
+                    <MapPin className="w-4 h-4" />
+                    Find a Chuck Wagon
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+
           {/* Big Boots Challenge */}
           <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-lg p-6 md:p-8 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 text-9xl opacity-10">👢</div>

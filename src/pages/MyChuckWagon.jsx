@@ -106,13 +106,13 @@ export default function MyChuckWagon() {
         end_time: stop.end_time,
         notes: stop.notes,
         is_public: true,
-        status: 'draft',
+        status: 'active',
         created_by_email: user.email,
         expires_at: last ? new Date(`${last}T${stop.end_time}:00`).toISOString() : null,
       });
     },
     onSuccess: () => {
-      toast.success('Stop submitted — it goes live once reviewed');
+      toast.success('Stop published — it is live on the map');
       setDraft(emptyStop);
       setShowForm(false);
       queryClient.invalidateQueries({ queryKey: ['myStops'] });
@@ -348,8 +348,8 @@ export default function MyChuckWagon() {
                 {addStopMutation.isPending ? 'Saving' : 'Submit stop'}
               </Button>
               <p className="text-xs text-stone-500">
-                Drop a pin by address, map tap, or GPS, then drag to fine-tune. New stops are
-                reviewed before they appear on the public map.
+                Drop a pin by address, map tap, or GPS, then drag to fine-tune. Stops go live on
+                the public map as soon as you submit them.
               </p>
             </div>
           )}

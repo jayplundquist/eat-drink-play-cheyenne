@@ -13,6 +13,7 @@ import { createPageUrl } from '@/utils';
 import { MapPin, Radio, Plus, Trash2, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import StopLocationPicker from '@/components/chuckwagons/StopLocationPicker';
+import BrandedPinCard from '@/components/chuckwagons/BrandedPinCard';
 
 const emptyStop = {
   location_label: '',
@@ -394,16 +395,8 @@ export default function MyChuckWagon() {
           )}
         </Card>
 
-        {/* Branded pin upsell */}
-        {!wagon.has_branded_pin && (
-          <Card className="p-6 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 mt-6">
-            <h3 className="font-semibold text-amber-900 mb-1">Put your logo on the map</h3>
-            <p className="text-sm text-amber-800">
-              Your pin shows a plain marker right now. Upgrade to show your logo instead, so
-              people spot you at a glance.
-            </p>
-          </Card>
-        )}
+        {/* Branded logo pin — purchase, upload, manage */}
+        <BrandedPinCard wagon={wagon} />
       </div>
     </div>
   );

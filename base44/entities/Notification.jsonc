@@ -12,7 +12,8 @@
         "review_reaction",
         "new_review_on_venue",
         "weekly_recommendation",
-        "weekly_digest"
+        "weekly_digest",
+        "branded_pin_logo"
       ],
       "description": "Type of notification"
     },

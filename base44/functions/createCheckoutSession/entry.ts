@@ -7,6 +7,7 @@ const PRICES = {
   venue_claim: 'price_1SvuhCGuyms0jVKHcSPJtHFA',
   venue_boost: 'price_1SvudtGuyms0jVKHy9nJZQ0J',
   review_boost: 'price_1SvudtGuyms0jVKHVfzFSuDp',
+  branded_pin: 'price_1UHG0YEKeDXy19QNYNlJUjtt',
 };
 
 Deno.serve(async (req) => {

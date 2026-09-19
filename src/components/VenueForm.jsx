@@ -779,6 +779,60 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
             </div>
           )}
 
+          {/* Branded Logo Pin — Admin Only */}
+          {venue && user?.role === 'admin' && (
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">📍</span>
+                <Label className="text-amber-900 font-semibold">Branded Logo Pin</Label>
+              </div>
+              <p className="text-sm text-amber-800">
+                Grant this chuck wagon a branded map pin, or revoke it. Revoking clears the
+                logo and reverts the pin to the default letter marker.
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  type="button"
+                  onClick={() => handleChange('has_branded_pin', !formData.has_branded_pin)}
+                  variant={formData.has_branded_pin ? 'default' : 'outline'}
+                  className={formData.has_branded_pin ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'border-amber-300 text-amber-800 hover:bg-amber-50'}
+                >
+                  {formData.has_branded_pin ? 'Branded pin unlocked ✓' : 'Unlock branded pin'}
+                </Button>
+                {formData.has_branded_pin && !formData.pin_logo_url && (
+                  <span className="text-xs text-amber-700">Unlocked, but no logo uploaded yet.</span>
+                )}
+              </div>
+              {formData.has_branded_pin && (
+                <div className="space-y-2">
+                  <Label htmlFor="pin_logo_url">Pin logo URL</Label>
+                  <Input
+                    id="pin_logo_url"
+                    value={formData.pin_logo_url || ''}
+                    onChange={(e) => handleChange('pin_logo_url', e.target.value)}
+                    placeholder="https://… (leave blank to revert to letter pin)"
+                  />
+                  {formData.pin_logo_url && (
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-white border-2 border-amber-300 overflow-hidden">
+                        <img src={formData.pin_logo_url} alt="Pin preview" className="w-full h-full object-cover" />
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="border-red-300 text-red-600 hover:bg-red-50"
+                        onClick={() => handleChange('pin_logo_url', '')}
+                      >
+                        Clear logo
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Advanced SEO Settings — Admin Only */}
           {user?.role === 'admin' && (
             <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 space-y-3">

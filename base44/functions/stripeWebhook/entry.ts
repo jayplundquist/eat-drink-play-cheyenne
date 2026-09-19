@@ -53,6 +53,14 @@ Deno.serve(async (req) => {
         });
         console.log(`Review ${review_id} boosted until ${boostExpiresDate}`);
       }
+
+      // Handle branded pin upgrade (one-time purchase)
+      if (type === 'branded_pin' && venue_id) {
+        await base44.asServiceRole.entities.Venue.update(venue_id, {
+          has_branded_pin: true,
+        });
+        console.log(`Branded pin unlocked for venue ${venue_id}`);
+      }
     }
 
     return Response.json({ received: true }, { status: 200 });

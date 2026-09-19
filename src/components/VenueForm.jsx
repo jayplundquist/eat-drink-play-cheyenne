@@ -370,49 +370,78 @@ export default function VenueForm({ venue, onSave, onCancel, isSaving, user, onI
                 />
           </div>
 
-          {/* Image & Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="image_url">Venue Image</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="image_url"
-                  type="text"
-                  value={formData.image_url || ''}
-                  onChange={(e) => handleChange('image_url', e.target.value)}
-                  placeholder="Or paste image URL"
-                  className="flex-1"
+          {/* Cover Photo */}
+          <div className="space-y-2">
+            <Label htmlFor="image_url">Cover Photo</Label>
+            <div className="relative w-full h-44 rounded-lg overflow-hidden border-2 border-dashed border-stone-300 bg-stone-50 group">
+              {formData.image_url ? (
+                <img
+                  src={formData.image_url}
+                  alt="Cover preview"
+                  className="w-full h-full object-cover"
                 />
-                <Button
+              ) : (
+                <button
                   type="button"
-                  variant="outline"
-                  disabled={uploading}
-                  className="relative border-amber-300 text-amber-700 hover:bg-amber-50"
                   onClick={() => document.getElementById('image-upload').click()}
+                  className="w-full h-full flex flex-col items-center justify-center gap-2 text-stone-400 hover:text-amber-700 hover:bg-amber-50/50 transition-colors"
                 >
                   {uploading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   ) : (
-                    <Upload className="w-4 h-4" />
+                    <Upload className="w-6 h-6" />
                   )}
-                </Button>
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </div>
-              {formData.image_url && (
-                <img 
-                  src={formData.image_url} 
-                  alt="Preview" 
-                  className="w-full h-32 object-cover rounded-md border-2 border-stone-200"
-                />
+                  <span className="text-sm font-medium">
+                    {uploading ? 'Uploading...' : 'Tap to upload a cover photo'}
+                  </span>
+                  <span className="text-xs">Landscape photos work best</span>
+                </button>
               )}
+              {formData.image_url && (
+                <>
+                  <button
+                    type="button"
+                    disabled={uploading}
+                    onClick={() => document.getElementById('image-upload').click()}
+                    className="absolute bottom-2 right-2 bg-amber-600 hover:bg-amber-700 text-white rounded-full p-2 shadow-sm transition-colors disabled:opacity-50"
+                    title="Change cover photo"
+                  >
+                    {uploading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Upload className="w-4 h-4" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('image_url', '')}
+                    className="absolute bottom-2 left-2 bg-white/90 hover:bg-white text-stone-700 rounded-full p-2 shadow-sm transition-colors"
+                    title="Remove cover photo"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </>
+              )}
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
             </div>
+            <Input
+              id="image_url"
+              type="text"
+              value={formData.image_url || ''}
+              onChange={(e) => handleChange('image_url', e.target.value)}
+              placeholder="Or paste an image URL"
+              className="text-sm"
+            />
+          </div>
 
+          {/* Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="price_range">Price Range</Label>
               <Select

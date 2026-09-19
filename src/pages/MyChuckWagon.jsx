@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { MapPin, Radio, Plus, Trash2, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import StopLocationPicker from '@/components/chuckwagons/StopLocationPicker';
 
 const emptyStop = {
   location_label: '',
@@ -287,34 +288,14 @@ export default function MyChuckWagon() {
                   onChange={(e) => setDraft({ ...draft, location_label: e.target.value })}
                 />
               </div>
-              <div>
-                <Label className="text-sm">Address</Label>
-                <Input
-                  placeholder="1621 Capitol Ave"
-                  value={draft.address}
-                  onChange={(e) => setDraft({ ...draft, address: e.target.value })}
-                />
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={locating}
-                  onClick={() =>
-                    captureLocation((coords) => setDraft({ ...draft, ...coords }))
-                  }
-                >
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Use my current spot
-                </Button>
-                {draft.lat && (
-                  <span className="text-xs text-stone-500">
-                    Pin set ({draft.lat.toFixed(4)}, {draft.lng.toFixed(4)})
-                  </span>
-                )}
-              </div>
+              <StopLocationPicker
+                value={{ address: draft.address, lat: draft.lat, lng: draft.lng }}
+                onChange={(v) =>
+                  setDraft((d) => ({ ...d, address: v.address, lat: v.lat, lng: v.lng }))
+                }
+                locating={locating}
+                onUseGps={() => captureLocation((coords) => setDraft((d) => ({ ...d, ...coords })))}
+              />
 
               <div>
                 <Label className="text-sm">Date</Label>
@@ -367,8 +348,8 @@ export default function MyChuckWagon() {
                 {addStopMutation.isPending ? 'Saving' : 'Submit stop'}
               </Button>
               <p className="text-xs text-stone-500">
-                Set the pin before submitting. New stops are reviewed before they appear on the
-                public map.
+                Drop a pin by address, map tap, or GPS, then drag to fine-tune. New stops are
+                reviewed before they appear on the public map.
               </p>
             </div>
           )}

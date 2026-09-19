@@ -14,7 +14,6 @@ import { MapPin, Radio, Plus, Trash2, ArrowLeft, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import StopLocationPicker from '@/components/chuckwagons/StopLocationPicker';
 import BrandedPinCard from '@/components/chuckwagons/BrandedPinCard';
-import WagonDetailsCard from '@/components/chuckwagons/WagonDetailsCard';
 
 const emptyStop = {
   location_label: '',
@@ -194,9 +193,6 @@ export default function MyChuckWagon() {
 
         <h1 className="text-3xl font-bold text-stone-900">{wagon.name}</h1>
         <p className="text-stone-600 mt-1 mb-6">Manage where you are and where you'll be.</p>
-
-        {/* Listing details — cover photo + website */}
-        <WagonDetailsCard wagon={wagon} />
 
         {/* Live status */}
         <Card className="p-6 bg-white mb-6">

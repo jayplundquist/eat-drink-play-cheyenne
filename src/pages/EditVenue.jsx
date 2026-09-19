@@ -94,28 +94,18 @@ export default function EditVenue() {
     );
   }
 
-  if (!user || user.role !== 'admin') {
+  if (!user) {
     return (
       <div className="min-h-screen bg-stone-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
-          <h1 className="text-2xl font-bold text-stone-800 mb-4">Admin Access Required</h1>
-          <p className="text-stone-600 mb-8">
-            {!user ? 'You need to sign in as an admin to edit venues' : 'Only administrators can edit venues'}
-          </p>
-          {!user ? (
-            <Button 
-              onClick={() => base44.auth.redirectToLogin()}
-              className="bg-amber-600 hover:bg-amber-700 text-white"
-            >
-              Sign In
-            </Button>
-          ) : (
-            <Link to={createPageUrl('Home')}>
-              <Button className="bg-amber-600 hover:bg-amber-700 text-white">
-                Back to Home
-              </Button>
-            </Link>
-          )}
+          <h1 className="text-2xl font-bold text-stone-800 mb-4">Sign In Required</h1>
+          <p className="text-stone-600 mb-8">You need to sign in to edit a venue.</p>
+          <Button 
+            onClick={() => base44.auth.redirectToLogin()}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            Sign In
+          </Button>
         </div>
       </div>
     );
@@ -128,6 +118,25 @@ export default function EditVenue() {
           <h1 className="text-2xl font-bold text-stone-800 mb-4">Venue not found</h1>
           <Link to={createPageUrl('ManageVenues')}>
             <Button variant="outline">Back to Manage</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const isOwner = venue.claimed_by === user.email;
+  if (user.role !== 'admin' && !isOwner) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <h1 className="text-2xl font-bold text-stone-800 mb-4">Not Your Venue</h1>
+          <p className="text-stone-600 mb-8">
+            Only an admin or the venue's claimed owner can edit this listing.
+          </p>
+          <Link to={createPageUrl(`VenueDetails?id=${venueId}`)}>
+            <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+              Back to Venue
+            </Button>
           </Link>
         </div>
       </div>

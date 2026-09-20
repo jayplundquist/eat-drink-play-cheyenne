@@ -55,14 +55,15 @@ function parseTimes(timeStr) {
   const endObj = ends.length > 0
     ? ends.reduce((a, b) => (a.h > b.h || (a.h === b.h && a.min >= b.min) ? a : b))
     : { h: 14, min: 0 };
-  const toHHMM = (obj, isEnd, startH) => {
-    let h = obj.h;
-    if (isEnd && h < startH) h += 12; // PM end
-    return `${String(h).padStart(2, '0')}:${String(obj.min).padStart(2, '0')}`;
-  };
+  // Garage sales never start 1-6 AM; those are PM start times.
+  let startH = startObj.h;
+  if (startH >= 1 && startH <= 6) startH += 12;
+  // End is PM if it's 1-6 (garage sales don't end 1-6 AM) or <= the original start hour.
+  let endH = endObj.h;
+  if (endH < 7 || endH <= startObj.h) endH += 12;
   return {
-    start_time: toHHMM(startObj, false, startObj.h),
-    end_time: toHHMM(endObj, true, startObj.h),
+    start_time: `${String(startH).padStart(2, '0')}:${String(startObj.min).padStart(2, '0')}`,
+    end_time: `${String(endH).padStart(2, '0')}:${String(endObj.min).padStart(2, '0')}`,
   };
 }
 
@@ -78,33 +79,45 @@ function parseAddress(anchorText) {
     const p = parts[i];
     if (/^\d{5}$/.test(p)) zip = p;
     else if (/^[A-Za-z]{2}$/.test(p) && p.length === 2) state = p.toUpperCase();
-    else if (p.toLowerCase() === 'in alley') note = 'Located in the alley';
+    else if (p.toLowerCase() === 'in alley' || p.toLowerCase() === 'inside') note = 'Located in the alley';
     else city = p;
   }
   return { street, city, state, zip, note };
 }
 
+async function geocodeOnce(query) {
+  const params = new URLSearchParams();
+  Object.entries(query).forEach(([k, v]) => { if (v) params.set(k, v); });
+  params.set('country', 'US');
+  params.set('format', 'json');
+  params.set('limit', '1');
+  params.set('addressdetails', '1');
+  const resp = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`, {
+    headers: {
+      'User-Agent': 'EatDrinkPlayCheyenne/1.0 (wyotraders-scraper)',
+      Accept: 'application/json',
+    },
+  });
+  if (!resp.ok) return null;
+  const data = await resp.json();
+  if (!data || data.length === 0) return null;
+  return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+}
+
 async function geocode(street, city, state, zip) {
   try {
-    const params = new URLSearchParams();
-    if (street) params.set('street', street);
-    if (city) params.set('city', city);
-    if (state) params.set('state', state);
-    if (zip) params.set('postalcode', zip);
-    params.set('country', 'US');
-    params.set('format', 'json');
-    params.set('limit', '1');
-    params.set('addressdetails', '1');
-    const resp = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`, {
-      headers: {
-        'User-Agent': 'EatDrinkPlayCheyenne/1.0 (wyotraders-scraper)',
-        Accept: 'application/json',
-      },
-    });
-    if (!resp.ok) return CHEYENNE_FALLBACK;
-    const data = await resp.json();
-    if (!data || data.length === 0) return CHEYENNE_FALLBACK;
-    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    // First attempt: full address.
+    let coords = await geocodeOnce({ street, city, state, postalcode: zip });
+    if (coords) return coords;
+    // Retry without zip (zip can confuse Nominatim for new subdivisions).
+    await new Promise((r) => setTimeout(r, 1100));
+    coords = await geocodeOnce({ street, city, state });
+    if (coords) return coords;
+    // Retry with just street + city.
+    await new Promise((r) => setTimeout(r, 1100));
+    coords = await geocodeOnce({ street, city });
+    if (coords) return coords;
+    return CHEYENNE_FALLBACK;
   } catch {
     return CHEYENNE_FALLBACK;
   }
@@ -176,21 +189,33 @@ export default async function(req: Request): Promise<Response> {
       return Response.json({ ok: true, created: 0, skipped: 0, message: 'No current listings found on the page.' });
     }
 
-    // 3. Dedup against existing sales (by street + first date)
+    // 3. Match listings against existing sales (by street + first date)
     const existing = await base44.asServiceRole.entities.GarageSale.list('-created_date', 500);
-    const seen = new Set();
+    const existingByKey = new Map();
     for (const s of existing) {
       const firstDate = (s.sale_dates || []).slice().sort()[0];
-      seen.add(`${(s.address || '').toLowerCase().trim()}|${firstDate || ''}`);
+      existingByKey.set(`${(s.address || '').toLowerCase().trim()}|${firstDate || ''}`, s);
     }
 
-    const toCreate = listings.filter((l) =>
-      !seen.has(`${l.address.toLowerCase().trim()}|${l.firstDate}`)
-    );
+    const toCreate = [];
+    const toUpdate = [];
+    for (const l of listings) {
+      const key = `${l.address.toLowerCase().trim()}|${l.firstDate}`;
+      const match = existingByKey.get(key);
+      if (!match) {
+        toCreate.push(l);
+      } else {
+        // Re-process existing sales that are ungeocoded or have AM-mistaken times.
+        const ungeocoded = match.lat === CHEYENNE_FALLBACK.lat && match.lng === CHEYENNE_FALLBACK.lng;
+        const badTimes = (match.start_time || '').startsWith('0') && parseInt(match.start_time, 10) < 7;
+        if (ungeocoded || badTimes) toUpdate.push({ listing: l, existing: match });
+      }
+    }
 
-    // 4. Geocode + create (sequential to respect Nominatim rate limit)
+    // 4. Geocode + create new sales (sequential to respect Nominatim rate limit)
     let created = 0;
     let skipped = 0;
+    let updated = 0;
     for (const l of toCreate) {
       const coords = await geocode(l.address, l.city, l.state, l.zip);
       const expires_at = new Date(`${l.sale_dates.slice().sort()[l.sale_dates.length - 1]}T${l.end_time}:00-06:00`).toISOString();
@@ -225,12 +250,34 @@ export default async function(req: Request): Promise<Response> {
       await new Promise((r) => setTimeout(r, 1100)); // Nominatim 1 req/sec
     }
 
+    // 5. Re-geocode + fix times on existing ungeocoded/mistimed sales
+    for (const { listing: l, existing: s } of toUpdate) {
+      const coords = await geocode(l.address, l.city, l.state, l.zip);
+      const expires_at = new Date(`${l.sale_dates.slice().sort()[l.sale_dates.length - 1]}T${l.end_time}:00-06:00`).toISOString();
+      try {
+        await base44.asServiceRole.entities.GarageSale.update(s.id, {
+          lat: coords.lat,
+          lng: coords.lng,
+          start_time: l.start_time,
+          end_time: l.end_time,
+          expires_at,
+          city: l.city,
+        });
+        updated++;
+      } catch (err) {
+        console.error('update failed for', l.address, err);
+        skipped++;
+      }
+      await new Promise((r) => setTimeout(r, 1100));
+    }
+
     return Response.json({
       ok: true,
       found: listings.length,
       created,
+      updated,
       skipped,
-      dedup_skipped: listings.length - toCreate.length,
+      dedup_skipped: listings.length - toCreate.length - toUpdate.length,
       status,
     });
   } catch (error) {

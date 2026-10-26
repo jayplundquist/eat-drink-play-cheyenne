@@ -30,6 +30,7 @@ import SuperBowlVenues from "../components/SuperBowlVenues";
 import SeoContent from "../components/SeoContent";
 import { CowboyBoot } from "../components/BootRating";
 import { useSEO } from "@/hooks/useSEO";
+import { matchesSearch } from "../lib/fuzzySearch";
 
 export default function Home() {
   useSEO({
@@ -198,22 +199,17 @@ export default function Home() {
     },
   });
 
-  const filteredBoots = boots.filter(boot => {
-    const searchLower = searchQuery.toLowerCase();
-    return !searchQuery ||
-      boot.name?.toLowerCase().includes(searchLower) ||
-      boot.address?.toLowerCase().includes(searchLower);
-  }).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
+  const filteredBoots = boots.filter(boot =>
+    matchesSearch(searchQuery, [boot.name, boot.address], [boot.name, boot.address])
+  ).sort((a, b) => (a.name || '').localeCompare((b.name || '')));
 
   const allFilteredVenues = venues.filter(venue => {
-    const searchLower = searchQuery.toLowerCase();
-    const matchesSearch = !searchQuery || 
-      venue.name?.toLowerCase().includes(searchLower) ||
-      venue.description?.toLowerCase().includes(searchLower) ||
-      venue.address?.toLowerCase().includes(searchLower) ||
-      (venue.categories || []).some(cat => cat.toLowerCase().includes(searchLower)) ||
-      (venue.food_types || []).some(type => type.toLowerCase().includes(searchLower)) ||
-      (venue.features || []).some(feat => feat.toLowerCase().includes(searchLower));
+    // Substring match across descriptive fields; typo-tolerant match on name/address.
+    const matchesQueryText = matchesSearch(
+      searchQuery,
+      [venue.name, venue.description, venue.address, ...(venue.categories || []), ...(venue.food_types || []), ...(venue.features || [])],
+      [venue.name, venue.address, venue.slug]
+    );
 
     const venueCategories = venue.categories || (venue.category ? [venue.category] : []);
     const tabCats = tabCategories[activeTab];
@@ -224,7 +220,7 @@ export default function Home() {
 
     const matchesPrice = !selectedPrice || venue.price_range === selectedPrice;
 
-    return matchesSearch && matchesTab && matchesRating && matchesPrice;
+    return matchesQueryText && matchesTab && matchesRating && matchesPrice;
   }).sort((a, b) => {
     if (a.permanently_closed !== b.permanently_closed) {
       return (a.permanently_closed ? 1 : 0) - (b.permanently_closed ? 1 : 0);

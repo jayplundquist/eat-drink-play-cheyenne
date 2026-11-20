@@ -286,7 +286,7 @@ export default function GarageSales() {
 
       {/* Persistent My Route bar */}
       {routeStops.length > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-40 px-3 pb-3 pt-6 bg-gradient-to-t from-amber-50/95 to-transparent pointer-events-none">
+        <div className="fixed bottom-0 inset-x-0 z-40 px-3 pb-3 pt-6 bg-gradient-to-t from-background/95 to-transparent pointer-events-none above-tabbar">
           <div className="max-w-6xl mx-auto pointer-events-auto bg-amber-800 text-white rounded-xl shadow-lg flex items-center gap-3 px-4 py-2.5">
             <RouteIcon className="w-5 h-5 text-amber-200 shrink-0" />
             <div className="flex-1 min-w-0">

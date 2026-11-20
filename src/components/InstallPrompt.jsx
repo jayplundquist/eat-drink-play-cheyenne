@@ -39,7 +39,7 @@ export default function InstallPrompt() {
   if (!showPrompt || isInstalled || !canInstall) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 max-w-sm">
+    <div className="fixed bottom-4 right-4 z-40 max-w-sm above-tabbar">
       <div className="bg-white rounded-lg shadow-lg border-2 border-amber-600 p-6 animate-in slide-in-from-bottom">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3 flex-1">

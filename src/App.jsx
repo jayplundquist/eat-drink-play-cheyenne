@@ -6,6 +6,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import ThemeProvider from '@/components/ThemeProvider';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import VenueDetailsSlug from './pages/VenueDetailsSlug';
 import CategoryLanding from './pages/CategoryLanding';
@@ -169,6 +170,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
+        <ThemeProvider>
         <Router>
           <NavigationTracker />
           {/* OAuth consent for the app's MCP server — mounted outside the auth
@@ -178,6 +180,7 @@ function App() {
           </Routes>
           <AuthenticatedApp />
         </Router>
+        </ThemeProvider>
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>

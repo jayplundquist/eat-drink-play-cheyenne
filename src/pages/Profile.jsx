@@ -15,6 +15,7 @@ import { createPageUrl } from "@/utils";
 import VenueCard from "../components/VenueCard";
 import BootRating from "../components/BootRating";
 import BadgeCollection from "../components/BadgeCollection";
+import AccountDeletionCard from "../components/profile/AccountDeletionCard";
 
 
 export default function Profile() {
@@ -451,6 +452,10 @@ export default function Profile() {
           </TabsContent>
 
           </Tabs>
+          </div>
+
+          <div className="mt-10">
+            <AccountDeletionCard />
           </div>
           </div>
           </div>

@@ -107,17 +107,24 @@ export default function GarageSales() {
       return;
     }
     const existing = favorites.find((f) => f.garage_sale_id === sale.id);
+    const previous = queryClient.getQueryData(['gs_favorites']);
+    queryClient.setQueryData(['gs_favorites'], (old = []) =>
+      existing
+        ? (old || []).filter((f) => f.garage_sale_id !== sale.id)
+        : [...(old || []), { id: `optimistic-${sale.id}`, garage_sale_id: sale.id, garage_sale_title: sale.title }]
+    );
+    toast.success(existing ? 'Removed from saved' : 'Saved!');
     try {
       if (existing) {
         await base44.entities.GarageSaleFavorite.delete(existing.id);
-        toast.success('Removed from saved');
       } else {
         await base44.entities.GarageSaleFavorite.create({ garage_sale_id: sale.id, garage_sale_title: sale.title });
-        toast.success('Saved!');
       }
-      queryClient.invalidateQueries(['gs_favorites']);
     } catch {
+      if (previous !== undefined) queryClient.setQueryData(['gs_favorites'], previous);
       toast.error('Could not save right now');
+    } finally {
+      queryClient.invalidateQueries(['gs_favorites']);
     }
   }, [user, favorites, queryClient]);
 

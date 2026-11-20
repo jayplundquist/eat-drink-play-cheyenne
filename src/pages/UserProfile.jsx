@@ -101,9 +101,30 @@ export default function UserProfile() {
         });
       }
     },
-    onSuccess: () => {
+    onMutate: async () => {
+      const key = ['userFollows', currentUser?.email, userEmail];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      const wasFollowing = (previous || userFollows).length > 0;
+      queryClient.setQueryData(key, wasFollowing ? [] : [{
+        id: `optimistic-${userEmail}`,
+        user_email: currentUser?.email,
+        following_email: userEmail,
+      }]);
+      return { previous, wasFollowing };
+    },
+    onError: (_error, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['userFollows', currentUser?.email, userEmail], context.previous);
+      }
+      toast.error('Could not update follow right now');
+    },
+    onSuccess: (_data, _vars, context) => {
+      toast.success(context?.wasFollowing ? 'Unfollowed' : 'Following!');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['userFollows'] });
-      toast.success(userFollows.length > 0 ? 'Unfollowed' : 'Following!');
+      queryClient.invalidateQueries({ queryKey: ['profileFollowers'] });
     },
   });
 

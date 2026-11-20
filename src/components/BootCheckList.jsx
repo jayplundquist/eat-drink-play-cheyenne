@@ -38,19 +38,60 @@ export default function BootCheckList({ user }) {
         visited_date: new Date().toISOString()
       });
     },
+    onMutate: async ({ bootName, address, photoUrl = null }) => {
+      const key = ['bootVisits', user?.email];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      queryClient.setQueryData(key, (old = []) => [
+        ...(old || []),
+        {
+          id: `optimistic-${bootName}`,
+          user_email: user?.email,
+          boot_name: bootName,
+          address,
+          photo_url: photoUrl,
+          visited_date: new Date().toISOString(),
+        },
+      ]);
+      return { previous };
+    },
+    onError: (_error, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['bootVisits', user?.email], context.previous);
+      }
+      toast.error('Could not add that boot');
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bootVisits'] });
       toast.success('Boot added to your collection! 🤠');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bootVisits'] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (visitId) => {
+      if (String(visitId).startsWith('optimistic-')) return;
       await base44.entities.BootVisit.delete(visitId);
     },
+    onMutate: async (visitId) => {
+      const key = ['bootVisits', user?.email];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      queryClient.setQueryData(key, (old = []) => (old || []).filter((visit) => visit.id !== visitId));
+      return { previous };
+    },
+    onError: (_error, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['bootVisits', user?.email], context.previous);
+      }
+      toast.error('Could not remove that boot');
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bootVisits'] });
       toast.success('Removed from your collection');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bootVisits'] });
     },
   });
 

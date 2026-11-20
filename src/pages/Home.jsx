@@ -224,7 +224,25 @@ export default function Home() {
         await base44.entities.Favorite.create({ venue_id: venueId, user_email: user.email });
       }
     },
-    onSuccess: () => {
+    onMutate: async (venueId) => {
+      const key = ['userFavorites', user?.email];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      const existing = (previous || userFavorites).find(f => f.venue_id === venueId);
+      queryClient.setQueryData(key, (old = []) =>
+        existing
+          ? (old || []).filter(f => f.venue_id !== venueId)
+          : [...(old || []), { id: `optimistic-${venueId}`, venue_id: venueId, user_email: user?.email }]
+      );
+      return { previous };
+    },
+    onError: (_error, _venueId, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['userFavorites', user?.email], context.previous);
+      }
+      toast.error('Could not update your favorites');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
       queryClient.invalidateQueries({ queryKey: ['userFavorites'] });
     },

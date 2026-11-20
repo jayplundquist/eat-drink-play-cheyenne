@@ -9,6 +9,7 @@ import ActivityFeedItem from '../components/ActivityFeedItem';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -274,6 +275,7 @@ export default function ActivityFeed() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-amber-900 mb-6" style={{ fontFamily: 'Rye, serif' }}>
           The Hitching Post

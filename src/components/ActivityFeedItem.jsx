@@ -165,12 +165,13 @@ export default function ActivityFeedItem({
                         {currentUser?.role === 'admin' && (
                           <button
                             type="button"
+                            aria-label="Delete photo"
                             onClick={() => {
                               if (confirm('Delete this photo?')) {
                                 deletePhotoMutation.mutate({ reviewId: item.data.id, photoUrl: url });
                               }
                             }}
-                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                           >
                             ×
                           </button>

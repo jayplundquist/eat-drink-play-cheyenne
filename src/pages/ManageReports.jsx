@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Flag, Trash2, CheckCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -17,11 +17,12 @@ export default function ManageReports() {
   const [reportStatus, setReportStatus] = useState('pending');
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   useEffect(() => {
     base44.auth.me().then(user => {
       if (!user || user.role !== 'admin') {
-        window.location.href = createPageUrl('Home');
+        navigate(createPageUrl('Home'));
       }
       setUser(user);
     });

@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueForm from "../components/VenueForm";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 export default function EditVenue() {
   const urlParams = new URLSearchParams(window.location.search);
   const venueId = urlParams.get('id');
+  const navigate = useNavigate();
   
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ export default function EditVenue() {
     },
     onSuccess: () => {
       toast.success('Venue updated successfully!');
-      window.location.href = createPageUrl(`VenueDetails?id=${venueId}`);
+      navigate(createPageUrl(`VenueDetails?id=${venueId}`));
     },
   });
 
@@ -57,7 +58,7 @@ export default function EditVenue() {
     },
     onSuccess: () => {
       toast.success('Venue deleted successfully');
-      window.location.href = createPageUrl('ManageVenues');
+      navigate(createPageUrl('ManageVenues'));
     },
   });
 
@@ -166,7 +167,7 @@ export default function EditVenue() {
          <VenueForm
            venue={venue}
            onSave={(data) => updateVenueMutation.mutate(data)}
-           onCancel={() => window.location.href = createPageUrl(`VenueDetails?id=${venueId}`)}
+           onCancel={() => navigate(createPageUrl(`VenueDetails?id=${venueId}`))}
            isSaving={updateVenueMutation.isPending}
            user={user}
            onInitiateBoostCheckout={initiateBoostCheckout}

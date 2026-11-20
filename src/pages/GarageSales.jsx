@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
@@ -59,6 +60,8 @@ export default function GarageSales() {
   useEffect(() => {
     localStorage.setItem('gs_route_stops', JSON.stringify(routeStops));
   }, [routeStops]);
+
+  const navigate = useNavigate();
 
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['garageSales'],
@@ -160,7 +163,7 @@ export default function GarageSales() {
 
   const handleAddSale = () => {
     if (!user) base44.auth.redirectToLogin(window.location.href);
-    else window.location.href = '/AddGarageSale';
+    else navigate('/AddGarageSale');
   };
 
   return (

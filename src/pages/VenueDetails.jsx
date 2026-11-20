@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BackButton from "@/components/BackButton";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
@@ -193,7 +194,25 @@ export default function VenueDetails({ venueId: propVenueId }) {
         await base44.entities.Favorite.create({ venue_id: venueId, user_email: user.email });
       }
     },
-    onSuccess: () => {
+    onMutate: async () => {
+      const key = ['favorites', user?.email];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      const existing = (previous || favorites).find(f => f.venue_id === venueId);
+      queryClient.setQueryData(key, (old = []) =>
+        existing
+          ? (old || []).filter(f => f.venue_id !== venueId)
+          : [...(old || []), { id: `optimistic-${venueId}`, venue_id: venueId, user_email: user?.email }]
+      );
+      return { previous };
+    },
+    onError: (_error, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['favorites', user?.email], context.previous);
+      }
+      toast.error('Could not update your favorites');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
     },
   });
@@ -247,6 +266,27 @@ export default function VenueDetails({ venueId: propVenueId }) {
         });
       }
     },
+    onMutate: async () => {
+      const key = ['ratings', venueId];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      const optimistic = {
+        id: userRating?.id || `optimistic-${venueId}`,
+        venue_id: venueId,
+        user_email: user?.email,
+        boots: newRating,
+        comment: newComment,
+        image_urls: reviewImages,
+        created_date: userRating?.created_date || new Date().toISOString(),
+      };
+      queryClient.setQueryData(key, (old = []) => {
+        const list = old || [];
+        return userRating
+          ? list.map(r => (r.id === userRating.id ? { ...r, ...optimistic } : r))
+          : [optimistic, ...list];
+      });
+      return { previous };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ratings', venueId] });
       queryClient.invalidateQueries({ queryKey: ['venue', venueId] });
@@ -256,7 +296,10 @@ export default function VenueDetails({ venueId: propVenueId }) {
       setReviewImages([]);
       toast.success('Review submitted successfully');
     },
-    onError: (error) => {
+    onError: (error, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['ratings', venueId], context.previous);
+      }
       toast.error(error.message);
     },
   });
@@ -409,6 +452,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
 
   return (
     <div className="min-h-screen bg-stone-50">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       {/* Header Image */}
       {venue.image_url && !imageLoadError && (
         <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
@@ -672,7 +716,8 @@ export default function VenueDetails({ venueId: propVenueId }) {
                             <button
                               type="button"
                               onClick={() => removeImage(index)}
-                              className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                              aria-label="Remove photo"
+                              className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                             >
                               ×
                             </button>
@@ -783,6 +828,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
                                 <Button
                                   variant="ghost"
                                   size="sm"
+                                  aria-label="Report this review"
                                   onClick={() => {
                                     setSelectedReviewId(rating.id);
                                     setReportReviewDialogOpen(true);
@@ -825,7 +871,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
                                         setSelectedPhotoUrl(url);
                                         setReportPhotoDialogOpen(true);
                                       }}
-                                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded px-1.5 py-0.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded px-1.5 py-0.5 text-xs opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                                     >
                                       Report
                                     </button>
@@ -833,12 +879,13 @@ export default function VenueDetails({ venueId: propVenueId }) {
                                   {user && user.role === 'admin' && (
                                     <button
                                       type="button"
+                                      aria-label="Delete photo"
                                       onClick={() => {
                                         if (confirm('Delete this photo?')) {
                                           deletePhotoFromReviewMutation.mutate(rating.id, url);
                                         }
                                       }}
-                                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                                     >
                                       ×
                                     </button>

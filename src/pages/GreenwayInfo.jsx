@@ -4,6 +4,8 @@ import { createPageUrl } from '@/utils';
 import { MapPin, Navigation, Footprints, TreePine, Clock, Bike } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSEO } from '@/hooks/useSEO';
+import { useQueryClient } from '@tanstack/react-query';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const TRAILS = [
   {
@@ -118,6 +120,7 @@ const FACTS = [
 ];
 
 export default function GreenwayInfo() {
+  const queryClient = useQueryClient();
   useSEO({
     title: 'Greater Cheyenne Greenway Guide | Trails, Maps & Walking Routes',
     description: 'Explore the Greater Cheyenne Greenway with 47 miles of paved trails, trail maps, parking tips, nearby restaurants, dog-friendly routes, and family-friendly walking ideas in Cheyenne, Wyoming.',
@@ -133,6 +136,7 @@ export default function GreenwayInfo() {
 
   return (
     <div className="min-h-screen bg-amber-50">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
 
       {/* Hero */}
       <div className="relative bg-gradient-to-br from-green-900 via-green-800 to-teal-900 text-white overflow-hidden">

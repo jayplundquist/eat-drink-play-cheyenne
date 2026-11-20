@@ -9,6 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
@@ -176,6 +177,7 @@ export default function GarageSaleDetail() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 pb-20">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       <Link to="/GarageSales" className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 hover:text-amber-900 hover:underline mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Garage Sale Map

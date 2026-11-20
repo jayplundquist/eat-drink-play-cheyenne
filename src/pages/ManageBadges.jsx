@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Plus, Trash2, Edit2, Check, X, Upload, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BackButton from "@/components/BackButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 
@@ -21,11 +21,12 @@ export default function ManageBadges() {
   const [newBadge, setNewBadge] = useState({ name: '', type: 'review', description: '', min_count: 1, icon_url: '' });
   const [editBadge, setEditBadge] = useState({ name: '', type: 'review', description: '', min_count: 1, icon_url: '' });
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     base44.auth.me().then(u => {
       if (u?.role !== 'admin') {
-        window.location.href = createPageUrl('Home');
+        navigate(createPageUrl('Home'));
       }
       setUser(u);
     }).catch(() => base44.auth.redirectToLogin());

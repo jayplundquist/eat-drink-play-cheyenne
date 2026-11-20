@@ -113,6 +113,7 @@ export default function SuperBowlVenues({ venues, favorites, user, onToggleFavor
                         e.preventDefault();
                         onToggleFavorite(currentVenue.id);
                       }}
+                      aria-label={isFavorite(currentVenue.id) ? 'Remove from favorites' : 'Save to favorites'}
                       className="flex-shrink-0 hover:bg-yellow-200 p-2 rounded transition-colors"
                     >
                       <Heart

@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueForm from "../components/VenueForm";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 
 export default function AddVenue() {
+  const navigate = useNavigate();
   useSEO({
     title: 'Add a Venue to Eat, Drink, Play Cheyenne',
     description: 'Submit a Cheyenne restaurant, bar, event space, activity, or local business to Eat, Drink, Play Cheyenne and help locals discover new spots.',
@@ -66,7 +67,7 @@ export default function AddVenue() {
     }),
     onSuccess: () => {
       toast.success('Venue created successfully!');
-      window.location.href = createPageUrl('ManageVenues');
+      navigate(createPageUrl('ManageVenues'));
     },
   });
 
@@ -140,7 +141,7 @@ export default function AddVenue() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <VenueForm
           onSave={(data) => createVenueMutation.mutate(data)}
-          onCancel={() => window.location.href = createPageUrl('ManageVenues')}
+          onCancel={() => navigate(createPageUrl('ManageVenues'))}
           isSaving={createVenueMutation.isPending}
         />
       </div>

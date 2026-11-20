@@ -281,6 +281,7 @@ export default function ReviewActions({ ratingId, reviewUserId, currentUserEmail
                       variant="ghost"
                       size="icon"
                       onClick={() => deleteCommentMutation.mutate(comment.id)}
+                      aria-label="Delete comment"
                       className="h-6 w-6 text-rose-500 hover:text-rose-700"
                     >
                       <Trash2 className="w-3 h-3" />

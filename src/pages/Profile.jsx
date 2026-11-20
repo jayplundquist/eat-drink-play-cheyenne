@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User, Heart, Star, Edit2, Save, X, Camera, Loader2, Map, CreditCard } from "lucide-react";
 import { toast } from "sonner";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VenueCard from "../components/VenueCard";
@@ -116,7 +117,25 @@ export default function Profile() {
         await base44.entities.Favorite.create({ venue_id: venueId, user_email: user.email });
       }
     },
-    onSuccess: () => {
+    onMutate: async (venueId) => {
+      const key = ['userFavorites', user?.email];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData(key);
+      const existing = (previous || userFavorites).find(f => f.venue_id === venueId);
+      queryClient.setQueryData(key, (old = []) =>
+        existing
+          ? (old || []).filter(f => f.venue_id !== venueId)
+          : [...(old || []), { id: `optimistic-${venueId}`, venue_id: venueId, user_email: user?.email }]
+      );
+      return { previous };
+    },
+    onError: (_error, _venueId, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['userFavorites', user?.email], context.previous);
+      }
+      toast.error('Could not update your favorites');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['userFavorites'] });
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
     },
@@ -163,6 +182,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-stone-50 py-12">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Profile Header */}
         <motion.div

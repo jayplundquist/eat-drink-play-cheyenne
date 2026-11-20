@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Camera, Loader2, X, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import BootMap from "./BootMap";
+const BootMap = lazy(() => import('./BootMap'));
 
 export default function BootCheckList({ user }) {
   const [uploadingBoot, setUploadingBoot] = useState(null);
@@ -202,13 +202,15 @@ export default function BootCheckList({ user }) {
       {!geocodingLoading && bootsWithCoords.length > 0 && (
         <div>
           <h3 className="text-xl font-bold text-stone-800 mb-3">Find the Nearest Boot</h3>
-          <BootMap
-            boots={bootsWithCoords}
-            user={user}
-            onRecordVisit={startPhotoUpload}
-            onBootMove={handleBootMove}
-            movingBoot={moveBootMutation.isPending ? moveBootMutation.variables?.id : null}
-          />
+          <Suspense fallback={<div className="w-full h-[400px] flex items-center justify-center bg-stone-100 text-stone-500 rounded-lg">Loading map…</div>}>
+            <BootMap
+              boots={bootsWithCoords}
+              user={user}
+              onRecordVisit={startPhotoUpload}
+              onBootMove={handleBootMove}
+              movingBoot={moveBootMutation.isPending ? moveBootMutation.variables?.id : null}
+            />
+          </Suspense>
         </div>
       )}
       

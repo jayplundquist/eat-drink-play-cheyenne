@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Truck, Clock, MapPin, ChevronRight } from 'lucide-react';
-import ChuckWagonMap from '@/components/chuckwagons/ChuckWagonMap';
+const ChuckWagonMap = lazy(() => import('@/components/chuckwagons/ChuckWagonMap'));
 import ChuckWagonStatusBanner, {
   isStale,
   relativeTime,
@@ -235,7 +235,9 @@ export default function ChuckWagons() {
       {/* Map */}
       <div className="max-w-6xl mx-auto py-6">
         <Card className="overflow-hidden border-stone-200">
-          <ChuckWagonMap />
+          <Suspense fallback={<div className="w-full h-[400px] flex items-center justify-center bg-stone-100 text-stone-500">Loading map…</div>}>
+            <ChuckWagonMap />
+          </Suspense>
         </Card>
       </div>
 

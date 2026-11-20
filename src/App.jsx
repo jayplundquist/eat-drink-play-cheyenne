@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -8,43 +9,46 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import ThemeProvider from '@/components/ThemeProvider';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import VenueDetailsSlug from './pages/VenueDetailsSlug';
-import CategoryLanding from './pages/CategoryLanding';
-import OAuthConsent from './pages/OAuthConsent';
+import PageLoader from '@/components/PageLoader';
+// Every route loads its own chunk, so a screen's code is only downloaded when
+// it is actually opened.
+const VenueDetailsSlug = lazy(() => import('./pages/VenueDetailsSlug'));
+const CategoryLanding = lazy(() => import('./pages/CategoryLanding'));
+const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 // Internal / admin / app-user pages — kept out of pages.config so the platform's
 // public page directory never lists them. Wired here as explicit routes.
-import ActivityFeed from './pages/ActivityFeed';
-import Analytics from './pages/Analytics';
-import EditVenue from './pages/EditVenue';
-import Favorites from './pages/Favorites';
-import ManageBadges from './pages/ManageBadges';
-import ManageBoots from './pages/ManageBoots';
-import ManageClaimRequests from './pages/ManageClaimRequests';
-import MyChuckWagon from './pages/MyChuckWagon';
-import ChuckWagons from './pages/ChuckWagons';
-import ManageChuckWagonStops from './pages/ManageChuckWagonStops';
-import BackfillVenueCoords from './pages/BackfillVenueCoords';
-import ManageGameSettings from './pages/ManageGameSettings';
-import ManageReports from './pages/ManageReports';
-import ManageVenueOptions from './pages/ManageVenueOptions';
-import ManageVenues from './pages/ManageVenues';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import UserProfile from './pages/UserProfile';
-import GarageSales from './pages/GarageSales';
-import GarageSaleDetail from './pages/GarageSaleDetail';
-import AddGarageSale from './pages/AddGarageSale';
-import MyGarageSales from './pages/MyGarageSales';
-import ManageGarageSales from './pages/ManageGarageSales';
-import ImportGarageSale from './pages/ImportGarageSale';
-import GarageSaleDrafts from './pages/GarageSaleDrafts';
-import About from './pages/About';
-import BootFinder from './pages/BootFinder';
-import BootHighScores from './pages/BootHighScores';
-import Connect from './pages/Connect';
-import ManageNotifications from './pages/ManageNotifications';
-import ManageFacebookPosts from './pages/ManageFacebookPosts';
-import Unsubscribe from './pages/Unsubscribe';
+const ActivityFeed = lazy(() => import('./pages/ActivityFeed'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const EditVenue = lazy(() => import('./pages/EditVenue'));
+const Favorites = lazy(() => import('./pages/Favorites'));
+const ManageBadges = lazy(() => import('./pages/ManageBadges'));
+const ManageBoots = lazy(() => import('./pages/ManageBoots'));
+const ManageClaimRequests = lazy(() => import('./pages/ManageClaimRequests'));
+const MyChuckWagon = lazy(() => import('./pages/MyChuckWagon'));
+const ChuckWagons = lazy(() => import('./pages/ChuckWagons'));
+const ManageChuckWagonStops = lazy(() => import('./pages/ManageChuckWagonStops'));
+const BackfillVenueCoords = lazy(() => import('./pages/BackfillVenueCoords'));
+const ManageGameSettings = lazy(() => import('./pages/ManageGameSettings'));
+const ManageReports = lazy(() => import('./pages/ManageReports'));
+const ManageVenueOptions = lazy(() => import('./pages/ManageVenueOptions'));
+const ManageVenues = lazy(() => import('./pages/ManageVenues'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Settings = lazy(() => import('./pages/Settings'));
+const UserProfile = lazy(() => import('./pages/UserProfile'));
+const GarageSales = lazy(() => import('./pages/GarageSales'));
+const GarageSaleDetail = lazy(() => import('./pages/GarageSaleDetail'));
+const AddGarageSale = lazy(() => import('./pages/AddGarageSale'));
+const MyGarageSales = lazy(() => import('./pages/MyGarageSales'));
+const ManageGarageSales = lazy(() => import('./pages/ManageGarageSales'));
+const ImportGarageSale = lazy(() => import('./pages/ImportGarageSale'));
+const GarageSaleDrafts = lazy(() => import('./pages/GarageSaleDrafts'));
+const About = lazy(() => import('./pages/About'));
+const BootFinder = lazy(() => import('./pages/BootFinder'));
+const BootHighScores = lazy(() => import('./pages/BootHighScores'));
+const Connect = lazy(() => import('./pages/Connect'));
+const ManageNotifications = lazy(() => import('./pages/ManageNotifications'));
+const ManageFacebookPosts = lazy(() => import('./pages/ManageFacebookPosts'));
+const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -59,11 +63,7 @@ const AuthenticatedApp = () => {
 
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Handle authentication errors
@@ -79,7 +79,8 @@ const AuthenticatedApp = () => {
 
   // Render the main app
   return (
-    <Routes>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
       <Route path="/" element={
         <LayoutWrapper currentPageName={mainPageKey}>
           <MainPage />
@@ -160,7 +161,8 @@ const AuthenticatedApp = () => {
         </LayoutWrapper>
       } />
       <Route path="*" element={<PageNotFound />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 };
 
@@ -175,9 +177,11 @@ function App() {
           <NavigationTracker />
           {/* OAuth consent for the app's MCP server — mounted outside the auth
               guard so the page can handle the signed-out case and preserve ctx. */}
-          <Routes>
-            <Route path="/oauth/consent" element={<OAuthConsent />} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/oauth/consent" element={<OAuthConsent />} />
+            </Routes>
+          </Suspense>
           <AuthenticatedApp />
         </Router>
         </ThemeProvider>

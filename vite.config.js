@@ -15,5 +15,16 @@ export default defineConfig({
       visualEditAgent: true
     }),
     react(),
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      output: {
+        // Keep the map stack (Leaflet) in its own chunk so it is only
+        // downloaded by the screens that actually render a map.
+        manualChunks: {
+          maps: ['leaflet', 'react-leaflet'],
+        },
+      },
+    },
+  },
 });

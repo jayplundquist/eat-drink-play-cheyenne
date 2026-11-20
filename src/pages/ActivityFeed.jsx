@@ -14,7 +14,6 @@ export default function ActivityFeed() {
   const [currentUser, setCurrentUser] = useState(null);
   const [searchEmail, setSearchEmail] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const [loadStage, setLoadStage] = useState(0);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -25,24 +24,12 @@ export default function ActivityFeed() {
       });
   }, []);
 
-  // Stagger query loading to prevent rate limits
-  useEffect(() => {
-    if (!currentUser) return;
-    const timer1 = setTimeout(() => setLoadStage(1), 500);
-    const timer2 = setTimeout(() => setLoadStage(2), 2000);
-    const timer3 = setTimeout(() => setLoadStage(3), 3500);
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [currentUser]);
-
-  // Staggered loading to prevent rate limits
+  // One limited query per entity. staleTime/gcTime keep navigating back here
+  // from refetching everything again.
   const { data: follows = [] } = useQuery({
     queryKey: ['follows', currentUser?.email],
     queryFn: () => base44.entities.Follow.filter({ user_email: currentUser?.email }),
-    enabled: !!currentUser?.email && loadStage >= 0,
+    enabled: !!currentUser?.email,
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     refetchOnMount: false,
@@ -51,7 +38,7 @@ export default function ActivityFeed() {
   });
 
   const { data: allVenues = [] } = useQuery({
-    queryKey: ['venues'],
+    queryKey: ['activityVenues'],
     queryFn: async () => {
       const venues = await base44.entities.Venue.list('-created_date', 50);
       return venues;
@@ -61,7 +48,7 @@ export default function ActivityFeed() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    enabled: !!currentUser?.email && loadStage >= 1,
+    enabled: !!currentUser?.email,
   });
 
   const { data: allRatings = [] } = useQuery({
@@ -72,13 +59,13 @@ export default function ActivityFeed() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    enabled: !!currentUser?.email && loadStage >= 2,
+    enabled: !!currentUser?.email,
   });
 
   const { data: allFavorites = [] } = useQuery({
     queryKey: ['recentFavorites'],
     queryFn: () => base44.entities.Favorite.list('-created_date', 3),
-    enabled: !!currentUser?.email && follows.length > 0 && loadStage >= 3,
+    enabled: !!currentUser?.email && follows.length > 0,
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     refetchOnMount: false,
@@ -89,7 +76,7 @@ export default function ActivityFeed() {
   const { data: allBootShares = [] } = useQuery({
     queryKey: ['recentBootShares'],
     queryFn: () => base44.entities.BootShare.list('-shared_date', 3),
-    enabled: !!currentUser?.email && follows.length > 0 && loadStage >= 3,
+    enabled: !!currentUser?.email && follows.length > 0,
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     refetchOnMount: false,
@@ -100,7 +87,7 @@ export default function ActivityFeed() {
   const { data: allUsers = [] } = useQuery({
     queryKey: ['searchUsers'],
     queryFn: () => base44.entities.User.list('-created_date', 20),
-    enabled: searchEmail.length > 2 && loadStage >= 3,
+    enabled: searchEmail.length > 2,
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     refetchOnMount: false,

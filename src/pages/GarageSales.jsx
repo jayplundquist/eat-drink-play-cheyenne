@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
 import { base44 } from '@/api/base44Client';
@@ -8,7 +8,7 @@ import { Plus, Map as MapIcon, List, Route as RouteIcon, Heart, ArrowRight, Spar
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSEO } from '@/hooks/useSEO';
-import GarageSaleMap from '@/components/garagesales/GarageSaleMap';
+const GarageSaleMap = lazy(() => import('@/components/garagesales/GarageSaleMap'));
 import GarageSaleCard from '@/components/garagesales/GarageSaleCard';
 import GarageSaleFilters from '@/components/garagesales/GarageSaleFilters';
 import RouteBuilder from '@/components/garagesales/RouteBuilder';
@@ -252,17 +252,19 @@ export default function GarageSales() {
               {isLoading ? (
                 <div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-500">Loading map…</div>
               ) : (
-                <GarageSaleMap
-                  sales={filtered}
-                  selectedSale={selectedSale}
-                  onSelectSale={(s) => { setSelectedSale(s); setFocusTarget(getDisplayCoords(s)); }}
-                  onCloseSale={() => { setSelectedSale(null); setFocusTarget(null); }}
-                  savedIds={savedIds}
-                  routeNumberById={routeNumberById}
-                  routeStopIds={routeStops.map((s) => s.id)}
-                  routePoints={routePoints}
-                  focusTarget={focusTarget}
-                />
+                <Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-500">Loading map…</div>}>
+                  <GarageSaleMap
+                    sales={filtered}
+                    selectedSale={selectedSale}
+                    onSelectSale={(s) => { setSelectedSale(s); setFocusTarget(getDisplayCoords(s)); }}
+                    onCloseSale={() => { setSelectedSale(null); setFocusTarget(null); }}
+                    savedIds={savedIds}
+                    routeNumberById={routeNumberById}
+                    routeStopIds={routeStops.map((s) => s.id)}
+                    routePoints={routePoints}
+                    focusTarget={focusTarget}
+                  />
+                </Suspense>
               )}
             </div>
           </div>

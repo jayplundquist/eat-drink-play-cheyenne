@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ import { createPageUrl } from '@/utils';
 import { MapPin, Radio, Plus, Trash2, ArrowLeft, Loader2 } from 'lucide-react';
 import BackButton from '@/components/BackButton';
 import { toast } from 'sonner';
-import StopLocationPicker from '@/components/chuckwagons/StopLocationPicker';
+const StopLocationPicker = lazy(() => import('@/components/chuckwagons/StopLocationPicker'));
 import BrandedPinCard from '@/components/chuckwagons/BrandedPinCard';
 
 const emptyStop = {
@@ -285,14 +285,16 @@ export default function MyChuckWagon() {
                   onChange={(e) => setDraft({ ...draft, location_label: e.target.value })}
                 />
               </div>
-              <StopLocationPicker
-                value={{ address: draft.address, lat: draft.lat, lng: draft.lng }}
-                onChange={(v) =>
-                  setDraft((d) => ({ ...d, address: v.address, lat: v.lat, lng: v.lng }))
-                }
-                locating={locating}
-                onUseGps={() => captureLocation((coords) => setDraft((d) => ({ ...d, ...coords })))}
-              />
+              <Suspense fallback={<div className="w-full h-[220px] flex items-center justify-center bg-stone-100 text-stone-500 rounded-md">Loading map…</div>}>
+                <StopLocationPicker
+                  value={{ address: draft.address, lat: draft.lat, lng: draft.lng }}
+                  onChange={(v) =>
+                    setDraft((d) => ({ ...d, address: v.address, lat: v.lat, lng: v.lng }))
+                  }
+                  locating={locating}
+                  onUseGps={() => captureLocation((coords) => setDraft((d) => ({ ...d, ...coords })))}
+                />
+              </Suspense>
 
               <div>
                 <Label className="text-sm">Date</Label>

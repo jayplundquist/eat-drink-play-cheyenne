@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import PullToRefresh from "@/components/mobile/PullToRefresh";
 import VenueCard from "../components/VenueCard";
-import FavoritesMap from "../components/FavoritesMap";
+const FavoritesMap = lazy(() => import('../components/FavoritesMap'));
 
 export default function Favorites() {
   const [user, setUser] = useState(null);
@@ -164,7 +164,9 @@ export default function Favorites() {
             </Link>
           </div>
         ) : view === 'map' ? (
-          <FavoritesMap user={user} favoriteVenues={favoriteVenues} />
+          <Suspense fallback={<div className="w-full h-[60vh] flex items-center justify-center bg-stone-100 text-stone-500 rounded-xl">Loading map…</div>}>
+            <FavoritesMap user={user} favoriteVenues={favoriteVenues} />
+          </Suspense>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {favoriteVenues.map((venue, i) => (

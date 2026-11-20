@@ -10,15 +10,18 @@
  * fully functional for logged-in users but are never exposed in the public
  * page registry. Layout.jsx also applies `noindex, nofollow` to them.
  *
+ * Pages are loaded with React.lazy so each one ships in its own chunk.
  * THE ONLY EDITABLE VALUE: mainPage (which page loads at "/").
  */
-import Home from './pages/Home';
-import AddVenue from './pages/AddVenue';
-import GreenwayGuide from './pages/GreenwayGuide';
-import GreenwayInfo from './pages/GreenwayInfo';
-import SuperBowlWatchParty from './pages/SuperBowlWatchParty';
-import VenueDetails from './pages/VenueDetails';
+import { lazy } from 'react';
 import __Layout from './Layout.jsx';
+
+const Home = lazy(() => import('./pages/Home'));
+const AddVenue = lazy(() => import('./pages/AddVenue'));
+const GreenwayGuide = lazy(() => import('./pages/GreenwayGuide'));
+const GreenwayInfo = lazy(() => import('./pages/GreenwayInfo'));
+const SuperBowlWatchParty = lazy(() => import('./pages/SuperBowlWatchParty'));
+const VenueDetails = lazy(() => import('./pages/VenueDetails'));
 
 
 export const PAGES = {

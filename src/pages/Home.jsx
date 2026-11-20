@@ -62,6 +62,10 @@ export default function Home() {
   const { data: customOptions = [] } = useQuery({
     queryKey: ['customVenueOptions'],
     queryFn: () => base44.entities.CustomVenueOption.list(),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const builtInTabCategories = {
@@ -93,33 +97,71 @@ export default function Home() {
     }, []);
 
   const { data: venues = [], isLoading: venuesLoading } = useQuery({
-    queryKey: ['venues'],
+    queryKey: ['venues', 'directory'],
     queryFn: async () => {
-      const allVenues = await base44.entities.Venue.list('-created_date', 10000);
+      // One bounded page of venues; the directory paginates what it gets.
+      const allVenues = await base44.entities.Venue.list('-created_date', 500);
       return allVenues.sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' }));
     },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
 
 
+  // Content below the fold starts loading after the first paint instead of
+  // competing with the venue directory for the first screen.
+  const [showSecondary, setShowSecondary] = useState(false);
+  useEffect(() => {
+    const handle = window.requestIdleCallback
+      ? window.requestIdleCallback(() => setShowSecondary(true), { timeout: 800 })
+      : setTimeout(() => setShowSecondary(true), 250);
+    return () => {
+      window.cancelIdleCallback?.(handle);
+      clearTimeout(handle);
+    };
+  }, []);
+
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites'],
-    queryFn: () => base44.entities.Favorite.list(),
+    queryFn: () => base44.entities.Favorite.list('-created_date', 500),
+    enabled: showSecondary,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: userFavorites = [] } = useQuery({
     queryKey: ['userFavorites', user?.email],
     queryFn: () => user ? base44.entities.Favorite.filter({ user_email: user.email }) : Promise.resolve([]),
+    enabled: !!user,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: userRatings = [] } = useQuery({
     queryKey: ['userRatings', user?.email],
     queryFn: () => user ? base44.entities.Rating.filter({ user_email: user.email }) : Promise.resolve([]),
+    enabled: showSecondary && !!user,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: recentReviews = [] } = useQuery({
     queryKey: ['recentReviews'],
     queryFn: () => base44.entities.Rating.list('-created_date', 5),
+    enabled: showSecondary,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -152,11 +194,20 @@ export default function Home() {
   const { data: boots = [] } = useQuery({
     queryKey: ['boots'],
     queryFn: () => base44.entities.Boot.list(),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: gameSettings = [] } = useQuery({
     queryKey: ['gameSettings'],
     queryFn: () => base44.entities.GameSettings.list(),
+    enabled: showSecondary,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   const quickDrawSetting = gameSettings.find(s => s.game_name === 'quick_draw');

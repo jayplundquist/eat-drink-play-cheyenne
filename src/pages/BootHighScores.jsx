@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, Crown } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useSEO } from '@/hooks/useSEO';
@@ -85,12 +86,7 @@ export default function BootHighScores() {
   return (
     <div className="min-h-screen bg-amber-50 py-8">
       <div className="max-w-2xl mx-auto px-4">
-        <Link to={createPageUrl('Home')} className="inline-block mb-6">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-        </Link>
+        <BackButton className="mb-6" />
 
         <div className="text-center mb-8">
           <div className="text-4xl mb-2">👢🏆</div>

@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Plus, Trash2, Edit2, Check, X, Upload, Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import BackButton from "@/components/BackButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -124,12 +126,7 @@ export default function ManageBadges() {
   return (
     <div className="min-h-screen bg-stone-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <Button asChild variant="ghost" className="mb-6 text-amber-700">
-          <Link to={createPageUrl('Home')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Link>
-        </Button>
+        <BackButton variant="ghost" className="mb-6 text-amber-700" />
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-stone-800 mb-2" style={{ fontFamily: 'Rye, serif' }}>
@@ -165,14 +162,18 @@ export default function ManageBadges() {
                   className="border-amber-200"
                 />
                 <div className="flex gap-3">
-                  <select
+                  <Select
                     value={newBadge.type}
-                    onChange={(e) => setNewBadge({ ...newBadge, type: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-amber-200 rounded-md"
+                    onValueChange={(value) => setNewBadge({ ...newBadge, type: value })}
                   >
-                    <option value="review">Review Badge</option>
-                    <option value="boot">Boot Challenge</option>
-                  </select>
+                    <SelectTrigger className="flex-1 border-amber-200">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="review">Review Badge</SelectItem>
+                      <SelectItem value="boot">Boot Challenge</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <Input
                     type="number"
                     placeholder="Min count"
@@ -266,14 +267,18 @@ export default function ManageBadges() {
                           placeholder="Description"
                         />
                         <div className="flex gap-3">
-                          <select
+                          <Select
                             value={editBadge.type}
-                            onChange={(e) => setEditBadge({ ...editBadge, type: e.target.value })}
-                            className="flex-1 px-3 py-2 border border-stone-300 rounded-md"
+                            onValueChange={(value) => setEditBadge({ ...editBadge, type: value })}
                           >
-                            <option value="review">Review Badge</option>
-                            <option value="boot">Boot Challenge</option>
-                          </select>
+                            <SelectTrigger className="flex-1 border-stone-300">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="review">Review Badge</SelectItem>
+                              <SelectItem value="boot">Boot Challenge</SelectItem>
+                            </SelectContent>
+                          </Select>
                           <Input
                             type="number"
                             value={editBadge.min_count}

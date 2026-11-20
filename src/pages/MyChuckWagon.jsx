@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { MapPin, Radio, Plus, Trash2, ArrowLeft, Loader2 } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 import { toast } from 'sonner';
 import StopLocationPicker from '@/components/chuckwagons/StopLocationPicker';
 import BrandedPinCard from '@/components/chuckwagons/BrandedPinCard';
@@ -184,12 +185,7 @@ export default function MyChuckWagon() {
   return (
     <div className="min-h-screen bg-stone-50 py-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <Link to={createPageUrl('Home')}>
-          <Button variant="outline" size="sm" className="mb-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-        </Link>
+        <BackButton className="mb-4" />
 
         <h1 className="text-3xl font-bold text-stone-900">{wagon.name}</h1>
         <p className="text-stone-600 mt-1 mb-6">Manage where you are and where you'll be.</p>

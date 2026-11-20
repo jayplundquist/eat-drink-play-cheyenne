@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Plus, Search, ArrowLeft, Pencil, Trash2, ExternalLink, ArrowUpDown } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
@@ -160,12 +161,7 @@ export default function ManageVenues() {
       {/* Header */}
       <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-amber-900 text-white py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <Link to={createPageUrl('Home')}>
-            <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
+          <BackButton variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 mb-4" />
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>

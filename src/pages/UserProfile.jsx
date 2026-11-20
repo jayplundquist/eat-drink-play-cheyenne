@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User, Heart, Star, Users, ArrowLeft, AlertCircle, Send, Map } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -159,12 +160,7 @@ export default function UserProfile() {
   return (
     <div className="min-h-screen bg-stone-50 py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <Button asChild variant="ghost" className="mb-6 text-amber-700">
-          <Link to={createPageUrl('Home')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Link>
-        </Button>
+        <BackButton variant="ghost" className="mb-6 text-amber-700" />
 
         {/* Profile Header */}
         <motion.div

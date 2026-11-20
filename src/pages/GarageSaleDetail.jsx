@@ -8,6 +8,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
@@ -301,13 +302,14 @@ export default function GarageSaleDetail() {
             <DialogTitle className="text-amber-800">Report this listing</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <select
-              value={reportReason}
-              onChange={(e) => setReportReason(e.target.value)}
-              className="w-full border border-stone-300 rounded-md p-2 text-sm"
-            >
-              {REPORT_REASONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
-            </select>
+            <Select value={reportReason} onValueChange={setReportReason}>
+              <SelectTrigger className="w-full border-stone-300 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {REPORT_REASONS.map((r) => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
             <Textarea placeholder="Add any details (optional)" value={reportDetails} onChange={(e) => setReportDetails(e.target.value)} rows={3} />
           </div>
           <DialogFooter>

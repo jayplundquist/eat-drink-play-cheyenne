@@ -181,6 +181,26 @@ a {
   .above-tabbar {
     bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom, 0px) + 0.75rem);
   }
+
+  /* Finger-sized controls: 44px minimum, everywhere on small screens */
+  button,
+  [role="button"],
+  [role="tab"],
+  select {
+    min-height: 44px;
+  }
+
+  button[aria-label],
+  [role="button"][aria-label] {
+    min-width: 44px;
+  }
+
+  /* Lift micro-type so it stays readable at arm's length */
+  .text-\[10px\],
+  .text-\[11px\] {
+    font-size: 14px !important;
+    line-height: 1.3rem !important;
+  }
 }
 
 /*

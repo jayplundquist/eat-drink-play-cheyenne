@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Upload, Image } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -73,12 +74,7 @@ export default function Settings() {
       {/* Header */}
       <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-amber-900 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <Link to={createPageUrl('Home')}>
-            <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
+          <BackButton variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 mb-4" />
           
           <h1 className="text-3xl sm:text-4xl font-bold mb-2">Settings</h1>
           <p className="text-stone-300">

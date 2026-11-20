@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -157,6 +158,7 @@ export default function GarageSales() {
 
   return (
     <div className="min-h-screen bg-amber-50 pb-24">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       {/* Header */}
       <div className="bg-gradient-to-b from-amber-900 to-amber-800 text-amber-50 px-4 pt-6 pb-4">
         <div className="max-w-6xl mx-auto">

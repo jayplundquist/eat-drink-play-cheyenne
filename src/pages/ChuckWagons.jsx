@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -38,6 +39,7 @@ function cuisineLabel(wagon) {
 
 export default function ChuckWagons() {
   const [user, setUser] = useState(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -156,6 +158,7 @@ export default function ChuckWagons() {
 
   return (
     <div className="min-h-screen bg-stone-50">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       {/* Header */}
       <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b-4 border-amber-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">

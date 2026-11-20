@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSEO } from '@/hooks/useSEO';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import BackButton from "@/components/BackButton";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
@@ -419,12 +421,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         
         <div className="absolute top-4 left-4 right-4 flex justify-between">
-          <Link to={createPageUrl('Home') + (window.location.search.replace(/[?&]id=[^&]*/g, '').replace(/^&/, '?') || '')}>
-            <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-          </Link>
+          <BackButton variant="secondary" className="bg-white/90 backdrop-blur-sm hover:bg-white" />
 
           {user && (user.role === 'admin' || venue.claimed_by === user.email) && (
             <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
@@ -460,12 +457,7 @@ export default function VenueDetails({ venueId: propVenueId }) {
       {(!venue.image_url || imageLoadError) && (
         <div className="bg-gradient-to-br from-amber-900 via-amber-800 to-orange-900 text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-                <Link to={createPageUrl('Home') + (window.location.search.replace(/[?&]id=[^&]*/g, '').replace(/^&/, '?') || '')}>
-                  <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 mb-4">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
-                  </Button>
-                </Link>
+                <BackButton variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 mb-4" />
             {user && (user.role === 'admin' || venue.claimed_by === user.email) && (
               <Link to={createPageUrl(`EditVenue?id=${venueId}`)}>
                 <Button variant="secondary" size="sm" className="bg-white/90 backdrop-blur-sm hover:bg-white ml-2 mb-4">
@@ -725,18 +717,19 @@ export default function VenueDetails({ venueId: propVenueId }) {
                 </h2>
                 <div className="flex items-center gap-2">
                   <label className="text-sm text-stone-600">Filter:</label>
-                  <select
-                    value={ratingFilter}
-                    onChange={(e) => setRatingFilter(e.target.value)}
-                    className="text-sm border border-stone-300 rounded-md px-3 py-1.5 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  >
-                    <option value="all">All Ratings</option>
-                    <option value="5">5 Boots</option>
-                    <option value="4">4 Boots</option>
-                    <option value="3">3 Boots</option>
-                    <option value="2">2 Boots</option>
-                    <option value="1">1 Boot</option>
-                  </select>
+                  <Select value={ratingFilter} onValueChange={setRatingFilter}>
+                    <SelectTrigger className="w-[150px] text-sm bg-white border-stone-300 text-stone-700">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Ratings</SelectItem>
+                      <SelectItem value="5">5 Boots</SelectItem>
+                      <SelectItem value="4">4 Boots</SelectItem>
+                      <SelectItem value="3">3 Boots</SelectItem>
+                      <SelectItem value="2">2 Boots</SelectItem>
+                      <SelectItem value="1">1 Boot</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Plus, Upload, Loader2, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import { base44 } from '@/api/base44Client';
@@ -176,9 +177,14 @@ export default function GarageSaleFormFields({ form, set }) {
           </div>
           <div className="space-y-1.5">
             <Label>Event Type</Label>
-            <select value={form.event_type || 'garage'} onChange={(e) => set('event_type', e.target.value)} className="w-full border border-stone-300 rounded-md p-2 text-sm">
-              {EVENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </select>
+            <Select value={form.event_type || 'garage'} onValueChange={(value) => set('event_type', value)}>
+              <SelectTrigger className="w-full border-stone-300 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {EVENT_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>

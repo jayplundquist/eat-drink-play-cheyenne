@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import NotificationManager from '@/components/NotificationManager';
 import InstallPrompt from '@/components/InstallPrompt';
 import InstallButton from '@/components/InstallButton';
@@ -108,6 +109,7 @@ export default function Layout({ children, currentPageName }) {
 
   // Auto-apply noindex to admin/internal routes so crawlers never index them
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
   useEffect(() => {
     const internalPrefixes = [
       '/Settings', '/Analytics', '/ManageVenues', '/ManageVenueOptions',
@@ -577,7 +579,17 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Main Content */}
       <main className={isHome ? "md:-mt-16" : ""}>
-        {children}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={location.pathname}
+            initial={reduceMotion ? false : { opacity: 0, x: 14 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, x: -14 }}
+            transition={{ duration: reduceMotion ? 0 : 0.18, ease: 'easeOut' }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Ad Banner */}

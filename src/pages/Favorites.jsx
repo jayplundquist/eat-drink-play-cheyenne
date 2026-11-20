@@ -7,6 +7,7 @@ import { Heart, ArrowLeft, Map as MapIcon, List } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import VenueCard from "../components/VenueCard";
 import FavoritesMap from "../components/FavoritesMap";
 
@@ -42,7 +43,20 @@ export default function Favorites() {
         await base44.entities.Favorite.delete(existing.id);
       }
     },
-    onSuccess: () => {
+    onMutate: async (venueId) => {
+      await queryClient.cancelQueries({ queryKey: ['favorites', user?.email] });
+      const previous = queryClient.getQueryData(['favorites', user?.email]);
+      queryClient.setQueryData(['favorites', user?.email], (old = []) =>
+        (old || []).filter((favorite) => favorite.venue_id !== venueId)
+      );
+      return { previous };
+    },
+    onError: (_error, _venueId, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(['favorites', user?.email], context.previous);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
     },
   });
@@ -85,6 +99,7 @@ export default function Favorites() {
 
   return (
     <div className="min-h-screen bg-stone-50">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       {/* Header */}
       <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-amber-900 text-white py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">

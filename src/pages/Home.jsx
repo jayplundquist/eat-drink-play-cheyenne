@@ -31,6 +31,7 @@ import SeoContent from "../components/SeoContent";
 import { CowboyBoot } from "../components/BootRating";
 import { useSEO } from "@/hooks/useSEO";
 import { matchesSearch } from "../lib/fuzzySearch";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 
 export default function Home() {
   useSEO({
@@ -246,6 +247,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-amber-50">
+      <PullToRefresh onRefresh={() => queryClient.invalidateQueries()} />
       <HeroSection 
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}

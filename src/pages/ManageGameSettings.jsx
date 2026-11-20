@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Save, X } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -146,12 +147,7 @@ export default function ManageGameSettings() {
     <div className="min-h-screen bg-stone-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <div className="mb-6">
-          <Link to={createPageUrl('Home')}>
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
+          <BackButton />
         </div>
 
         <h1 className="text-3xl font-bold text-amber-900 mb-8" style={{ fontFamily: 'Rye, serif' }}>

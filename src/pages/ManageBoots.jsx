@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash2, Plus, ArrowLeft, Pencil, Check, X, MapPin } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { toast } from "sonner";
@@ -188,12 +189,7 @@ export default function ManageBoots() {
   return (
     <div className="min-h-screen bg-stone-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        <Link to={createPageUrl('Home')} className="inline-block mb-6">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-        </Link>
+        <BackButton className="mb-6" />
 
         <h1 className="text-3xl font-bold text-stone-800 mb-8">Manage Big Boots</h1>
 
